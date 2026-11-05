@@ -11,6 +11,7 @@ import St from 'gi://St';
 import {VERTICAL, onUiScale} from '../compat.js';
 import {isShelfCopy} from '../downloads.js';
 import {DropLight} from '../dropLight.js';
+import {_, N_, ngettext} from '../i18n.js';
 import {Thumbnails} from '../thumbnails.js';
 import {icon, iconButton, label, pillButton, setEnabled} from '../widgets.js';
 import {ClipsView} from './clips.js';
@@ -18,17 +19,18 @@ import {FilesView, SHELF_CAPACITY} from './files.js';
 import {Page} from './page.js';
 import {PhoneCode, PhoneView} from './phone.js';
 
-// Phone has a tab only while sharing.
+// The shelf's tabs (Phone only while sharing), and the clipboard's filters with what each button says; translated
+// as they show.
 const TABS = [
-    {name: 'clipboard', label: 'Clipboard'},
-    {name: 'files', label: 'Files'},
-    {name: 'phone', label: 'Phone'},
+    {name: 'clipboard', label: N_('Clipboard')},
+    {name: 'files', label: N_('Files')},
+    {name: 'phone', label: N_('Phone')},
 ];
 const FILTERS = [
-    {kind: 'text', icon: 'isle-text', name: 'Text'},
-    {kind: 'link', icon: 'isle-link', name: 'Links'},
-    {kind: 'image', icon: 'isle-image', name: 'Images'},
-    {kind: 'files', icon: 'isle-file', name: 'Files'},
+    {kind: 'text', icon: 'isle-text', only: N_('Only text')},
+    {kind: 'link', icon: 'isle-link', only: N_('Only links')},
+    {kind: 'image', icon: 'isle-image', only: N_('Only images')},
+    {kind: 'files', icon: 'isle-file', only: N_('Only files')},
 ];
 /** How long "Clear all" waits for its confirming click. */
 const CONFIRM_MS = 3000;
@@ -153,7 +155,7 @@ export const ShelfPage = GObject.registerClass({
         const tabs = new St.BoxLayout({style_class: 'isle-segmented'});
         this._tabButtons = new Map();
         for (const {name, label: text} of TABS) {
-            const button = new St.Button({style_class: 'isle-segment', label: text, can_focus: true});
+            const button = new St.Button({style_class: 'isle-segment', label: _(text), can_focus: true});
             button.connect('clicked', () => this.showTab(name));
             this._tabButtons.set(name, button);
             tabs.add_child(button);
@@ -169,7 +171,7 @@ export const ShelfPage = GObject.registerClass({
             const button = new St.Button({
                 style_class: 'isle-segment',
                 child: new St.Icon({gicon: icon(filter.icon), icon_size: 13}),
-                accessible_name: `Only ${filter.name.toLowerCase()}`,
+                accessible_name: _(filter.only),
                 can_focus: true,
             });
             button.connect('clicked', () => this._setFilter(this._filter === filter.kind ? null : filter.kind));
@@ -178,7 +180,7 @@ export const ShelfPage = GObject.registerClass({
         }
         this._clipboardControls.add_child(filters);
 
-        this._search = new St.Entry({style_class: 'isle-entry isle-shelf-field', hint_text: 'Search', can_focus: true, x_expand: true});
+        this._search = new St.Entry({style_class: 'isle-entry isle-shelf-field', hint_text: _('Search'), can_focus: true, x_expand: true});
         this._search.set_primary_icon(new St.Icon({gicon: icon('isle-search'), icon_size: 12, style_class: 'isle-shelf-field-icon'}));
         const text = this._search.clutter_text;
         text.connect('text-changed', () => {
@@ -198,14 +200,14 @@ export const ShelfPage = GObject.registerClass({
         // Keeps the buttons at the end while the field is closed.
         this._searchSpacer = new St.Widget({x_expand: true});
         this._searchButton = iconButton('isle-search', 'isle-button-round isle-button-small',
-            () => this._openSearch(), {size: 13, accessibleName: 'Search the clipboard history'});
+            () => this._openSearch(), {size: 13, accessibleName: _('Search the clipboard history')});
         this._clipboardControls.add_child(this._searchSpacer);
         this._clipboardControls.add_child(this._search);
         this._clipboardControls.add_child(this._searchButton);
 
         this._clear = iconButton('isle-trash', 'isle-button-round isle-button-small', () => this._askToClear(),
-            {size: 14, accessibleName: 'Clear the clipboard history'});
-        this._confirm = pillButton('Clear all', 'isle-pill-small isle-shelf-confirm', () => this._clearHistory());
+            {size: 14, accessibleName: _('Clear the clipboard history')});
+        this._confirm = pillButton(_('Clear all'), 'isle-pill-small isle-shelf-confirm', () => this._clearHistory());
         this._confirm.hide();
         this._clipboardControls.add_child(this._clear);
         this._clipboardControls.add_child(this._confirm);
@@ -536,21 +538,21 @@ export const ShelfPage = GObject.registerClass({
         else if (count === 0 && !this._added)
             text = '';
         else if (refusal === 'local')
-            text = 'Only files on this computer';
+            text = _('Only files on this computer');
         else if (refusal && full)
-            text = 'Full · remove a file first';
+            text = _('Full · remove a file first');
         else if (refusal)
-            text = `Only ${SHELF_CAPACITY - count} more fit`;
+            text = ngettext('Only {count} more fits', 'Only {count} more fit', SHELF_CAPACITY - count);
         else if (this._dropping)
-            text = this._dropOver ? 'Release to add it' : 'Drop to keep it on the shelf';
+            text = this._dropOver ? _('Release to add it') : _('Drop to keep it on the shelf');
         else if (this._added)
-            text = 'Added · click to copy, or drag it into any app';
+            text = _('Added · click to copy, or drag it into any app');
         else if (full)
-            text = 'Full · remove a file to add another';
+            text = _('Full · remove a file to add another');
         else
             text = this._files.items.some(item => isShelfCopy(item.uri))
-                ? `${count} of ${SHELF_CAPACITY} · click to copy, ↓ to save, or drag out`
-                : `${count} of ${SHELF_CAPACITY} · click to copy, or drag into any app`;
+                ? _('{count} of {capacity} · click to copy, ↓ to save, or drag out', {count, capacity: SHELF_CAPACITY})
+                : _('{count} of {capacity} · click to copy, or drag into any app', {count, capacity: SHELF_CAPACITY});
         this._filesHint.text = text;
         if (this._dropping || this._added)
             this._filesHint.add_style_class_name('active');
@@ -653,7 +655,7 @@ export const ShelfPage = GObject.registerClass({
             this.emit('request-close');
             this._history.paste();
         } else {
-            this._clips.flash(item, 'isle-check-symbolic', 'Copied');
+            this._clips.flash(item, 'isle-check-symbolic', _('Copied'));
             this._copied = [...this._copied.filter(id => id !== item.id), item.id];
         }
     }

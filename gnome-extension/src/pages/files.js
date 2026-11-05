@@ -14,6 +14,7 @@ import St from 'gi://St';
 
 import {VERTICAL, onUiScale, px, uiScale} from '../compat.js';
 import {isShelfCopy} from '../downloads.js';
+import {_} from '../i18n.js';
 import {Lines, icon, iconButton, label} from '../widgets.js';
 
 /** The shelf holds this many files (as isled enforces). */
@@ -318,15 +319,15 @@ export const FilesView = GObject.registerClass({
     _updateEmptyText() {
         const dragging = this._dropping && this._helperAvailable;
         // The same words as the helper's (crates/isle-shelf), which keeps its own see-through.
-        let title = 'No files on the shelf', hint = 'Drop files here, then drag them into any app';
+        let title = _('No files on the shelf'), hint = _('Drop files here, then drag them into any app');
         if (!this._helperAvailable)
-            [title, hint] = ['No files on the shelf', 'Dropping files here isn’t set up; install Isle again to add it'];
+            [title, hint] = [_('No files on the shelf'), _('Dropping files here isn’t set up; install Isle again to add it')];
         else if (dragging && this._dropOver && this._refusal === 'local')
-            [title, hint] = ['Only files on this computer', 'Links and files online can’t be kept'];
+            [title, hint] = [_('Only files on this computer'), _('Links and files online can’t be kept')];
         else if (dragging && this._dropOver && this._refusal)
-            [title, hint] = ['Too many files', 'The shelf holds six at a time'];
+            [title, hint] = [_('Too many files'), _('The shelf holds six at a time')];
         else if (dragging)
-            [title, hint] = [this._dropOver ? 'Release to add it' : 'Drop to add it', 'Then drag it into any app, or click to copy it'];
+            [title, hint] = [this._dropOver ? _('Release to add it') : _('Drop to add it'), _('Then drag it into any app, or click to copy it')];
         this._emptyTitle.text = title;
         this._emptyHint.text = hint;
     }
@@ -348,7 +349,7 @@ export const FilesView = GObject.registerClass({
             child: new St.Icon({gicon: icon('isle-check-symbolic'), icon_size: 18}),
         });
         const remove = iconButton('isle-close-symbolic', 'isle-shelf-remove',
-            () => this._daemon.call('shelf', 'Remove', item.uri), {size: 10, accessibleName: 'Remove from the shelf'});
+            () => this._daemon.call('shelf', 'Remove', item.uri), {size: 10, accessibleName: _('Remove from the shelf')});
         remove.set_size(px(REMOVE_DISC), px(REMOVE_DISC));
 
         // Files the Shelf keeps itself (sent from the phone, a clipboard picture): ↓ saves one into Downloads,
