@@ -14,7 +14,14 @@ import * as Signals from 'resource:///org/gnome/shell/misc/signals.js';
  * GNOME 51 the shell's calendar server's own, with the same ids. */
 const CALENDAR_REMINDERS = ['org.gnome.Evolution-alarm-notify', 'org.gnome.Shell.CalendarServer'];
 
-/** Signals: `changed` (the list), `seen-changed` (only what is seen), `updated` (one changed in place),
+/** Whether `notification` is unread: it came or changed since the Notifications page was last opened. GNOME's
+ * own `acknowledged` only says its banner was shown; an alert that came and went leaves it unread. Kept on the
+ * notification itself, so it lasts while Isle is turned off and on again (each screen lock). */
+function isUnread(notification) {
+    return Boolean(notification.isleUnreadSince) || !notification.acknowledged;
+}
+
+/** Signals: `changed` (the list), `seen-changed` (only what is read), `updated` (one changed in place),
  * `banner` (notification: show it, then acknowledge it) and `dnd-changed`. */
 export class NotificationCenter extends Signals.EventEmitter {
     /** `isleSettings` says whether GNOME keeps its own banners (`gnome-banners`). */
@@ -48,17 +55,27 @@ export class NotificationCenter extends Signals.EventEmitter {
         return all.sort((a, b) => b.datetime.compare(a.datetime));
     }
 
-    /** How many are not seen yet. */
+    /** How many are unread (see `isUnread`). */
     get unseenCount() {
         let count = 0;
         for (const source of this._sources.keys())
-            count += source.notifications.filter(notification => !notification.acknowledged).length;
+            count += source.notifications.filter(isUnread).length;
         return count;
     }
 
-    /** Whether the unread dot shows. */
+    /** Whether the unread bell shows. */
     get hasUnseen() {
-        return [...this._sources.keys()].some(source => source.notifications.some(n => !n.acknowledged));
+        return [...this._sources.keys()].some(source => source.notifications.some(isUnread));
+    }
+
+    /** When the latest unread one came or changed (ms since the epoch), 0 with none. */
+    get latestUnreadAt() {
+        let latest = 0;
+        for (const source of this._sources.keys()) {
+            for (const notification of source.notifications.filter(isUnread))
+                latest = Math.max(latest, notification.isleUnreadSince || notification.datetime.to_unix() * 1000);
+        }
+        return latest;
     }
 
     /** Do Not Disturb: GNOME's "show banners" turned off. */
@@ -71,12 +88,14 @@ export class NotificationCenter extends Signals.EventEmitter {
         this._settings.set_boolean('show-banners', !on);
     }
 
-    /** Marks every notification as seen, clearing the unread dot. */
+    /** Marks every notification as read (the Notifications page was opened), clearing the unread bell. */
     acknowledgeAll() {
-        const unseen = [...this._sources.keys()].flatMap(source => source.notifications)
-            .filter(notification => !notification.acknowledged);
-        unseen.forEach(notification => (notification.acknowledged = true));
-        if (unseen.length)
+        const unread = [...this._sources.keys()].flatMap(source => source.notifications).filter(isUnread);
+        for (const notification of unread) {
+            notification.acknowledged = true;
+            delete notification.isleUnreadSince;
+        }
+        if (unread.length)
             this.emit('seen-changed');
     }
 
@@ -140,6 +159,7 @@ export class NotificationCenter extends Signals.EventEmitter {
                     return;
                 }
                 this._added = notification;
+                notification.isleUnreadSince = Date.now();
                 this.emit('changed');
             }),
             source.connect('notification-removed', () => this.emit('changed')),
@@ -186,6 +206,9 @@ export class NotificationCenter extends Signals.EventEmitter {
     _onBannerRequest(notification) {
         const updated = notification !== this._added;
         this._added = null;
+        // Changed in place (a chat's next message): unread again, as new.
+        if (updated)
+            notification.isleUnreadSince = Date.now();
         this._onBanner(notification);
         if (updated) {
             Promise.resolve().then(() => {
@@ -215,7 +238,8 @@ export class NotificationCenter extends Signals.EventEmitter {
         });
     }
 
-    /** Marks `notification` seen once it was shown with someone there to see it (see `banner`), as GNOME does. */
+    /** Marks `notification` seen once it was shown with someone there to see it (see `banner`), as GNOME does.
+     * It stays unread (see `isUnread`) until the Notifications page is opened. */
     acknowledge(notification) {
         if (notification.acknowledged)
             return;

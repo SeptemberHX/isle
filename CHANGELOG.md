@@ -12,6 +12,18 @@ All notable changes to Isle are listed here. The format follows
   400 pixels, so more notifications, more of the day's events or more of the clipboard history fit. The
   island grows and shrinks as you move between pages of different heights. Every page is 150 tall by default,
   so nothing changes until you set it.
+- **Open the page you point at.** Rest the pointer on (or click) a side of the closed island to open that
+  side's page: the cover opens Music, the bell Notifications, the timer Timer, the phone Call. The clock still
+  opens the usual page.
+
+### Changed
+
+- **Unread notifications show on the closed island.** A bell with a red dot, left of the clock, or on the
+  right in place of the music bars while a song plays; with both sides taken, a red dot on the left sign. A
+  notification stays unread until you open the Notifications page, even after its alert has gone (before, an
+  alert marked it seen, so the old white dot almost never showed).
+- **New notifications come first.** If a notification arrives after you picked a page, the island opens on
+  Notifications instead of going back to that page.
 
 ## [1.6.0] - 2026-11-03
 

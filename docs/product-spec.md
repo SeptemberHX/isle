@@ -174,10 +174,10 @@ place, dimmed, so the layout never jumps.
 
 | Input | Closed / alert | Open |
 |---|---|---|
-| Pointer rests 120 ms (Settings: 60–1000 ms, or click only) | Open on the default page | – |
+| Pointer rests 120 ms (Settings: 60–1000 ms, or click only) | Open on the page of the sign it rests on (see below), else the default page | – |
 | Pointer on the hidden island (Settings: auto-hide) | Fades back in; then as the row above | – |
 | Pointer leaves | – | Close after 300 ms (not while typing or dragging a file) |
-| Click | Open now (an alert opens on its page) | Normal button clicks |
+| Click | Open now, as resting does (an alert opens on its page) | Normal button clicks |
 | Middle-click | Play / pause | Play / pause |
 | Right-click | On an alert: put it away; else bring the call, or the music player, to the front | Bring the music player to the front |
 | Pointer on an alert | Holds it; it goes 1.5 s after the pointer leaves (one asking, a reminder or an event keeps its own time). One the pointer doesn't open (with a button) and an answer show a × on their icon to put them away | – |
@@ -190,12 +190,22 @@ place, dimmed, so the layout never jumps.
 | ← → Enter (search field) | – | Choose a clipboard card; Enter pastes it into the window in front |
 | Esc | – | Clear the search, stop typing or renaming; then close when opened with Super+V |
 
+**Opening where the pointer is.** Resting on (or clicking) a side of the closed island opens the page of
+the sign there: the bell Notifications, the cover or the music bars Music, the timer's glyph, ring or time
+left Timer, the green phone or the muted microphone Call. The clock, an empty side and a sign with no page
+(the screen recording, the bot, the warning) open the default page. A side counts from the island's end to
+the clock (the sign and its gap). Opening a page so is not a page picked by hand.
+
 **Default page on open**, first match wins: the page of the alert being
-shown → the page picked by hand (a tab, or the Shelf after a file
-was dragged onto the island), remembered for 5 minutes and forgotten when a
-call starts → Call during a call → Notifications if some arrived unseen
-(during Do Not Disturb) → Music if something plays → Timer if the timer
-runs → Music.
+shown → Notifications if some unread came after a page was picked by hand → the page picked by hand (a tab,
+or the Shelf after a file was dragged onto the island), remembered for 5 minutes and forgotten when a
+call starts → Call during a call → Notifications if some are unread → Music if something plays → Timer if
+the timer runs → Music.
+
+**Unread notifications** are those that came, or changed in place (a chat's next message), since the
+Notifications page was last opened, and those never shown (during Do Not Disturb, low urgency). Their
+alert coming and going leaves them unread; opening the page, or the page being open as they come, reads
+them all; one clicked (its app opened) or cleared is gone.
 
 Pages, in order: **Call** (only during a call) **· Music · Notifications ·
 Timer · Reminders · Shelf · Calendar · Apps · Usage** (Apps only with its switch
@@ -226,17 +236,22 @@ with the wheel or touchpad and never show a scrollbar.
   island).
 - One island, one sign on each side of the clock. Left: the first activity that applies, in the order
   screen recording → a call → music (a song playing or paused, until its player closes; a browser's
-  video or voice note until it is over, at its end or paused a minute; none with the Music page left out) → the timer (a session or break under way); with none, a white dot while
-  notifications are unseen. Right, first that applies:
+  video or voice note until it is over, at its end or paused a minute; none with the Music page left out) → the timer (a session or break under way); with none, the
+  unread bell while notifications are unread (see §3; none with the Notifications page left out): the
+  Notifications tab's bell (15 px, 14 in the bar) with a red 6 px dot on its corner. Right, first that applies:
   1. a warning (Isle's service stopped; a click offers to restart it);
   2. the bot, 18 px, in the look chosen, blinking and glancing every few seconds (the assistant works
      on a request or a command runs with the island closed; a click shows it);
   3. a red crossed-out microphone while a call is muted;
   4. the second activity's sign: the timer's ring (filling as the phase runs), the song's cover, or a
      call's green phone;
-  5. what goes with the first activity: the song's music bars, or the timer's time left.
+  5. the unread bell, when the left is taken;
+  6. what goes with the first activity: the song's music bars, or the timer's time left (which the bell
+     never takes the place of).
 
-  A third activity and later ones show only in the open island.
+  With both sides taken (the bell can't take the timer's time left, another activity's sign or the signs
+  above it), unread notifications are a red dot on the left sign's corner instead. A third activity and
+  later ones show only in the open island.
 
   | Shown | Left | Right |
   |---|---|---|
@@ -247,6 +262,9 @@ with the wheel or touchpad and never show a scrollbar.
   | Timer with privacy dots | its ring | the dots |
   | Call and music | green phone | the song's cover |
   | Music and timer | cover art | the timer's ring |
+  | Unread notifications | bell, red dot | – |
+  | Music and unread | cover art | bell, red dot |
+  | Timer alone and unread | timer glyph, red dot | its time left |
 
   The timer's glyph, ring and time are white while focusing and green on a break, and dim while
   paused. The bars dance only while the song plays and the closed island is on screen, and rest
@@ -264,7 +282,7 @@ with the wheel or touchpad and never show a scrollbar.
 
 Every page shares the header row inside the top bar. On
 the left, a tab per page: icons, the open page's in a lit pill with its
-name, and a red dot on Notifications while some are unseen. On the right a
+name, and a red dot on Notifications while some are unread (see §3). On the right a
 red "● 0:42" pill while the screen records (click to stop), a green "📞 1:15"
 pill during a call on any page but Call (click: the Call page), the privacy
 dots, the music bars, the assistant's sparkle, `[timer ring] Tue 20 Oct 12:26` and the gear. The
@@ -370,7 +388,7 @@ when there is more), how long ago on the right, and its buttons ("Reply",
 "Mark as read") under them, whole, going on to another line when they
 don't fit; under the pointer the card lights and × takes the time's place.
 Cards past the edge fade out as the list scrolls. Click a card to open
-it (the island closes). Opening the page marks them seen. Empty: a bell,
+it (the island closes). Opening the page marks them read. Empty: a bell,
 "No notifications · You're all caught up".
 
 **Timer** (its tab, its Settings page and its row in Settings → Pages say

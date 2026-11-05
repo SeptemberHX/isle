@@ -71,6 +71,15 @@ class CentreLayout extends Clutter.LayoutManager {
     }
 });
 
+/** The unread bell: the Notifications tab's icon, a red dot on its corner. */
+function unreadBell() {
+    const bell = new St.Widget({layout_manager: new Clutter.BinLayout(), y_align: Clutter.ActorAlign.CENTER});
+    bell.add_child(new St.Icon({gicon: icon('isle-bell'), icon_size: 15, style_class: 'isle-unread-bell'}));
+    bell.add_child(new St.Widget({style_class: 'isle-unread-badge', x_expand: true, y_expand: true,
+        x_align: Clutter.ActorAlign.END, y_align: Clutter.ActorAlign.START}));
+    return bell;
+}
+
 /** The closed island's contents; emits `width-changed` when it needs another width. */
 export const CompactView = GObject.registerClass({
     Signals: {'width-changed': {}},
@@ -96,14 +105,23 @@ export const CompactView = GObject.registerClass({
         // Each side's padding is its gap to the centre; `_fit` makes both as wide as the wider side. A sign sits
         // centred in a square as big as the cover at the island's end, so a round one is concentric with it.
         this._left = new St.Bin({style_class: 'isle-compact-slot isle-compact-start', x_expand: false, y_align: Clutter.ActorAlign.CENTER});
-        this._lead = new St.Bin({x_expand: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER});
-        this._left.child = this._lead;
+        this._lead = new St.Bin({y_align: Clutter.ActorAlign.CENTER});
+        // Unread notifications with both sides taken: a red dot on the left sign's corner.
+        this._leadBadge = new St.Widget({style_class: 'isle-unread-badge', x_expand: true, y_expand: true,
+            x_align: Clutter.ActorAlign.END, y_align: Clutter.ActorAlign.START, visible: false});
+        const leadBox = new St.Widget({layout_manager: new Clutter.BinLayout(), x_expand: true,
+            x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER});
+        leadBox.add_child(this._lead);
+        leadBox.add_child(this._leadBadge);
+        this._left.child = leadBox;
         // The timer alone: a still timer glyph, its time left on the right (no ring: the time says it). With the
         // privacy dots on the right, its ring instead, so neither side runs long.
         this._timerIcon = new St.Icon({gicon: icon('isle-timer-symbolic'), icon_size: 15, y_align: Clutter.ActorAlign.CENTER});
         this._ring = new Ring({size: 20, lineWidth: 3});
         this._art = new Art({size: 24, radius: 6});
-        this._dot = new St.Widget({style_class: 'isle-unseen-dot', y_align: Clutter.ActorAlign.CENTER});
+        // Unread notifications: the Notifications tab's bell with a red dot, on the left, else the right.
+        this._bell = unreadBell();
+        this._secondBell = unreadBell();
         this._recordingDot = new RecordingDot();
         // A call: a green phone, and on the right a red microphone while it is muted.
         this._phone = new St.Icon({gicon: icon('isle-phone-symbolic'), icon_size: 15, style_class: 'isle-call-icon', y_align: Clutter.ActorAlign.CENTER});
@@ -167,8 +185,8 @@ export const CompactView = GObject.registerClass({
         this._pillHeight = 0;
         this._inset = -1;
         // The sides are told not to expand, or their children's x_expand (which the alignment needs) would widen them.
-        for (const actor of [this._timerIcon, this._ring, this._art, this._dot, this._recordingDot, this._phone, this._bars, this._micOff,
-            this._serviceDown, this._assistant, this._secondRing, this._secondArt, this._secondPhone])
+        for (const actor of [this._timerIcon, this._ring, this._art, this._bell, this._recordingDot, this._phone, this._bars, this._micOff,
+            this._serviceDown, this._assistant, this._secondRing, this._secondArt, this._secondPhone, this._secondBell])
             actor.set({x_align: Clutter.ActorAlign.CENTER, x_expand: true});
         // From its square's start: the room `_fit` leaves after it keeps it off the island's end.
         this._timerTime.set({x_align: Clutter.ActorAlign.START, x_expand: true});
@@ -204,6 +222,20 @@ export const CompactView = GObject.registerClass({
             this._refresh();
         }, {now: false});
         this.connect('destroy', () => this._onDestroy());
+    }
+
+    /** The page the side at stage `x` opens (its sign's: music, the timer, a call, notifications), or null for
+     * the clock, an empty side or a sign with no page of its own (the screen recording, the assistant). */
+    pageAt(x) {
+        for (const [slot, page] of [[this._left, this._leftPage], [this._rightSide, this._rightPage]]) {
+            if (!page || !slot.mapped)
+                continue;
+            const [slotX] = slot.get_transformed_position();
+            const [width] = slot.get_transformed_size();
+            if (x >= slotX && x < slotX + width)
+                return page;
+        }
+        return null;
     }
 
     /** The theme changed (the island asks, see its `refreshTheme`): the timer's colours follow it. */
@@ -301,7 +333,8 @@ export const CompactView = GObject.registerClass({
         return this._settings.get_boolean('privacy-indicators') && this._privacy.any;
     }
 
-    /** Shows a dot for unseen notifications when nothing else is on the left. */
+    /** Shows the unread bell: on the left if free, else on the right in place of what goes with the first
+     * activity, else as a red dot on the left sign. */
     set unseenNotifications(unseen) {
         if (unseen === this._unseen)
             return;
@@ -354,6 +387,8 @@ export const CompactView = GObject.registerClass({
         this._bars.maxHeight = size.bars;
         this._moon.icon_size = size.moon;
         this._phone.icon_size = this._micOff.icon_size = this._secondPhone.icon_size = this._timerIcon.icon_size = size.call;
+        for (const bell of [this._bell, this._secondBell])
+            bell.get_first_child().icon_size = size.call;
         if (inBar)
             this.add_style_class_name('isle-compact-in-bar');
         else
@@ -405,11 +440,15 @@ export const CompactView = GObject.registerClass({
         const phone = Boolean(this._daemon.state.share?.active);
         const dots = {camera: privacy.camera, microphone, screenShare: privacy.screenShare, phone};
         const anyDot = Object.values(dots).some(Boolean);
-        // Left: the activity's sign, else the unread dot.
+        // Left: the activity's sign, else the unread bell.
         const timerSign = anyDot ? this._ring : this._timerIcon;
         let left = {recording: this._recordingDot, call: this._phone, music: this._art, timer: timerSign}[primary] ?? null;
-        if (!left && this._unseen)
-            left = this._dot;
+        /** The page each side opens when the pointer rests on it (see `pageAt`). */
+        this._leftPage = {call: 'call', music: 'music', timer: 'focus'}[primary] ?? null;
+        if (!left && this._unseen) {
+            left = this._bell;
+            this._leftPage = 'notifications';
+        }
         if (this._lead.child !== left)
             this._swap(this._lead, left);
         this._lead.visible = Boolean(left);
@@ -417,13 +456,28 @@ export const CompactView = GObject.registerClass({
         // activity's sign, what goes with the first (the song's bars, the timer's time left).
         let right = second ? {music: this._secondArt, timer: this._secondRing, call: this._secondPhone}[second]
             : {music: this._bars, timer: anyDot ? null : this._timerTime}[primary] ?? null;
-        if (onCall && this._call.muted)
+        this._rightPage = right ? {music: 'music', timer: 'focus', call: 'call'}[second ?? primary] ?? null : null;
+        // Unread with the left taken: the bell on a free right, or in place of the song's bars (they only go
+        // with the cover), never before the timer's time left, another activity's sign or what follows.
+        if (this._unseen && left !== this._bell && (!right || right === this._bars)) {
+            right = this._secondBell;
+            this._rightPage = 'notifications';
+        }
+        if (onCall && this._call.muted) {
             right = this._micOff;
-        if (this._assistantBusy)
+            this._rightPage = 'call';
+        }
+        if (this._assistantBusy) {
             right = this._assistant;
+            this._rightPage = null;
+        }
         this._assistant.alive = right === this._assistant;
-        if (this._isServiceDown)
+        if (this._isServiceDown) {
             right = this._serviceDown;
+            this._rightPage = null;
+        }
+        // Both sides taken: the unread bell is a red dot on the left sign.
+        this._leadBadge.visible = Boolean(this._unseen && left && left !== this._bell && right !== this._secondBell);
         this._privacyDots.update(dots);
         if (this._right.child !== right)
             this._swap(this._right, right);
@@ -610,8 +664,8 @@ export const CompactView = GObject.registerClass({
         this._privacy.disconnect(this._privacyChanged);
         this._call.disconnect(this._callChanged);
         // Slots may hold actors that are not currently children.
-        for (const actor of [this._timerIcon, this._ring, this._art, this._dot, this._recordingDot, this._bars, this._phone, this._micOff, this._assistant, this._serviceDown,
-            this._timerTime, this._secondRing, this._secondArt, this._secondPhone]) {
+        for (const actor of [this._timerIcon, this._ring, this._art, this._bell, this._recordingDot, this._bars, this._phone, this._micOff, this._assistant, this._serviceDown,
+            this._timerTime, this._secondRing, this._secondArt, this._secondPhone, this._secondBell]) {
             if (!actor.get_parent())
                 actor.destroy();
         }

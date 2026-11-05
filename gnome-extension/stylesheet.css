@@ -176,11 +176,13 @@
 .isle-compact-in-bar .isle-compact-clock-row { spacing: 3px; }
 .isle-compact-in-bar .isle-compact-meridiem { font-size: 12px; }
 
-.isle-unseen-dot {
+/* Unread notifications: the Notifications tab's bell, red dot on its corner (as the tab's own badge). */
+.isle-unread-bell { color: #ffffff; }
+.isle-unread-badge {
   width: 6px;
   height: 6px;
   border-radius: 3px;
-  background-color: #ffffff;
+  background-color: #ff453a;
 }
 
 /* Live activities: privacy dots and screen recording */

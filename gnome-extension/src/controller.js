@@ -1425,7 +1425,7 @@ export class Controller {
             if (rested && this._voiceWorking)
                 this._reopenVoice({byHover: true});
             else if (rested)
-                this.expand();
+                this.expand(this._pointedPage(nowX));
             else if (this._island.hovered)
                 this._expandOnRest();
         });
@@ -1503,7 +1503,7 @@ export class Controller {
             return Clutter.EVENT_STOP;
         }
         if (!this._expandWanted) {
-            this.expand();
+            this.expand(this._pointedPage(global.get_pointer()[0]));
             return Clutter.EVENT_STOP;
         }
         return Clutter.EVENT_PROPAGATE;
@@ -1676,10 +1676,24 @@ export class Controller {
         this._nextAlert();
     }
 
-    /** The page to open on: the one picked lately by hand, else one with something live, else music. */
+    /** The page of the closed island's side under stage `x` (its sign's), or null: the clock, or not closed. */
+    _pointedPage(x) {
+        if (this._presentation !== 'compact')
+            return null;
+        const name = this._compact.pageAt(x);
+        return name && this._expanded.pageNamed(name)?.available ? name : null;
+    }
+
+    /** The page to open on: notifications that came since a page was picked by hand, else that page (for a
+     * while), else one with something live, else music. */
     _defaultPage() {
-        if (Date.now() - this._pagePickedAt < PAGE_MEMORY_MS)
+        if (Date.now() - this._pagePickedAt < PAGE_MEMORY_MS) {
+            const notifications = this._expanded.pageNamed('notifications');
+            if (notifications?.available && this._notifications.hasUnseen &&
+                this._notifications.latestUnreadAt > this._pagePickedAt)
+                return 'notifications';
             return null; // stay on the current page
+        }
         const page = DEFAULT_PAGE_ORDER.map(name => this._expanded.pageNamed(name)).find(p => p?.available && p.relevant);
         return page?.name ?? this._expanded.pages.find(p => p.available)?.name ?? null;
     }
