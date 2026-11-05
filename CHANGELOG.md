@@ -21,6 +21,8 @@ All notable changes to Isle are listed here. The format follows
   ("Продолжение следует…"). What isled says (the assistant's steps and errors, the AI limits' names and notes)
   is translated in the island as it shows, and the shelf's drag-and-drop window takes its words from the
   extension (`SetWords`, new in its D-Bus interface).
+- Isle in Simplified Chinese (`po/zh_CN.po`): every text of the island, its alerts, the assistant's panel and
+  Settings.
 - Notification buttons that turn something down are also known in Russian ("Отклонить"), so they are never
   the one shown to press.
 

@@ -509,10 +509,10 @@ export function savedToDownloads(name, show) {
         key: 'shelf-saved',
         icon: 'isle-save-symbolic',
         motion: 'bounce',
-        title: 'Saved to Downloads',
+        title: _('Saved to Downloads'),
         subtitle: name,
         tone: 'good',
-        action: {label: 'Show', callback: show},
+        action: {label: _('Show'), callback: show},
         duration: NOTIFICATION_DURATION,
     };
 }
@@ -522,7 +522,7 @@ export function saveFailed(why) {
     return {
         key: 'shelf-saved',
         icon: 'isle-warning-symbolic',
-        title: 'Couldn’t save to Downloads',
+        title: _('Couldn’t save to Downloads'),
         subtitle: why,
         tone: 'bad',
         duration: NOTIFICATION_DURATION,
@@ -534,8 +534,8 @@ export function sharingStopped() {
     return {
         key: 'phone-stopped',
         icon: 'isle-smartphone-symbolic',
-        title: 'Phone sharing stopped',
-        subtitle: 'This computer’s network changed',
+        title: _('Phone sharing stopped'),
+        subtitle: _('This computer’s network changed'),
         tone: 'neutral',
         duration: NOTIFICATION_DURATION,
     };
@@ -549,14 +549,14 @@ export function phoneAsks(ask, answer) {
         icon: 'isle-smartphone-symbolic',
         motion: 'bounce',
         // The code is the phone's own, shown big on its screen: only the phone showing it gets in.
-        title: `Allow ${ask.device} — code ${ask.code}?`,
+        title: _('Allow {device} — code {code}?', {device: ask.device, code: ask.code}),
         // A long browser name goes on to a second line rather than losing the code.
         titleLines: 2,
-        subtitle: `${ask.address} · the same code on the phone?`,
+        subtitle: _('{address} · the same code on the phone?', {address: ask.address}),
         tone: 'neutral',
         actions: [
-            {label: 'Deny', answer: 'deny', callback: () => answer(false)},
-            {label: 'Allow', answer: 'allow', primary: true, callback: () => answer(true)},
+            {label: _('Deny'), answer: 'deny', callback: () => answer(false)},
+            {label: _('Allow'), answer: 'allow', primary: true, callback: () => answer(true)},
         ],
         // It waits on the user, as long as the phone waits (isled gives up after two minutes).
         sticky: true,
@@ -572,8 +572,8 @@ export function phoneReceived(names, onShown) {
         key: 'phone-received',
         icon: 'isle-smartphone-symbolic',
         motion: 'bounce',
-        title: one ? names[0] : `${names.length} files from your phone`,
-        subtitle: one ? 'From your phone · on the Shelf' : 'On the Shelf',
+        title: one ? names[0] : ngettext('{count} file from your phone', '{count} files from your phone', names.length),
+        subtitle: one ? _('From your phone · on the Shelf') : _('On the Shelf'),
         tone: 'good',
         page: 'shelf',
         duration: NOTIFICATION_DURATION,

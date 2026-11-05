@@ -285,7 +285,7 @@ stops, a warning shows in the closed island; click it to start it again.
 
 ## Settings
 
-Isle speaks your desktop's language where it has a translation (English and Russian so far; see
+Isle speaks your desktop's language where it has a translation (English, Russian and Simplified Chinese so far; see
 [Contributing](CONTRIBUTING.md#translations) to add one).
 
 Click the gear right of the clock in the open island (or Isle's gear in the

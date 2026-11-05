@@ -227,7 +227,7 @@ export const ShelfPage = GObject.registerClass({
             style_class: 'isle-pill isle-pill-small isle-shelf-phone',
             child: phone,
             can_focus: true,
-            accessible_name: 'Share the Shelf with your phone',
+            accessible_name: _('Share the Shelf with your phone'),
             y_align: Clutter.ActorAlign.CENTER,
         });
         this._phoneStart.connect('clicked', () => this._startSharing());
@@ -332,8 +332,8 @@ export const ShelfPage = GObject.registerClass({
         if (error || result === null) {
             this._startingShare = false;
             // An isled from before sharing: updated, not yet restarted.
-            this._shareError = error ?? (unknownMethod ? 'Log out and back in to share with a phone'
-                : 'Couldn’t start sharing · is Isle’s service running?');
+            this._shareError = error ?? (unknownMethod ? _('Log out and back in to share with a phone')
+                : _('Couldn’t start sharing · is Isle’s service running?'));
             this._updateFilesHint();
             this.later('share-error', SHARE_ERROR_MS, () => {
                 this._shareError = null;

@@ -355,7 +355,7 @@ export const FilesView = GObject.registerClass({
         // Files the Shelf keeps itself (sent from the phone, a clipboard picture): ↓ saves one into Downloads,
         // shown under the pointer, mirroring the ×.
         const save = isShelfCopy(item.uri) ? iconButton('isle-save-symbolic', 'isle-shelf-remove isle-shelf-save',
-            () => this.emit('save', item.uri), {size: 10, accessibleName: 'Save to Downloads'}) : null;
+            () => this.emit('save', item.uri), {size: 10, accessibleName: _('Save to Downloads')}) : null;
         save?.set_size(px(REMOVE_DISC), px(REMOVE_DISC));
         save?.set({opacity: 0, reactive: false});
         const tile = this._tileBox(this._frame(preview, {copied, remove, save}), item.name);

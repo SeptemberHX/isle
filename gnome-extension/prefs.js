@@ -409,14 +409,14 @@ export default class IslePreferences extends ExtensionPreferences {
         delay.connect('destroy', () => settings.disconnect(openOnChanged));
         byHover();
         look.add(delay);
-        look.add(choiceRow(settings, 'auto-hide', 'Auto-hide', 'Hide the closed island; alerts still show, and pointing at its place brings it back', [
+        look.add(choiceRow(settings, 'auto-hide', _('Auto-hide'), _('Hide the closed island; alerts still show, and pointing at its place brings it back'), [
             ['off', 'Off'],
             ['always', 'Always'],
-            ['top-bar', 'With the top bar'],
-            ['windows', 'Beside windows'],
+            ['top-bar', _('With the top bar')],
+            ['windows', _('Beside windows')],
         ]));
         // The wait only counts where the island hides on its own: not with a bar that hides.
-        const hideDelay = spinRow(settings, 'auto-hide-delay', 'Hide after', 'Seconds without the pointer on the island', 1, 60);
+        const hideDelay = spinRow(settings, 'auto-hide-delay', _('Hide after'), _('Seconds without the pointer on the island'), 1, 60);
         const waits = () => (hideDelay.sensitive = ['always', 'windows'].includes(settings.get_string('auto-hide')));
         const waitsChanged = settings.connect('changed::auto-hide', waits);
         hideDelay.connect('destroy', () => settings.disconnect(waitsChanged));
@@ -986,15 +986,15 @@ function pagesGroup(settings, window) {
 
 /** Each page's title in the height rows, in tab order, and the switch (if any) that leaves it out. */
 const PAGE_TITLES = {
-    call: ['Call', 'Only during a call'],
-    music: ['Music'],
-    notifications: ['Notifications'],
-    focus: ['Timer'],
-    reminders: ['Reminders'],
-    shelf: ['Shelf'],
-    calendar: ['Calendar', 'The month keeps its size; the day’s events get the room'],
-    apps: ['Apps'],
-    usage: ['AI Usage'],
+    call: [N_('Call'), N_('Only during a call')],
+    music: [N_('Music')],
+    notifications: [N_('Notifications')],
+    focus: [N_('Timer')],
+    reminders: [N_('Reminders')],
+    shelf: [N_('Shelf')],
+    calendar: [N_('Calendar'), N_('The month keeps its size; the day’s events get the room')],
+    apps: [N_('Apps')],
+    usage: [N_('AI Usage')],
 };
 
 /** Whether page `name` is in the island now, by its switch in the Pages group. */
@@ -1009,15 +1009,16 @@ function pageShown(settings, name) {
 /** A height per page (`page-heights`), the same rows for all; a page that is off dims its row. */
 function pageHeightsGroup(settings, window) {
     const group = new Adw.PreferencesGroup({
-        title: 'Page Height',
-        description: `How tall each page of the open island is, in pixels (${MIN_PAGE_HEIGHT} to ${MAX_PAGE_HEIGHT}). The island grows and shrinks as you move between them.`,
+        title: _('Page Height'),
+        description: _('How tall each page of the open island is, in pixels ({least} to {most}). The island grows and shrinks as you move between them.',
+            {least: MIN_PAGE_HEIGHT, most: MAX_PAGE_HEIGHT}),
     });
     const rows = PAGE_NAMES.map(name => {
         const [title, subtitle] = PAGE_TITLES[name];
         const row = Adw.SpinRow.new_with_range(MIN_PAGE_HEIGHT, MAX_PAGE_HEIGHT, 10);
-        row.title = title;
+        row.title = _(title);
         if (subtitle)
-            row.subtitle = subtitle;
+            row.subtitle = _(subtitle);
         row.connect('notify::value', () => {
             const heights = settings.get_value('page-heights').deep_unpack();
             if (heightOf(heights, name) === row.value)
