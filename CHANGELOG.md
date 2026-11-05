@@ -22,6 +22,8 @@ All notable changes to Isle are listed here. The format follows
   right in place of the music bars while a song plays; with both sides taken, a red dot on the left sign. A
   notification stays unread until you open the Notifications page, even after its alert has gone (before, an
   alert marked it seen, so the old white dot almost never showed).
+- **Short notifications open out wider.** A notification's alert is at least 280 pixels wide, so one that
+  says little ("Hi") no longer grows only a little out of the closed island.
 - **New notifications come first.** If a notification arrives after you picked a page, the island opens on
   Notifications instead of going back to that page.
 

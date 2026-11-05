@@ -19,6 +19,8 @@ import {Art, LevelBar, Ring, VolumeGlyph, WrapLayout, cornerClose, icon, isSymbo
 
 /** The widest an alert gets; narrower, it fits its content. Sizes are in CSS pixels (see `px`). */
 const MAX_WIDTH = 380;
+/** The narrowest a notification's alert gets: a short one ("Hi") still opens out clearly from the closed island. */
+const NOTIFICATION_MIN_WIDTH = 280;
 /** Room round the badge, as much on every side (see .isle-peek-row); PEEK_RADIUS in controller.js is the
  * badge's radius plus this, so the corners follow it. */
 const PADDING = 12;
@@ -553,8 +555,14 @@ export const PeekView = GObject.registerClass({
         return [fitted, Math.min(max, count), logical.height / count];
     }
 
-    /** The width the island should have for this alert. */
+    /** The width the island should have for this alert: a notification's no narrower than NOTIFICATION_MIN_WIDTH. */
     get preferredWidth() {
+        const width = this._fittedWidth();
+        return this._shown?.kind === 'notification' ? Math.max(Math.round(px(NOTIFICATION_MIN_WIDTH)), width) : width;
+    }
+
+    /** The width its content needs, up to the widest for its kind. */
+    _fittedWidth() {
         this._fit();
         const [, natural] = this._row.get_preferred_width(-1);
         if (this._asks || this._code.visible) {

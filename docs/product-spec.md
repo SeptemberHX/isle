@@ -37,7 +37,7 @@ All sizes are logical pixels.
 |---|---|---|---|---|
 | Compact | as wide as it shows, at least 144 (the clock alone) × B | 10 | 7 | Clock, centred; one sign each side (first activity left; a second activity's sign or what goes with the first right), privacy dots after it |
 | Compact, hanging | as wide as it shows, at least 164 × (P + 30; Settings 24–40) | 16 | 10 | As above |
-| Peek (alert) | fits its content, up to 380 wide × (P + 56); 56 high off a black bar; 12 px round the badge on every side, and the value or button as far from the right edge | 28 | 13 | Badge · title/subtitle (a notification's words on up to two lines) · value, level bar or button, centred |
+| Peek (alert) | fits its content, up to 380 wide (a notification's at least 280, so a short one still opens out from the closed island) × (P + 56); 56 high off a black bar; 12 px round the badge on every side, and the value or button as far from the right edge | 28 | 13 | Badge · title/subtitle (a notification's words on up to two lines) · value, level bar or button, centred |
 | Peek with buttons | fits its words up to 440, its buttons whole up to 560; buttons that don't fit go on to a line below; 16 px round one lit along its edges | 28 | 13 | Badge · title/subtitle · code · small buttons under the words, from the left |
 | Expanded | at least 600 × (P + 170), the page 150 high unless Settings → Island → Page Height gives it its own (150–400, each page alike; fixed parts such as the month grid keep their size, lists take the room); wider when its tabs and status need room (about 650 with the usual tabs); 720 for lyrics | 32 | 22 | Header row (tabs) · page, 20 px in from the sides and the bottom |
 
