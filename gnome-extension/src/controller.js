@@ -22,7 +22,7 @@ import {ClipboardHistory} from './clipboard.js';
 import {CompactView} from './compact.js';
 import {HAS_ACCENT, grabsKeyboard, inhibitScanout, isWayland, onUiScale, px, uiScale} from './compat.js';
 import {Daemon} from './daemon.js';
-import {BOTTOM_PADDING, ExpandedView, PAGE_HEIGHT} from './expanded.js';
+import {BOTTOM_PADDING, ExpandedView} from './expanded.js';
 import {Island} from './island.js';
 import {AudioOutputs} from './audio.js';
 import {CallMonitor} from './call.js';
@@ -46,6 +46,7 @@ import {TasksPage} from './pages/tasks.js';
 import {TimerPage} from './pages/timer.js';
 import {UsagePage} from './pages/usage.js';
 import {ReminderWatcher} from './reminders.js';
+import {PAGE_HEIGHT} from './pageHeights.js';
 import * as Theme from './theme.js';
 import {GREETING, InstalledApps, UNDO_MS, VoiceView, stopUnit, actionTypes, aiSettings, openSetUp, openSignIn, runActions, signInHint, stopPending, voiceContext} from './voice.js';
 import {autoHide, revealBand} from './visibilityRules.js';
@@ -415,6 +416,11 @@ export class Controller {
         expanded.pageNamed('shelf').connect('helper-area-changed', () => this._shelfHelper?.sync());
         // Lyrics widen the island and wash it with the cover's colour.
         expanded.connect('width-changed', () => {
+            if (this._presentation === 'expanded')
+                this._render();
+        });
+        // Each page can have a height of its own (Settings → Page Height): the island follows.
+        expanded.connect('height-changed', () => {
             if (this._presentation === 'expanded')
                 this._render();
         });
@@ -1139,7 +1145,7 @@ export class Controller {
         case 'expanded':
             size = {
                 width: this._expanded.preferredWidth,
-                height: (this._onBar ? top : HEADER_WITHOUT_BAR * scale) + (PAGE_HEIGHT + BOTTOM_PADDING) * scale,
+                height: (this._onBar ? top : HEADER_WITHOUT_BAR * scale) + (this._expanded.pageHeight + BOTTOM_PADDING) * scale,
                 radius: EXPANDED_RADIUS * scale,
                 shoulder: EXPANDED_SHOULDER * scale,
             };

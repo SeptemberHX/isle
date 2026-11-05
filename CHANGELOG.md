@@ -6,6 +6,13 @@ All notable changes to Isle are listed here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **A height for each page (#39).** Settings → Island → Page Height: give any page of the open island 150 to
+  400 pixels, so more notifications, more of the day's events or more of the clipboard history fit. The
+  island grows and shrinks as you move between pages of different heights. Every page is 150 tall by default,
+  so nothing changes until you set it.
+
 ## [1.6.0] - 2026-11-03
 
 Send files between the Shelf and your phone, auto-hide, alerts over full-screen apps, a black top bar beside

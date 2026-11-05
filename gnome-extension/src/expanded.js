@@ -12,6 +12,7 @@ import St from 'gi://St';
 import {timerColor} from './compact.js';
 import {VERTICAL, onUiScale, px, uiScale} from './compat.js';
 import * as Format from './format.js';
+import {PAGE_HEIGHT, heightOf} from './pageHeights.js';
 import * as Playback from './playback.js';
 import {watchClock} from './wallClock.js';
 import {Bars, PrivacyDots, RecordingDot, Ring, easeTo, fence, icon, iconButton, label, slideBy} from './widgets.js';
@@ -20,7 +21,6 @@ import {Bars, PrivacyDots, RecordingDot, Ring, easeTo, fence, icon, iconButton, 
 const EXPANDED_WIDTH = 600;
 /** The least room between the tabs and the status on the right. */
 const HEADER_GAP = 16;
-export const PAGE_HEIGHT = 150;
 /** Room below the page, as at its sides (.isle-page): 20 px all round, cards' 12 px corners concentric with the 32. */
 export const BOTTOM_PADDING = 20;
 
@@ -67,6 +67,8 @@ export const ExpandedView = GObject.registerClass({
         'page-settled': {},
         // The current page wants the island wider or narrower.
         'width-changed': {},
+        // The current page is taller or shorter (another page, or its height in Settings).
+        'height-changed': {},
         // The current page's tint colour changed; see `tint`.
         'tint-changed': {},
         // The current page's 'aura' tint moved: time (s), level (0..1).
@@ -91,6 +93,8 @@ export const ExpandedView = GObject.registerClass({
         this._width = px(EXPANDED_WIDTH);
         /** Set once smooth scrolling is seen; its click-style copies are then dropped. */
         this._smoothScrolling = false;
+        /** The pager's height in CSS px: the open page's, or while one slides out, the taller of the two. */
+        this._pagerHeight = 0;
         this._lastFlip = 0;
         /** The scroll gesture over the header in progress: travel so far, and whether it turned a page. */
         this._gesture = {dx: 0, dy: 0, flipped: false, at: 0};
@@ -112,9 +116,11 @@ export const ExpandedView = GObject.registerClass({
         this.add_child(this._buildPager());
         const bottom = new St.Widget();
         this.add_child(bottom);
+        this._applyHeights();
+        this._heightsChanged = settings.connect('changed::page-heights', () => this._applyHeights());
         onUiScale(bottom, scale => {
             bottom.height = BOTTOM_PADDING * scale;
-            this._pagerArea.height = PAGE_HEIGHT * scale;
+            this._pagerArea.height = this._pagerHeight * scale;
         });
 
         for (const page of pages) {
@@ -335,6 +341,8 @@ export const ExpandedView = GObject.registerClass({
         });
         for (const page of this._pages) {
             page.x_expand = page.y_expand = true;
+            // At its own height from the top, not stretched while the pager is taller (see `_syncPagerHeight`).
+            page.y_align = Clutter.ActorAlign.START;
             page.hide();
             this._pager.add_child(page);
         }
@@ -352,6 +360,31 @@ export const ExpandedView = GObject.registerClass({
     /** The open page. */
     get page() {
         return this._pages[this._index];
+    }
+
+    /** The open page's height in CSS px, which the island makes room for below the header. */
+    get pageHeight() {
+        return this.page.pageHeight ?? PAGE_HEIGHT;
+    }
+
+    /** Gives every page its height from Settings (`page-heights`); the island follows if the open page's changed. */
+    _applyHeights() {
+        const before = this.pageHeight;
+        const heights = this._settings.get_value('page-heights').deep_unpack();
+        for (const page of this._pages)
+            page.pageHeight = heightOf(heights, page.name);
+        this._syncPagerHeight();
+        if (this.pageHeight !== before)
+            this.emit('height-changed');
+    }
+
+    /** Sizes the pager to the open page, or to `atLeast` (CSS px) while a taller one slides out. */
+    _syncPagerHeight(atLeast = 0) {
+        const height = Math.max(this.pageHeight, atLeast);
+        if (height === this._pagerHeight)
+            return;
+        this._pagerHeight = height;
+        this._pagerArea.height = px(height);
     }
 
     /** The width the island should have: the current page's, and never less than the header needs. */
@@ -458,6 +491,7 @@ export const ExpandedView = GObject.registerClass({
             return;
 
         const previous = this.page;
+        const previousHeight = this.pageHeight;
         const direction = index > this._index ? 1 : -1;
         this._index = index;
         const next = this.page;
@@ -468,7 +502,10 @@ export const ExpandedView = GObject.registerClass({
         next.remove_all_transitions();
         next.show();
 
-        if (animate && St.Settings.get().enable_animations) {
+        const sliding = animate && St.Settings.get().enable_animations;
+        // A taller page sliding out keeps its room until it is gone; the island shrinks around it meanwhile.
+        this._syncPagerHeight(sliding ? previousHeight : 0);
+        if (sliding) {
             const distance = px(SLIDE_DISTANCE);
             // Whole pixels (see `slideBy`), the fades eased as before.
             slideBy(previous, 'x', previous.translation_x, -direction * distance, {duration: SLIDE_DURATION});
@@ -479,6 +516,7 @@ export const ExpandedView = GObject.registerClass({
                 onStopped: () => {
                     if (previous !== this.page)
                         previous.hide();
+                    this._syncPagerHeight();
                     slideBy(previous, 'x', 0, 0);
                     previous.opacity = 255;
                 },
@@ -501,6 +539,8 @@ export const ExpandedView = GObject.registerClass({
         next.setActive(this._active);
         this._syncPage();
         this._syncWidth();
+        if (this.pageHeight !== previousHeight)
+            this.emit('height-changed');
         this.emit('tint-changed');
         this.emit('page-changed');
     }
@@ -856,6 +896,7 @@ export const ExpandedView = GObject.registerClass({
         this._stopClock();
         this._stopRecordingTick();
         this._daemon.disconnect(this._daemonChanged);
+        this._settings.disconnect(this._heightsChanged);
         this._privacy.disconnect(this._privacyChanged);
         this._call.disconnect(this._callChanged);
     }

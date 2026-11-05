@@ -17,6 +17,7 @@ import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/ex
 import {DesktopAppInfo} from './src/appInfo.js';
 import {Bot, COLORS, SHAPES, paletteFor} from './src/bot.js';
 import {paintRim} from './src/glow.js';
+import {MAX_PAGE_HEIGHT, MIN_PAGE_HEIGHT, PAGE_NAMES, heightOf, withHeight} from './src/pageHeights.js';
 import * as WorldClocks from './src/worldClocks.js';
 
 const DAEMON = 'io.github.zickrian.isle.Daemon';
@@ -410,6 +411,7 @@ export default class IslePreferences extends ExtensionPreferences {
         look.add(hideDelay);
         page.add(look);
         page.add(pagesGroup(settings, window));
+        page.add(pageHeightsGroup(settings, window));
         page.add(appUsageGroup(settings, window));
         page.add(worldClocksGroup(settings, window));
 
@@ -962,6 +964,66 @@ function pagesGroup(settings, window) {
     const changed = settings.connect('changed::hidden-pages', sync);
     window.connect('close-request', () => {
         settings.disconnect(changed);
+        return false;
+    });
+    sync();
+    return group;
+}
+
+/** Each page's title in the height rows, in tab order, and the switch (if any) that leaves it out. */
+const PAGE_TITLES = {
+    call: ['Call', 'Only during a call'],
+    music: ['Music'],
+    notifications: ['Notifications'],
+    focus: ['Timer'],
+    reminders: ['Reminders'],
+    shelf: ['Shelf'],
+    calendar: ['Calendar', 'The month keeps its size; the day’s events get the room'],
+    apps: ['Apps'],
+    usage: ['AI Usage'],
+};
+
+/** Whether page `name` is in the island now, by its switch in the Pages group. */
+function pageShown(settings, name) {
+    if (name === 'apps')
+        return settings.get_boolean('app-usage');
+    if (name === 'usage')
+        return settings.get_boolean('usage-enabled');
+    return !settings.get_strv('hidden-pages').includes(name);
+}
+
+/** A height per page (`page-heights`), the same rows for all; a page that is off dims its row. */
+function pageHeightsGroup(settings, window) {
+    const group = new Adw.PreferencesGroup({
+        title: 'Page Height',
+        description: `How tall each page of the open island is, in pixels (${MIN_PAGE_HEIGHT} to ${MAX_PAGE_HEIGHT}). The island grows and shrinks as you move between them.`,
+    });
+    const rows = PAGE_NAMES.map(name => {
+        const [title, subtitle] = PAGE_TITLES[name];
+        const row = Adw.SpinRow.new_with_range(MIN_PAGE_HEIGHT, MAX_PAGE_HEIGHT, 10);
+        row.title = title;
+        if (subtitle)
+            row.subtitle = subtitle;
+        row.connect('notify::value', () => {
+            const heights = settings.get_value('page-heights').deep_unpack();
+            if (heightOf(heights, name) === row.value)
+                return;
+            settings.set_value('page-heights', new GLib.Variant('a{si}', withHeight(heights, name, row.value)));
+        });
+        group.add(row);
+        return [name, row];
+    });
+    const sync = () => {
+        const heights = settings.get_value('page-heights').deep_unpack();
+        for (const [name, row] of rows) {
+            row.value = heightOf(heights, name);
+            row.sensitive = pageShown(settings, name);
+        }
+    };
+    const changed = ['page-heights', 'hidden-pages', 'app-usage', 'usage-enabled'].map(key =>
+        settings.connect(`changed::${key}`, sync));
+    window.connect('close-request', () => {
+        changed.forEach(id => settings.disconnect(id));
         return false;
     });
     sync();

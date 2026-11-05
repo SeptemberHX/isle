@@ -7,7 +7,7 @@ import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import St from 'gi://St';
 
-import {onUiScale} from '../compat.js';
+import {onUiScale, uiScale} from '../compat.js';
 
 /** Subclasses override the getters and hooks below; timeouts and daemon handlers end with the page. */
 export const Page = GObject.registerClass({
@@ -33,8 +33,9 @@ export const Page = GObject.registerClass({
     /** `params.height` is in CSS pixels (see `px`). */
     _init(daemon, {height, ...params}) {
         super._init(params);
+        this._pageHeight = height;
         if (height !== undefined)
-            onUiScale(this, scale => (this.height = height * scale));
+            onUiScale(this, scale => (this.height = this._pageHeight * scale));
         this.daemon = daemon;
         this._active = false;
         this._timeouts = new Map();
@@ -44,6 +45,19 @@ export const Page = GObject.registerClass({
         /** Whether it changed since last laid out out of sight (see `Expanded.warmPage`). */
         this.cold = true;
         this.connect('destroy', () => this._onPageDestroy());
+    }
+
+    /** The page's height in CSS pixels (see `px`), as given or as last set. */
+    get pageHeight() {
+        return this._pageHeight;
+    }
+
+    /** Another height, from Settings; the island fits it the next time it is laid out. */
+    set pageHeight(height) {
+        if (height === this._pageHeight)
+            return;
+        this._pageHeight = height;
+        this.height = height * uiScale();
     }
 
     /** Pages only animate and poll while they are on screen. */

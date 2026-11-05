@@ -180,6 +180,11 @@
       <summary>Pages left out of the island</summary>
       <description>Names of the open island’s pages that have no tab: music, notifications, focus, reminders, shelf, calendar. The Apps and Usage pages have their own switches (app-usage, usage-enabled).</description>
     </key>
+    <key name="page-heights" type="a{si}">
+      <default>{}</default>
+      <summary>Height of each page</summary>
+      <description>How tall the open island's pages are, in pixels (150 to 400), by page name: call, music, notifications, focus, reminders, shelf, calendar, apps, usage. A page not listed is 150 tall.</description>
+    </key>
     <key name="app-usage" type="b">
       <default>false</default>
       <summary>The Apps page, timing the application in front</summary>
