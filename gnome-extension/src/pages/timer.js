@@ -13,6 +13,7 @@ import * as Format from '../format.js';
 import {_, N_} from '../i18n.js';
 import {typedMinutes} from '../timerRules.js';
 import {Ring, icon, iconButton, label, setEnabled} from '../widgets.js';
+import {PAGE_HEIGHT} from '../expanded.js';
 import {Page} from './page.js';
 
 /** The phase's name inside the ring, under the time (translated as it shows). */
@@ -326,6 +327,11 @@ class TimerPage extends Page {
         if (remaining <= 0)
             return;
         this.later('tick', (remaining % 1000) + 15, () => this._update());
+    }
+
+    /** Settings → Size: the ring as much larger as the page is taller. */
+    onPageHeight(height) {
+        this._ring.resize(Math.round(RING_SIZE * height / PAGE_HEIGHT / 2) * 2);
     }
 
     /** The time may be stale after a while off screen. */

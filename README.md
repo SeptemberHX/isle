@@ -77,7 +77,7 @@ appear in the same place instead of in the middle of the screen.
 </td>
 <td width="50%" valign="top">
 <img src="docs/images/clipboard.png" alt="Clipboard history" width="100%"><br>
-<b>Shelf.</b> A clipboard history of text, links, images and files (search, filter, pin; Super+V to paste), and a files tray: drop files on the island, then drag them into any app or click one to copy it, ready to paste into a chat. Press <b>Phone</b> and scan the QR code to save the Shelf's files on your phone, or send photos and files from it to the Shelf, in the phone's browser: same Wi-Fi, no app, nothing through the internet. ↓ on a file the phone sent saves it into Downloads.
+<b>Shelf.</b> A clipboard history of text, links, images and files (search, filter, pin; paste from the keyboard with Super+V given to it), and a files tray: drop files on the island, then drag them into any app or click one to copy it, ready to paste into a chat. Press <b>Phone</b> and scan the QR code to save the Shelf's files on your phone, or send photos and files from it to the Shelf, in the phone's browser: same Wi-Fi, no app, nothing through the internet. ↓ on a file the phone sent saves it into Downloads.
 </td>
 </tr>
 <tr>
@@ -123,7 +123,7 @@ appear in the same place instead of in the middle of the screen.
 <tr>
 <td width="50%" valign="top">
 <img src="docs/images/alerts.png" alt="The closed island with a song and the focus timer, then alerts for a meeting with Join, Claude Code asking to run a command, a notification with Reply, and charging" width="100%"><br>
-<b>Alerts</b> for volume, brightness, Caps Lock, charging, low battery, Bluetooth devices with their battery, going offline, reminders, meetings about to start, AI plan limits and GNOME notifications with their buttons, in the same place instead of the middle of the screen. Hold the pointer on one to keep it, with a × on its icon to put it away (or swipe up). Isle's own icons move once as they appear: the bolt pulses, the bell sways, rings sweep and count up.
+<b>Alerts</b> for volume, brightness, Caps Lock, charging, low battery, Bluetooth devices with their battery (and, if you like, as theirs runs low), going offline, reminders, meetings about to start, AI plan limits and GNOME notifications with their buttons, in the same place instead of the middle of the screen. Hold the pointer on one to keep it, with a × on its icon to put it away (or swipe up). Isle's own icons move once as they appear: the bolt pulses, the bell sways, rings sweep and count up.
 </td>
 <td width="50%" valign="top">
 <img src="docs/images/approvals.png" alt="Claude Code asking to run npm run build, with Deny, Allow and Always; then Allowed" width="100%"><br>
@@ -137,14 +137,15 @@ appear in the same place instead of in the middle of the screen.
 </td>
 <td width="50%" valign="top">
 <img src="docs/images/glass.png" alt="The music page in the glass island, the wallpaper behind it showing through, blurred" width="100%"><br>
-<b>Glass.</b> The island in clear dark glass instead of black, if you prefer: what is behind it shows through, blurred, as you work. Choose it in Settings → Island → Appearance.
+<b>Glass.</b> The island in clear glass instead of black, if you prefer: what is behind it shows through, blurred, as you work. Choose it in Settings → Island → Appearance.
 </td>
 </tr>
 </table>
 
-Also: privacy dots while the camera, microphone or screen sharing is in use,
-a recording timer with a stop button, and a slim glass top bar that leaves
-your windows uncovered.
+Also: a Devices page with each connected Bluetooth device's battery (off
+until you turn it on), privacy dots while the camera, microphone or screen
+sharing is in use, a recording timer with a stop button, and a slim glass top
+bar that leaves your windows uncovered.
 
 ## Requirements
 
@@ -265,7 +266,9 @@ cd isle
 | Rest the pointer on an alert | Keep it until the pointer leaves |
 | Swipe up or down on an alert (touchpad) | Put it away, or open it |
 | Right-click the notch | Put an alert away; else bring the call, or the music player, to the front |
-| Super+V | Open the clipboard history with search ready; Enter pastes |
+| Super+V | Open the Calendar page (or the clipboard history, search ready, Enter pastes: Settings → Island → Shortcuts) |
+| Ctrl+Tab, Ctrl+1–9 | In the island opened from the keyboard: the next page, or the first to ninth tab |
+| Your own shortcut for a page | Open the island on that page from anywhere (Settings → Island → Shortcuts) |
 | Drag a file towards the notch | Open the files tray to drop it |
 | Super+I | Ask the voice assistant; press again to finish speaking, or after an answer to ask more. Start typing (or click the keyboard) to type the request instead |
 | Enter or Esc on the assistant's card | Run or Deny the command it shows |
@@ -291,23 +294,25 @@ Isle speaks your desktop's language where it has a translation (English, Russian
 Click the gear right of the clock in the open island (or Isle's gear in the
 **Extensions** app):
 
-- **Island:** Isle's own black island, or Glass, clear dark glass that shows what
+- **Island:** Isle's own black island, or Glass, clear glass that shows what
   is behind it (windows and wallpaper) blurred, with a slider from clear to dark smoked glass; the top bar on a slider from glass (default) to black, and black anyway while a window reaches it (off by default);
-  a little space below the island inside the bar (on by default); auto-hide (always, with a top bar that hides, or beside maximized windows; off by default); a 24- or 12-hour clock (or as GNOME's); privacy dots; which pages the open island has (Music,
-  Notifications, Timer, Reminders, Shelf, Calendar, Apps, AI Usage) and whether it
-  has the AI assistant at all; world clocks, and their cities;
+  the island's shape, a notch joined to the top or a pill floating free;
+  a little space below the island inside the bar (on by default); auto-hide (always, with a top bar that hides, or beside maximized windows; off by default); a 24- or 12-hour clock (or as GNOME's), and the date beside it; a standard or large open island; privacy dots; which pages the open island has (Music,
+  Notifications, Timer, Reminders, Shelf, Calendar, Apps, Devices, AI Usage) and whether it
+  has the AI assistant at all; a shortcut of your own for each page (none at first); world clocks, and their cities;
   the closed island inside the bar or hanging below it; with more than one
-  display, on the main one or the one you are using; opening when the
+  display, on the main one, the one you are using, or all of them; opening when the
   pointer rests on it (and for how long) or only on a click; how long auto-hide waits.
 - **Alerts:** apps' notifications in the island (or GNOME's own banners
-  instead); over full-screen apps too (off by default); volume and brightness; charging, network, Bluetooth and Caps
-  Lock, each on its own; new songs, sounds; lyrics online;
+  instead); over full-screen apps too (off by default); volume and brightness; charging, network, Bluetooth, a Bluetooth
+  device's low battery (off by default) and Caps Lock, each on its own; new songs, sounds; lyrics online;
   a reminder before calendar events, and how many minutes before.
   Alerts other than a low battery are not shown while Do Not Disturb is on.
 - **Calls:** show calls in the island, and the live preview of the call.
-- **Clipboard:** turn the history on or off, clear it, what Super+V opens (the
-  clipboard history, or GNOME's calendar), and choose apps whose copies are never
-  kept (password managers are on the list from the start).
+- **Clipboard:** turn the history on or off, clear it, and choose apps whose copies
+  are never kept (password managers are on the list from the start). What Super+V
+  opens (the calendar or the clipboard history) is set with the other shortcuts, in
+  Island → Shortcuts.
 - **Timer:** session and break lengths, Do Not Disturb while focusing.
 - **Assistant:** the bot's look (shape, colour, glow, with a live
   preview); the assistant on or off, its shortcut, which AI answers and with
@@ -663,6 +668,10 @@ Thanks to everyone who has made Isle better:
   a sun or a moon by each World Clock.
 - [@Ashishranjan980](https://github.com/Ashishranjan980): the Apps page, where
   your time in each app goes.
+- [@jvspier](https://github.com/jvspier): the island on every display, and a
+  top bar moved to the bottom by another extension.
+- [@AlphaBeast97](https://github.com/AlphaBeast97): opencode 2 in the voice
+  assistant.
 
 ## Support
 

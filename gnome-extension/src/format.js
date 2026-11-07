@@ -56,7 +56,14 @@ export function shortcutLabel(accelerator) {
 
 /** "Tue 20 Oct", short and calm in the top bar. */
 export function longDate(dateTime = GLib.DateTime.new_now_local()) {
-    return dateTime.format('%a %-d %b');
+    // TRANSLATORS: a short date (GLib.DateTime.format codes): "Tue 20 Oct".
+    return dateTime.format(_('%a %-d %b'));
+}
+
+/** "Tue 20", beside the closed island's clock (Settings). */
+export function shortDate(dateTime = GLib.DateTime.new_now_local()) {
+    // TRANSLATORS: the day beside the closed island's clock (GLib.DateTime.format codes): "Tue 20".
+    return dateTime.format(_('%a %-d'));
 }
 
 /** Formats a duration as "3:07" or "1:02:07". */

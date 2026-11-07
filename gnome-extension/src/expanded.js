@@ -13,15 +13,21 @@ import {timerColor} from './compact.js';
 import {VERTICAL, onUiScale, px, uiScale} from './compat.js';
 import * as Format from './format.js';
 import {_, N_} from './i18n.js';
-import {PAGE_HEIGHT, heightOf} from './pageHeights.js';
+import {LARGE_PAGE_HEIGHT, PAGE_HEIGHT, heightOf} from './pageHeights.js';
+
+export {PAGE_HEIGHT};
 import * as Playback from './playback.js';
 import {watchClock} from './wallClock.js';
 import {Bars, PrivacyDots, RecordingDot, Ring, easeTo, fence, icon, iconButton, label, slideBy} from './widgets.js';
 
 /** Sizes and distances in CSS pixels (see `px`). */
-const EXPANDED_WIDTH = 600;
+export const EXPANDED_WIDTH = 600;
 /** The least room between the tabs and the status on the right. */
 const HEADER_GAP = 16;
+/** Settings → Appearance → Size: Large makes the open island wider and every page taller (LARGE_PAGE_HEIGHT, unless
+ * Settings gives it a height of its own), each laying itself out for the room (a larger cover, ring and month, more
+ * rows and cards); the type keeps its size. */
+export const LARGE_WIDTH = 720;
 /** Room below the page, as at its sides (.isle-page): 20 px all round, cards' 12 px corners concentric with the 32. */
 export const BOTTOM_PADDING = 20;
 
@@ -35,6 +41,7 @@ const TABS = {
     shelf: {icon: 'isle-shelf', label: N_('Shelf')},
     calendar: {icon: 'isle-calendar', label: N_('Calendar')},
     apps: {icon: 'isle-apps', label: N_('Apps')},
+    devices: {icon: 'isle-headphones', label: N_('Devices')},
     usage: {icon: 'isle-gauge', label: N_('Usage')},
 };
 /** How bright a tab's icon is: open, under the pointer, otherwise. */
@@ -68,7 +75,7 @@ export const ExpandedView = GObject.registerClass({
         'page-settled': {},
         // The current page wants the island wider or narrower.
         'width-changed': {},
-        // The current page is taller or shorter (another page, or its height in Settings).
+        // The open page is another height (see `pageHeight`).
         'height-changed': {},
         // The current page's tint colour changed; see `tint`.
         'tint-changed': {},
@@ -94,8 +101,6 @@ export const ExpandedView = GObject.registerClass({
         this._width = px(EXPANDED_WIDTH);
         /** Set once smooth scrolling is seen; its click-style copies are then dropped. */
         this._smoothScrolling = false;
-        /** The pager's height in CSS px: the open page's, or while one slides out, the taller of the two. */
-        this._pagerHeight = 0;
         this._lastFlip = 0;
         /** The scroll gesture over the header in progress: travel so far, and whether it turned a page. */
         this._gesture = {dx: 0, dy: 0, flipped: false, at: 0};
@@ -121,7 +126,7 @@ export const ExpandedView = GObject.registerClass({
         this._heightsChanged = settings.connect('changed::page-heights', () => this._applyHeights());
         onUiScale(bottom, scale => {
             bottom.height = BOTTOM_PADDING * scale;
-            this._pagerArea.height = this._pagerHeight * scale;
+            this._pagerArea.height = (this._shownHeight ?? this.pageHeight) * scale;
         });
 
         for (const page of pages) {
@@ -342,7 +347,7 @@ export const ExpandedView = GObject.registerClass({
         });
         for (const page of this._pages) {
             page.x_expand = page.y_expand = true;
-            // At its own height from the top, not stretched while the pager is taller (see `_syncPagerHeight`).
+            // At its own height from the top, not stretched while the pager is taller (see `syncHeight`).
             page.y_align = Clutter.ActorAlign.START;
             page.hide();
             this._pager.add_child(page);
@@ -363,34 +368,53 @@ export const ExpandedView = GObject.registerClass({
         return this._pages[this._index];
     }
 
-    /** The open page's height in CSS px, which the island makes room for below the header. */
+    /** The open page's height, in CSS pixels. */
     get pageHeight() {
         return this.page.pageHeight ?? PAGE_HEIGHT;
     }
 
-    /** Gives every page its height from Settings (`page-heights`); the island follows if the open page's changed. */
+    /** Gives every page its height: Settings → Size's for all (Large: taller, and wider), or a page's own from
+     * Page Height (`page-heights`); each lays itself out for it (see `Page.onPageHeight`). */
     _applyHeights() {
-        const before = this.pageHeight;
+        const base = this._large ? LARGE_PAGE_HEIGHT : PAGE_HEIGHT;
         const heights = this._settings.get_value('page-heights').deep_unpack();
-        for (const page of this._pages)
-            page.pageHeight = heightOf(heights, page.name);
-        this._syncPagerHeight();
-        if (this.pageHeight !== before)
-            this.emit('height-changed');
+        for (const page of this._pages) {
+            page.wide = Boolean(this._large);
+            page.pageHeight = heightOf(heights, page.name, base);
+        }
+        this.syncHeight();
     }
 
-    /** Sizes the pager to the open page, or to `atLeast` (CSS px) while a taller one slides out. */
-    _syncPagerHeight(atLeast = 0) {
-        const height = Math.max(this.pageHeight, atLeast);
-        if (height === this._pagerHeight)
+    /** Large (Settings → Size): wider, and every page without a height of its own taller. */
+    set large(large) {
+        if (large === this._large)
             return;
-        this._pagerHeight = height;
-        this._pagerArea.height = px(height);
+        this._large = large;
+        this._applyHeights();
+        this._syncWidth();
+    }
+
+    get large() {
+        return Boolean(this._large);
+    }
+
+    /** Sizes the pages' area to the open page, telling the island when that is another height: it grows or shrinks
+     * at its bottom, the header where it is. */
+    syncHeight() {
+        const height = this.pageHeight;
+        if (height === this._shownHeight)
+            return;
+        // Shorter: the page sliding out keeps its room until it is gone, as the island shrinks round it.
+        const shrinking = this._shownHeight !== undefined && height < this._shownHeight && this._sliding;
+        this._shownHeight = height;
+        if (!shrinking)
+            this._pagerArea.height = px(height);
+        this.emit('height-changed');
     }
 
     /** The width the island should have: the current page's, and never less than the header needs. */
     get preferredWidth() {
-        return Math.max(this.page.preferredWidth ?? px(EXPANDED_WIDTH), this._headerWidth());
+        return Math.max(this.page.preferredWidth ?? px(this._large ? LARGE_WIDTH : EXPANDED_WIDTH), this._headerWidth());
     }
 
     // The tabs and the status side by side with room between, so they never overlap,
@@ -492,7 +516,6 @@ export const ExpandedView = GObject.registerClass({
             return;
 
         const previous = this.page;
-        const previousHeight = this.pageHeight;
         const direction = index > this._index ? 1 : -1;
         this._index = index;
         const next = this.page;
@@ -503,10 +526,8 @@ export const ExpandedView = GObject.registerClass({
         next.remove_all_transitions();
         next.show();
 
-        const sliding = animate && St.Settings.get().enable_animations;
-        // A taller page sliding out keeps its room until it is gone; the island shrinks around it meanwhile.
-        this._syncPagerHeight(sliding ? previousHeight : 0);
-        if (sliding) {
+        if (animate && St.Settings.get().enable_animations) {
+            this._sliding = true;
             const distance = px(SLIDE_DISTANCE);
             // Whole pixels (see `slideBy`), the fades eased as before.
             slideBy(previous, 'x', previous.translation_x, -direction * distance, {duration: SLIDE_DURATION});
@@ -517,7 +538,6 @@ export const ExpandedView = GObject.registerClass({
                 onStopped: () => {
                     if (previous !== this.page)
                         previous.hide();
-                    this._syncPagerHeight();
                     slideBy(previous, 'x', 0, 0);
                     previous.opacity = 255;
                 },
@@ -528,6 +548,10 @@ export const ExpandedView = GObject.registerClass({
                 opacity: 255,
                 duration: SLIDE_DURATION,
                 mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+                onStopped: () => {
+                    this._sliding = false;
+                    this._pagerArea.height = px(this._shownHeight ?? this.pageHeight);
+                },
                 onComplete: () => this.emit('page-settled'),
             });
         } else {
@@ -540,8 +564,7 @@ export const ExpandedView = GObject.registerClass({
         next.setActive(this._active);
         this._syncPage();
         this._syncWidth();
-        if (this.pageHeight !== previousHeight)
-            this.emit('height-changed');
+        this.syncHeight();
         this.emit('tint-changed');
         this.emit('page-changed');
     }
@@ -590,6 +613,21 @@ export const ExpandedView = GObject.registerClass({
     /** Whether the page just shown was picked by the user, not left for another on its own. */
     get pickedByHand() {
         return !this._automatic;
+    }
+
+    /** The next page with a tab in `direction` (±1), round from the last to the first (Ctrl+Tab). */
+    stepPage(direction) {
+        const index = this._nearestAvailable(this._index, direction) ??
+            this._nearestAvailable(direction > 0 ? -1 : this._pages.length, direction);
+        if (index !== null)
+            this.showPage(index);
+    }
+
+    /** The `n`th tab shown (from 1; Ctrl+1…9): the tabs that come and go (a call's) are counted as they show. */
+    showTab(n) {
+        const index = this._pages.map((page, i) => page.available ? i : -1).filter(i => i >= 0)[n - 1];
+        if (index !== undefined)
+            this.showPage(index);
     }
 
     /** The first page from `index` on in `direction` (±1) that has a tab, or null. */

@@ -12,6 +12,7 @@ import * as Signals from 'resource:///org/gnome/shell/misc/signals.js';
 
 import {clutterBackend, uiScale} from './compat.js';
 import {normalized, restyle} from './panelStyle.js';
+import {sendSuperV, watchRecorder} from './shortcutRecorder.js';
 
 // The bar's colour (glass 0% to black 100%) is a declaration in its inline style, which other extensions write
 // too: Isle edits only its own (panelStyle.js) and puts it back if another extension takes it out.
@@ -27,6 +28,8 @@ const GLASS_BAR_CLASS = 'isle-glass-bar';
 const COMPACT_BAR_CLASS = 'isle-compact-bar';
 /** Style class making the top bar as tall as the closed island. */
 const NOTCH_BAR_CLASS = 'isle-notch-bar';
+/** Style class making the top bar taller round a pill inside it, as tall as a notched display's (see stylesheet.css). */
+const PILL_BAR_CLASS = 'isle-pill-bar';
 /** The space left below the island inside the bar (Settings): the island is this much shorter, the bar
  * keeps its height, so its other buttons stay centred (#14). */
 const GAP_PX = 4;
@@ -38,15 +41,16 @@ export const REACH_PX = 5;
 const WINDOW_SETTLE_MS = 400;
 
 // Restyles the top bar around the island (black or glass) and hides the clock and its calendar menu.
-// Signals: `height-changed`, `style-changed` (`blendsIn` may have changed), `calendar-requested` (Super+V).
+// Signals: `height-changed`, `style-changed` (`blendsIn` may have changed), `calendar-requested` (Super+V, with
+// the island's page to open: 'clipboard', 'calendar', or null for its usual one).
 export class TopBar extends Signals.EventEmitter {
-    /** Hides the clock at once; Super+V comes to Isle unless Settings leaves it to GNOME. */
+    /** Hides the clock at once; Super+V comes to Isle, which opens what Settings say. */
     constructor(settings) {
         super();
         this._settings = settings;
         /** Every declaration Isle has put in the bar's style, normalized: to tell them from another's. */
         this._own = new Set();
-        this._toggle = () => this.emit('calendar-requested');
+        this._toggle = () => this._onToggle();
         this._dateMenu = Main.panel.statusArea.dateMenu;
         this._dateMenu.opacity = 0;
         this._dateMenu.reactive = false;
@@ -64,6 +68,7 @@ export class TopBar extends Signals.EventEmitter {
             settings.connect('changed::compact-top-bar', () => this._applyStyle()),
             settings.connect('changed::top-bar-black-with-windows', () => this._syncWindowWatch()),
             settings.connect('changed::island-in-top-bar', () => this._applyStyle()),
+            settings.connect('changed::island-shape', () => this._applyStyle()),
             // The bar keeps its height: the island is laid out again for its own.
             settings.connect('changed::notch-gap', () => {
                 const gap = this._gap;
@@ -72,6 +77,9 @@ export class TopBar extends Signals.EventEmitter {
                     this.emit('height-changed');
             }),
         ];
+        // Another extension may move the bar off the top (to the bottom of the screen, say): the island then
+        // hangs from the main display's top edge, as on any other display, and the bar is left as that one has it.
+        this._atTop = this._isAtTop();
         this._applyStyle();
         this._styleChanged = Main.panel.connect('notify::style', () => this._onPanelStyle());
         this._windowWatch = [];
@@ -84,16 +92,42 @@ export class TopBar extends Signals.EventEmitter {
             this._dragGesture.required_button = PRIMARY_BUTTON;
 
         this._heightChanged = Main.panel.connect('notify::height', () => this.emit('height-changed'));
+        const panelBox = Main.layoutManager.panelBox;
+        this._barMoved = ['notify::x', 'notify::y'].map(signal => panelBox.connect(signal, () => this._onBarMoved()));
 
-        // The calendar shortcut opens the island instead, and the hidden clock's menu is closed again
-        // should anything else open it; unless Super+V is left to GNOME (Settings).
-        this._superVChanged = settings.connect('changed::super-v', () => this._syncCalendar());
-        this._pagesChanged = settings.connect('changed::hidden-pages', () => this._syncCalendar());
-        this._syncCalendar();
+        // GNOME's calendar shortcut (Super+V, Super+M) always opens the island, on the page Settings say (`superV`);
+        // it used to fall to GNOME's menu, which never opened for the hidden clock (#50). No shortcut of Isle's own,
+        // nothing in GNOME's settings. The hidden clock's menu is closed again should anything else open it.
+        this._takeToggle();
+        // While Settings waits for a shortcut, Super+V goes to it (GNOME's grab keeps it from the window itself).
+        this._recording = false;
+        this._unwatchRecorder = watchRecorder(waiting => (this._recording = waiting));
         this._menuChanged = this._dateMenu.menu.connect('open-state-changed', (menu, open) => {
-            if (open && !this._clockShown && this._superVIsIsle)
+            if (open && !this._clockShown)
                 menu.close();
         });
+    }
+
+    /** Whether the bar runs along the top of `monitor`: the main display's, unless another extension moved it. */
+    isOn(monitor) {
+        return Boolean(monitor) && monitor === Main.layoutManager.primaryMonitor && this._isAtTop();
+    }
+
+    /** Where GNOME puts it, or above, slid out of sight (Hide Top Bar): in the main display's upper half. */
+    _isAtTop() {
+        const monitor = Main.layoutManager.primaryMonitor;
+        const {x, y} = Main.layoutManager.panelBox;
+        return !monitor || (y < monitor.y + monitor.height / 2 && x >= monitor.x && x < monitor.x + monitor.width);
+    }
+
+    /** Tells the island once the bar comes to the top or leaves it, not as it slides. */
+    _onBarMoved() {
+        const atTop = this._isAtTop();
+        if (atTop === this._atTop)
+            return;
+        this._atTop = atTop;
+        this._applyStyle();
+        this.emit('moved');
     }
 
     /** In stage pixels; it changes with the compact and notch styles. */
@@ -106,20 +140,38 @@ export class TopBar extends Signals.EventEmitter {
         return this._gap * uiScale();
     }
 
-    /** Super+V opens Isle's clipboard, unless left to GNOME or the Shelf page is left out. */
-    get _superVIsIsle() {
-        return this._settings.get_string('super-v') === 'isle' && !this._settings.get_strv('hidden-pages').includes('shelf');
+    /** The island's page Super+V opens: 'clipboard' or 'calendar' (Settings; 'gnome', from before, reads as the
+     * calendar), the other one if that page is left out of the island, null with both left out (its usual page), or
+     * 'none' when Settings took Super+V off. */
+    get superV() {
+        const setting = this._settings.get_string('super-v');
+        if (setting === 'none')
+            return 'none';
+        const hidden = this._settings.get_strv('hidden-pages');
+        const pages = {clipboard: !hidden.includes('shelf'), calendar: !hidden.includes('calendar')};
+        const wanted = setting === 'isle' ? 'clipboard' : 'calendar';
+        const other = wanted === 'clipboard' ? 'calendar' : 'clipboard';
+        return pages[wanted] ? wanted : pages[other] ? other : null;
     }
 
-    /** Takes the calendar shortcut over, or gives it back, as the settings now say. */
-    _syncCalendar() {
-        if (!this._superVIsIsle) {
-            this._restoreToggle();
-        } else if (Main.panel.toggleCalendar !== this._toggle) {
-            // Another extension's own, put back when Isle stops (GNOME's is the prototype's).
-            this._priorToggle = Object.hasOwn(Main.panel, 'toggleCalendar') ? Main.panel.toggleCalendar : null;
-            Main.panel.toggleCalendar = this._toggle;
+    /** Takes the calendar shortcut, once: what it opens is looked up as it is pressed (`superV`). */
+    _takeToggle() {
+        if (Main.panel.toggleCalendar === this._toggle)
+            return;
+        // Another extension's own, put back when Isle stops (GNOME's is the prototype's).
+        this._priorToggle = Object.hasOwn(Main.panel, 'toggleCalendar') ? Main.panel.toggleCalendar : null;
+        Main.panel.toggleCalendar = this._toggle;
+    }
+
+    /** Super+V: the island, on the page Settings say; nothing with Super+V taken off (Island → Shortcuts). */
+    _onToggle() {
+        if (this._recording) {
+            sendSuperV();
+            return;
         }
+        const page = this.superV;
+        if (page !== 'none')
+            this.emit('calendar-requested', page);
     }
 
     /** Undoes Isle's toggleCalendar, unless another extension has set its own since. */
@@ -213,23 +265,32 @@ export class TopBar extends Signals.EventEmitter {
         this._dateMenu.reactive = shown;
         if (shown)
             this._dateMenu.set_width(-1);
-        else if (this._superVIsIsle)
+        else
             this._dateMenu.menu.close();
     }
 
-    /** Colour and style classes from the settings; remembers `blendsIn` to spot a change. */
+    /** Colour and style classes from the settings; remembers `blendsIn` to spot a change. Off the top, none:
+     * the bar there is another extension's to style, and Isle's colour and height would set it apart from
+     * that extension's bars on the other displays. */
     _applyStyle() {
         this._blended = this.blendsIn;
         this._syncColor();
         const inBar = this._settings.get_boolean('island-in-top-bar');
         this._gap = inBar && this._settings.get_boolean('notch-gap') ? GAP_PX : 0;
+        const styled = this._atTop;
         // The bar's height changes with these; `height-changed` re-lays out the island.
         setStyleClasses(Main.panel, {
-            [BAR_CLASS]: true,
-            [COMPACT_BAR_CLASS]: this._settings.get_boolean('compact-top-bar'),
-            [NOTCH_BAR_CLASS]: inBar,
-            [GLASS_BAR_CLASS]: this.opacity < SHADOW_BELOW,
+            [BAR_CLASS]: styled,
+            [COMPACT_BAR_CLASS]: styled && this._settings.get_boolean('compact-top-bar'),
+            [NOTCH_BAR_CLASS]: styled && inBar,
+            [PILL_BAR_CLASS]: styled && inBar && this._settings.get_string('island-shape') === 'pill',
+            [GLASS_BAR_CLASS]: styled && this.opacity < SHADOW_BELOW,
         });
+    }
+
+    /** The bar's opacity in % as Isle colours it; null off the top, where Isle leaves it the theme's. */
+    get _color() {
+        return this._atTop ? this._shownOpacity : null;
     }
 
     // Another extension that sets the bar's style too would undo Isle's rule each time Isle set it, in a
@@ -260,7 +321,7 @@ export class TopBar extends Signals.EventEmitter {
 
     /** The bar's style with Isle's colour at `opacity`, the rest of it left alone: the current one itself when
      * Isle's colour is already in effect there. */
-    _wantedStyle(opacity = this._shownOpacity) {
+    _wantedStyle(opacity = this._color) {
         const rule = this._barRule(opacity);
         if (rule)
             this._own.add(normalized(rule));
@@ -268,7 +329,7 @@ export class TopBar extends Signals.EventEmitter {
     }
 
     /** Sets Isle's colour, leaving the rest of the style alone; writes nothing when it is in effect already. */
-    _syncColor(opacity = this._shownOpacity) {
+    _syncColor(opacity = this._color) {
         const wanted = this._wantedStyle(opacity);
         if (wanted === Main.panel.get_style())
             return;
@@ -289,17 +350,18 @@ export class TopBar extends Signals.EventEmitter {
         Main.panel.disconnect(this._heightChanged);
         Main.panel.disconnect(this._styleChanged);
         this._unwatchWindows();
+        this._barMoved.forEach(id => Main.layoutManager.panelBox.disconnect(id));
         if (this._dragButtonWas === 0 && this._dragGesture.required_button === PRIMARY_BUTTON)
             this._dragGesture.required_button = 0;
         this._dateMenu.menu.disconnect(this._menuChanged);
-        this._settings.disconnect(this._superVChanged);
-        this._settings.disconnect(this._pagesChanged);
         this._restoreToggle();
+        this._unwatchRecorder();
 
         // No colour of Isle's: the theme's again.
         this._syncColor(null);
         setStyleClasses(Main.panel, {
-            [BAR_CLASS]: false, [COMPACT_BAR_CLASS]: false, [NOTCH_BAR_CLASS]: false, [GLASS_BAR_CLASS]: false,
+            [BAR_CLASS]: false, [COMPACT_BAR_CLASS]: false, [NOTCH_BAR_CLASS]: false, [PILL_BAR_CLASS]: false,
+            [GLASS_BAR_CLASS]: false,
         });
         this._dateMenu.set_width(-1);
         this._dateMenu.opacity = 255;

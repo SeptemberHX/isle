@@ -37,6 +37,8 @@ export const Page = GObject.registerClass({
         if (height !== undefined)
             onUiScale(this, scale => (this.height = this._pageHeight * scale));
         this.daemon = daemon;
+        /** Settings → Size is Large: the island is wider (see `Expanded.large`). */
+        this.wide = false;
         this._active = false;
         this._timeouts = new Map();
         /** Timeouts that outlive the page going off screen (see `later`'s `keep`). */
@@ -47,18 +49,22 @@ export const Page = GObject.registerClass({
         this.connect('destroy', () => this._onPageDestroy());
     }
 
-    /** The page's height in CSS pixels (see `px`), as given or as last set. */
+    /** Its height in CSS pixels: the island's size (Settings → Size), or the page's own (Settings → Page Height). */
     get pageHeight() {
         return this._pageHeight;
     }
 
-    /** Another height, from Settings; the island fits it the next time it is laid out. */
+    /** Another height (Settings → Size or Page Height): laid out for it, and the island fits it next time. */
     set pageHeight(height) {
         if (height === this._pageHeight)
             return;
         this._pageHeight = height;
         this.height = height * uiScale();
+        this.onPageHeight(height);
     }
+
+    /** For a page laid out by its height (a cover, a ring, the calendar's month): it changed. */
+    onPageHeight(_height) {}
 
     /** Pages only animate and poll while they are on screen. */
     setActive(active) {
