@@ -41,6 +41,23 @@ All notable changes to Isle are listed here. The format follows
 
 - Glass: the open island's sides no longer run up through its shoulders as a line with a lit edge; up there the
   edge is the shoulder's curve, and the glass bends and glows along it.
+- The one-line install stopped at the first time GitHub timed out ("curl: (22) The requested URL returned error:
+  504", then "the download failed"). It now asks again a few times when GitHub times out or is busy for a moment,
+  and still gives up at once when GitHub says to come back much later. An update from Settings runs the new
+  version's own installer, so updates get this from the next version on.
+
+## [1.7.1] - 2026-11-07
+
+With more than one display, the brightness shows in the island instead of a flickering popup. To update:
+click Update on the new-version alert (or Settings → About → Update), then log out and back in.
+
+### Fixed
+
+- With more than one display, changing the brightness while the pointer was on another display showed GNOME's own
+  brightness popup on the island's display, flickering as GNOME showed and took it back display after display. The
+  brightness of the island's own display (a laptop's screen) shows in the island, wherever the pointer is;
+  another display's brightness shows in GNOME's popup on that display. The volume is as before: with
+  the pointer on another display, GNOME's popup shows on every display. (#51) Thanks to @Hazem-Samir.
 
 ## [1.7.0] - 2026-11-06
 
@@ -1772,7 +1789,8 @@ The first release.
   dark, vivid ones bright.
 - Text is at least 12 px throughout.
 
-[Unreleased]: https://github.com/zickrian/isle/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/zickrian/isle/compare/v1.7.1...HEAD
+[1.7.1]: https://github.com/zickrian/isle/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/zickrian/isle/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/zickrian/isle/compare/v1.5.3...v1.6.0
 [1.5.3]: https://github.com/zickrian/isle/compare/v1.5.2...v1.5.3
