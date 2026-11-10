@@ -496,6 +496,8 @@ export function agent(event, show) {
         // It waits on the user: it stays until they are there to see it.
         sticky: waiting,
         action: show ? {label: _('Show'), callback: show} : null,
+        // A click anywhere on it, as on Show.
+        onActivate: show ?? undefined,
     };
 }
 
@@ -639,6 +641,8 @@ export function agentDone(event, look, show) {
             ...show ? [{label: _('Open terminal'), callback: show}] : [],
             {label: _('OK'), primary: true, callback: () => {}},
         ],
+        // A click anywhere on it, as on Open terminal.
+        onActivate: show ?? undefined,
         duration: REMINDER_DURATION,
     };
 }

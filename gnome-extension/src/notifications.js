@@ -5,6 +5,7 @@
 // banners and emits `banner` by GNOME's rules; Do Not Disturb is GNOME's own "show banners" setting.
 
 import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
@@ -13,6 +14,16 @@ import * as Signals from 'resource:///org/gnome/shell/misc/signals.js';
 /** GNOME's calendar reminders, whose window Isle's own event alerts stand in for: Evolution's, and since
  * GNOME 51 the shell's calendar server's own, with the same ids. */
 const CALENDAR_REMINDERS = ['org.gnome.Evolution-alarm-notify', 'org.gnome.Shell.CalendarServer'];
+
+/** Ghostty, and the title of the notification an agent's hook has its tab post for Isle (isled's hook.rs
+ * `mark_tab`): its body the agent's session, its default action the tab's own `present-surface`. */
+const GHOSTTY = 'com.mitchellh.ghostty';
+const TAB_MARK = 'isle-agent-tab';
+/** The agent sessions whose Ghostty tab is known, at most. */
+const MAX_TABS = 64;
+
+/** `source`'s app id, without `.desktop`. */
+const appOf = source => source.policy?.id ?? source.app?.get_id?.()?.replace(/\.desktop$/, '');
 
 /** Whether `notification` is unread: it came or changed since the Notifications page was last opened. GNOME's
  * own `acknowledged` only says its banner was shown; an alert that came and went leaves it unread. Kept on the
@@ -29,6 +40,8 @@ export class NotificationCenter extends Signals.EventEmitter {
         super();
         this._tray = Main.messageTray;
         this._sources = new Map();
+        /** Each agent session's Ghostty tab, as `present-surface`'s target (see `_takesTab`). */
+        this._tabs = new Map();
 
         this._settings = new Gio.Settings({schema_id: 'org.gnome.desktop.notifications'});
         this._settingsChanged = this._settings.connect('changed::show-banners', () => this.emit('dnd-changed'));
@@ -153,7 +166,7 @@ export class NotificationCenter extends Signals.EventEmitter {
             return;
         const ids = [
             source.connect('notification-added', (_source, notification) => {
-                if (this._standsInFor(source, notification)) {
+                if (this._takesTab(source, notification) || this._standsInFor(source, notification)) {
                     // Once GNOME queued its banner, which this takes back too.
                     Promise.resolve().then(() => notification.destroy(MessageTray.NotificationDestroyedReason.EXPIRED));
                     return;
@@ -164,7 +177,7 @@ export class NotificationCenter extends Signals.EventEmitter {
             }),
             source.connect('notification-removed', () => this.emit('changed')),
             source.connect('notification-request-banner', (_source, notification) => {
-                if (!this._standsInFor(source, notification))
+                if (!this._isTabMark(source, notification) && !this._standsInFor(source, notification))
                     this._onBannerRequest(notification);
             }),
         ];
@@ -173,11 +186,48 @@ export class NotificationCenter extends Signals.EventEmitter {
         this.emit('changed');
     }
 
+    /** Whether `notification` is an agent's Ghostty tab saying where it is, for Isle only. */
+    _isTabMark(source, notification) {
+        return appOf(source) === GHOSTTY && notification.title === TAB_MARK;
+    }
+
+    /** An agent's Ghostty tab saying where it is: kept by its session (the body), and taken away (true). Its
+     * target is GNOME's own field: a GNOME without it keeps none, and the alert goes to the window alone. */
+    _takesTab(source, notification) {
+        if (!this._isTabMark(source, notification))
+            return false;
+        const session = String(notification.body ?? '');
+        const target = notification._defaultAction === 'app.present-surface' ? notification._defaultActionTarget : null;
+        if (session && target instanceof GLib.Variant) {
+            this._tabs.delete(session);
+            this._tabs.set(session, target);
+            if (this._tabs.size > MAX_TABS)
+                this._tabs.delete(this._tabs.keys().next().value);
+        }
+        return true;
+    }
+
+    /** Whether agent `session`'s Ghostty tab is known. */
+    hasTab(session) {
+        return Boolean(session) && this._tabs.has(session);
+    }
+
+    /** Brings agent `session`'s Ghostty tab to the front; false when its tab isn't known. */
+    presentTab(session) {
+        const target = session ? this._tabs.get(session) : null;
+        if (!target)
+            return false;
+        Gio.DBus.session.call(GHOSTTY, '/com/mitchellh/ghostty', 'org.gtk.Actions', 'Activate',
+            new GLib.Variant('(sava{sv})', ['present-surface', [target], {}]),
+            null, Gio.DBusCallFlags.NO_AUTO_START, 1000, null, null);
+        return true;
+    }
+
     /** Whether `notification` is a calendar reminder Isle's own event alert stands in for: clicked, they
      * opened a window of their own, and came on top of Isle's, which has the meeting's Join. Under Do Not
      * Disturb Isle alerts of nothing, so the reminder stays; see `CalendarPage.remindsOf` for which others. */
     _standsInFor(source, notification) {
-        const app = source.policy?.id ?? source.app?.get_id?.()?.replace(/\.desktop$/, '');
+        const app = appOf(source);
         if (!CALENDAR_REMINDERS.includes(app) || !this._isleSettings.get_boolean('event-alerts') || this.dnd)
             return false;
         // Their id: the calendar, the event, its recurrence (if any) and the alarm's time, a line each.

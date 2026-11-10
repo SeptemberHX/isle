@@ -534,6 +534,12 @@ impl AgentsService {
         Ok(decision)
     }
 
+    /// Whether the island said it is there (see `SetPresent`): a hook then marks the agent's Ghostty tab for it
+    /// (hook.rs `mark_tab`), which nothing else would take back from GNOME's notifications.
+    fn present(&self) -> bool {
+        matches!(self.asks().island, Island::There(_))
+    }
+
     /// Whether the island is there to answer asks: the extension says so as it starts, and not as it goes
     /// (Isle turned off, the screen locked). GNOME Shell's only.
     async fn set_present(

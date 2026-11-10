@@ -42,6 +42,11 @@ pub async fn run(args: &[String]) {
         }
     };
     let Some(payload) = payload else { return };
+    if matches!(ai, Some("claude" | "grok"))
+        && let Some(session) = payload["session_id"].as_str()
+    {
+        let _ = tokio::time::timeout(TIMEOUT, mark_tab(session)).await;
+    }
     if payload["hook_event_name"] == "PermissionRequest" {
         let Some(request) = request(ai.unwrap_or_default(), &payload) else {
             return;
@@ -68,6 +73,65 @@ pub async fn run(args: &[String]) {
     if let Some(event) = event {
         let _ = tokio::time::timeout(TIMEOUT, send(&event)).await;
     }
+}
+
+/// What Ghostty's notifications carry for Isle: this title, and the session as their body.
+const TAB_MARK: &str = "isle-agent-tab";
+
+/// In Ghostty, has the agent's own tab post a notification naming `session` (OSC 777, written to its
+/// terminal): Ghostty gives it the tab's id, Isle keeps that and takes the notification away, and a click on
+/// the agent's alert goes to that tab, not only to Ghostty's window. Only while the island is there to take
+/// it away (an older isled, never: it has no `Present`).
+async fn mark_tab(session: &str) {
+    if std::env::var("TERM_PROGRAM").as_deref() != Ok("ghostty") || !plain_id(session) {
+        return;
+    }
+    let Some(tty) = ancestors().into_iter().find_map(terminal_of) else {
+        return;
+    };
+    if !island_present().await.unwrap_or(false) {
+        return;
+    }
+    // One write, so it never lands inside another sequence the agent is drawing.
+    let sequence = format!("\x1b]777;notify;{TAB_MARK};{session}\x07");
+    if let Ok(mut terminal) = std::fs::OpenOptions::new().write(true).open(&tty) {
+        use std::io::Write;
+        let _ = terminal.write_all(sequence.as_bytes());
+    }
+}
+
+/// A session id that can go in a terminal sequence as it is.
+fn plain_id(id: &str) -> bool {
+    !id.is_empty()
+        && id.len() <= 100
+        && id
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || "-_.".contains(c))
+}
+
+/// The terminal process `pid` runs in (its standard input, output or error, if one is a pseudo-terminal).
+fn terminal_of(pid: u32) -> Option<PathBuf> {
+    (0..3).find_map(|fd| {
+        std::fs::read_link(format!("/proc/{pid}/fd/{fd}"))
+            .ok()
+            .filter(|path| path.starts_with("/dev/pts/"))
+    })
+}
+
+/// Whether isled says the island is there; never starts isled.
+async fn island_present() -> zbus::Result<bool> {
+    let bus = zbus::Connection::session().await?;
+    let proxy: zbus::Proxy = zbus::proxy::Builder::new(&bus)
+        .destination(crate::BUS_NAME)?
+        .path(crate::OBJECT_PATH)?
+        .interface("io.github.zickrian.isle.Agents1")?
+        .cache_properties(CacheProperties::No)
+        .build()
+        .await?;
+    proxy
+        .call_with_flags::<_, _, bool>("Present", MethodFlags::NoAutoStart.into(), &())
+        .await?
+        .ok_or_else(|| zbus::Error::Failure("no answer".into()))
 }
 
 /// What the island shows of a permission: the tool, and what it would run or touch.
@@ -471,6 +535,15 @@ fn parent_of(stat: &str) -> Option<u32> {
 #[cfg(test)]
 mod tests {
     use serde_json::json;
+
+    #[test]
+    fn only_plain_session_ids_go_in_a_terminal_sequence() {
+        assert!(plain_id("0f6c2a1e-6b1d-4c3e-9a77-2f1c0d9e8b4a"));
+        assert!(!plain_id(""));
+        assert!(!plain_id("a;b"));
+        assert!(!plain_id("a\x07b"));
+        assert!(!plain_id(&"a".repeat(101)));
+    }
 
     #[test]
     fn shows_a_tools_input_readably() {

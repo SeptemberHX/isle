@@ -1350,8 +1350,21 @@ export class Controller {
         const window = this._agentWindow(event);
         if (window && window === global.display.focus_window)
             return;
-        const show = window ? () => Main.activateWindow(window) : null;
+        const show = this._agentShow(event, window);
         this._post(event.kind === 'done' ? Alerts.agentDone(event, this._botLook, show) : Alerts.agent(event, show));
+    }
+
+    /** Brings the agent of `event` (or of a request) to the front: its Ghostty tab, if known, and `window`;
+     * null with neither. */
+    _agentShow(event, window) {
+        const session = event.session;
+        if (!window && !this._notifications.hasTab(session))
+            return null;
+        return () => {
+            this._notifications.presentTab(session);
+            if (window)
+                Main.activateWindow(window);
+        };
     }
 
     /** The window (a terminal, VS Code) the agent runs in: one of the hook's parent processes (`pids`), else the
@@ -3025,6 +3038,14 @@ export class Controller {
         // Put away unanswered: the terminal asks instead.
         alert.onDismissed = pass;
         alert.agentWindow = window;
+        // A click on it, not on a button: to the agent's window, which asks there instead.
+        const show = this._agentShow(request, window);
+        if (show) {
+            alert.onActivate = () => {
+                pass();
+                show();
+            };
+        }
         return this._post(alert);
     }
 

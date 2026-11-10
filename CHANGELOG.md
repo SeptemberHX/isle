@@ -26,8 +26,14 @@ All notable changes to Isle are listed here. The format follows
 - Notification buttons that turn something down are also known in Russian ("Отклонить"), so they are never
   the one shown to press.
 
+- **Claude Code's alerts go to its Ghostty tab.** Clicking Show (or Open terminal) on an alert from Claude Code
+  running in Ghostty brings up the very tab it runs in, not only Ghostty's window: its hook has the tab post a
+  notification Isle takes its id from and takes away again, so none shows.
+
 ### Changed
 
+- **Click an agent's alert to go to it.** A click anywhere on an alert from Claude Code, Codex or Grok, not
+  only on Show, brings its terminal up; on an ask, the terminal then asks instead.
 - **Unread notifications show on the closed island.** A bell with a red dot, left of the clock, or on the
   right in place of the music bars while a song plays; with both sides taken, a red dot on the left sign. A
   notification stays unread until you open the Notifications page, even after its alert has gone (before, an
