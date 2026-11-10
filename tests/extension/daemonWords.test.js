@@ -10,7 +10,7 @@ import {dirname, join, resolve} from 'node:path';
 import {test} from 'node:test';
 import {fileURLToPath} from 'node:url';
 
-import {ALL, windowName, words} from '../../gnome-extension/src/daemonWords.js';
+import {ALL, deviceName, windowName, words} from '../../gnome-extension/src/daemonWords.js';
 import {setTranslations} from '../../gnome-extension/src/i18n.js';
 
 const crates = resolve(dirname(fileURLToPath(import.meta.url)), '../../crates');
@@ -31,7 +31,7 @@ const inRust = text => new RegExp(text.split(/\{\w+\}/).map(part => part.replace
 const COMPOSED = {
     'Searching your files for “{term}”…': ['Searching {place} for “{term}”…', 'your files'],
     'Searching your files…': ['Searching {place}…', 'your files'],
-    'Reading a page…': ['Reading {name}…', 'a page'],
+    'Reading a page…': ['Reading {file}…', 'a page'],
 };
 
 test('each of isled\'s texts is still in its code as the island knows it', () => {
@@ -68,9 +68,17 @@ test('a text is found with its blanks, the most particular first, and only isled
         assert.equal(asked.at(-1), 'Reading the system log…');
         assert.equal(words('Codex took too long to start'), '[Codex took too long to start]');
         assert.equal(asked.at(-1), '{name} took too long to start');
+        // A file or a site read, and every AI isled names.
+        words('Reading notes.txt…');
+        assert.equal(asked.at(-1), 'Reading {file}…');
+        words('Sign in to opencode');
+        assert.equal(asked.at(-1), 'Sign in to {name}');
         assert.equal(words('30 days'), '[30 days]');
         assert.equal(words('1 days'), '[1 day]');
         assert.equal(windowName('Week · Opus'), '[Week] · Opus');
+        // A device's own name is never one of isled's words.
+        assert.equal(deviceName('Bluetooth device'), '[Bluetooth device]');
+        assert.equal(deviceName('Week'), 'Week');
         // {name} is only an AI isled names: anything else that starts so is someone's own words.
         const before = asked.length;
         assert.equal(words('Update the system'), 'Update the system');

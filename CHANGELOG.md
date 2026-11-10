@@ -33,7 +33,7 @@ All notable changes to Isle are listed here. The format follows
 ### Changed
 
 - **Click an agent's alert to go to it.** A click anywhere on an alert from Claude Code, Codex or Grok, not
-  only on Show, brings its terminal up; on an ask, the terminal then asks instead.
+  only on Show, brings its terminal up. An ask keeps its buttons alone: a click beside Allow answers nothing.
 - **Unread notifications show on the closed island.** A bell with a red dot, left of the clock, or on the
   right in place of the music bars while a song plays; with both sides taken, a red dot on the left sign. A
   notification stays unread until you open the Notifications page, even after its alert has gone (before, an
@@ -45,6 +45,9 @@ All notable changes to Isle are listed here. The format follows
 
 ### Fixed
 
+- Translations: the assistant's "Reading notes.txt…" step and opencode's errors and hints are translated too; an
+  AI's own answer and a Bluetooth device's own name are never taken for Isle's words and reworded; and a
+  notification's 拒绝 or 取消 is known as turning something down, like Decline and Cancel.
 - Glass: the open island's sides no longer run up through its shoulders as a line with a lit edge; up there the
   edge is the shoulder's curve, and the glass bends and glows along it.
 - The one-line install stopped at the first time GitHub timed out ("curl: (22) The requested URL returned error:

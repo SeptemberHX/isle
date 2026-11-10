@@ -2697,8 +2697,8 @@ msgstr "正在阅读网页…"
 
 #: gnome-extension/src/daemonWords.js:33
 #, no-javascript-format
-msgid "Reading {name}…"
-msgstr "正在读取 {name}…"
+msgid "Reading {file}…"
+msgstr "正在读取 {file}…"
 
 #: gnome-extension/src/daemonWords.js:34
 #, no-javascript-format

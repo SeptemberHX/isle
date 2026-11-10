@@ -2689,7 +2689,7 @@ msgstr ""
 
 #: gnome-extension/src/daemonWords.js:33
 #, no-javascript-format
-msgid "Reading {name}…"
+msgid "Reading {file}…"
 msgstr ""
 
 #: gnome-extension/src/daemonWords.js:34

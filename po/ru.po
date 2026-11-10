@@ -2771,8 +2771,8 @@ msgstr "Читаю страницу…"
 
 #: gnome-extension/src/daemonWords.js:33
 #, no-javascript-format
-msgid "Reading {name}…"
-msgstr "Читаю {name}…"
+msgid "Reading {file}…"
+msgstr "Читаю {file}…"
 
 #: gnome-extension/src/daemonWords.js:34
 #, no-javascript-format

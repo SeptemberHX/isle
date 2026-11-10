@@ -16,6 +16,7 @@ import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 
 import {namesProject} from './actionRules.js';
 import * as Alerts from './alerts.js';
+import {words} from './daemonWords.js';
 import {AppUsage} from './appUsage.js';
 import {paletteFor} from './bot.js';
 import {ClipboardHistory} from './clipboard.js';
@@ -673,7 +674,7 @@ export class Controller {
         daemon.connect('model-switched', (_daemon, provider, plan, picked, used) =>
             this._post(Alerts.modelSwitched(provider, plan, picked, used)));
         daemon.connect('assistant-notice', (_daemon, text, ok) =>
-            this._post(Alerts.assistant(ok ? {phase: 'reply', reply: text} : {phase: 'error', error: text},
+            this._post(Alerts.assistant(ok ? {phase: 'reply', reply: words(text)} : {phase: 'error', error: text},
                 () => this._openVoice({typing: true}))));
         this._expanded.pageNamed('calendar').connect('event-soon', (_page, json) => this._onEventSoon(JSON.parse(json)));
         daemon.connect('changed', (_daemon, key) => {
@@ -1354,15 +1355,17 @@ export class Controller {
         this._post(event.kind === 'done' ? Alerts.agentDone(event, this._botLook, show) : Alerts.agent(event, show));
     }
 
-    /** Brings the agent of `event` (or of a request) to the front: its Ghostty tab, if known, and `window`;
-     * null with neither. */
+    /** Brings the agent of `event` to the front: its Ghostty tab, if known (its hook tells it just before the
+     * event), else `window`. With a tab, only a window of the agent's own process is raised besides: one found
+     * by its title alone may be another app's, and would come on top of Ghostty's. Null with nothing to try. */
     _agentShow(event, window) {
         const session = event.session;
         if (!window && !this._notifications.hasTab(session))
             return null;
+        const own = window && (event.pids ?? []).includes(window.get_pid());
         return () => {
-            this._notifications.presentTab(session);
-            if (window)
+            const tab = this._notifications.presentTab(session);
+            if (window && (own || !tab))
                 Main.activateWindow(window);
         };
     }
@@ -3038,14 +3041,6 @@ export class Controller {
         // Put away unanswered: the terminal asks instead.
         alert.onDismissed = pass;
         alert.agentWindow = window;
-        // A click on it, not on a button: to the agent's window, which asks there instead.
-        const show = this._agentShow(request, window);
-        if (show) {
-            alert.onActivate = () => {
-                pass();
-                show();
-            };
-        }
         return this._post(alert);
     }
 

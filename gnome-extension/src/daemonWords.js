@@ -30,7 +30,7 @@ const WORDS = [
     N_('Checking this computer…'),
     N_('Reading the system log…'),
     N_('Reading a page…'),
-    N_('Reading {name}…'),
+    N_('Reading {file}…'),
     N_('Run a command'),
     // How a command the assistant ran ended, told once it does (assistant/mod.rs); {why} is the AI's own words.
     N_('{why}: done.'),
@@ -109,7 +109,7 @@ const NO_SHORTCUT = [
 /** What a blank holds: {name} is one of the AIs isled names (brain.rs and agents/mod.rs `name`), {count} a
  * number; any other, at least a character, as few as fit. So "Update {name}" is never an AI's "Update the
  * system". */
-const BLANKS = {name: '(Antigravity|Claude Code|Codex|Grok)', count: '(\\d+)'};
+const BLANKS = {name: '(Antigravity|Claude Code|Codex|Grok|opencode)', count: '(\\d+)'};
 
 let known = null;
 
@@ -147,6 +147,12 @@ export function words(text) {
         return Array.isArray(entry) ? ngettext(entry[0], entry[1], Number(values.count), values) : _(entry, values);
     }
     return text;
+}
+
+/** A Bluetooth device's name as isled gives it: its own as it is (one may be called "Week"), isled's word for
+ * one with none translated. */
+export function deviceName(name) {
+    return name === 'Bluetooth device' ? _(name) : name ?? '';
 }
 
 /** A limit window's name as isled gives it ("Week · Opus"): its span translated, a model's name as it is. */

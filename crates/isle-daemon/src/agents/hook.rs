@@ -78,26 +78,71 @@ pub async fn run(args: &[String]) {
 /// What Ghostty's notifications carry for Isle: this title, and the session as their body.
 const TAB_MARK: &str = "isle-agent-tab";
 
+/// A tab marked this recently is not marked again: the island keeps what it learnt (see notifications.js).
+const MARK_AGAIN: Duration = Duration::from_secs(10 * 60);
+/// After a tab's first mark, the event waits this long, so the island knows the tab by the time it shows.
+const MARK_LEAD: Duration = Duration::from_millis(60);
+
 /// In Ghostty, has the agent's own tab post a notification naming `session` (OSC 777, written to its
 /// terminal): Ghostty gives it the tab's id, Isle keeps that and takes the notification away, and a click on
 /// the agent's alert goes to that tab, not only to Ghostty's window. Only while the island is there to take
-/// it away (an older isled, never: it has no `Present`).
+/// it away (an older isled, never: it has no `Present`), and once in a while for a session, not each event.
 async fn mark_tab(session: &str) {
     if std::env::var("TERM_PROGRAM").as_deref() != Ok("ghostty") || !plain_id(session) {
         return;
     }
-    let Some(tty) = ancestors().into_iter().find_map(terminal_of) else {
+    let Some(tty) = ghostty_terminal(&ancestors()) else {
         return;
     };
+    let Some(marked) = dirs::runtime_dir().map(|dir| dir.join("isle/agent-tabs").join(session))
+    else {
+        return;
+    };
+    let tty_name = tty.to_string_lossy().into_owned();
+    let recent = std::fs::metadata(&marked)
+        .and_then(|file| file.modified())
+        .ok()
+        .and_then(|at| at.elapsed().ok())
+        .is_some_and(|age| age < MARK_AGAIN);
+    if recent && std::fs::read_to_string(&marked).is_ok_and(|was| was == tty_name) {
+        return;
+    }
     if !island_present().await.unwrap_or(false) {
         return;
     }
-    // One write, so it never lands inside another sequence the agent is drawing.
+    // One write, so it is not cut in two by what the agent draws.
     let sequence = format!("\x1b]777;notify;{TAB_MARK};{session}\x07");
-    if let Ok(mut terminal) = std::fs::OpenOptions::new().write(true).open(&tty) {
-        use std::io::Write;
-        let _ = terminal.write_all(sequence.as_bytes());
+    let wrote = std::fs::OpenOptions::new()
+        .write(true)
+        .open(&tty)
+        .and_then(|mut terminal| {
+            use std::io::Write;
+            terminal.write_all(sequence.as_bytes())
+        });
+    if wrote.is_ok() {
+        if let Some(dir) = marked.parent() {
+            let _ = std::fs::create_dir_all(dir);
+        }
+        let _ = std::fs::write(&marked, tty_name);
+        tokio::time::sleep(MARK_LEAD).await;
     }
+}
+
+/// The terminal Ghostty itself gave the agent, from the hook's parents (nearest first): the nearest one's
+/// that has any, if the process Ghostty started holds the same. Inside tmux, zellij or screen there is no
+/// Ghostty above, or another terminal between: `None`, and nothing is written into their panes.
+fn ghostty_terminal(parents: &[u32]) -> Option<PathBuf> {
+    let tty = parents.iter().copied().find_map(terminal_of)?;
+    let ghostty = parents
+        .iter()
+        .position(|&pid| process_name(pid).is_some_and(|name| is_ghostty(&name)))?;
+    let started = *parents.get(ghostty.checked_sub(1)?)?;
+    (terminal_of(started).as_ref() == Some(&tty)).then_some(tty)
+}
+
+/// Ghostty's process, a debug or nightly build too.
+fn is_ghostty(name: &str) -> bool {
+    name == "ghostty" || name.starts_with("ghostty-")
 }
 
 /// A session id that can go in a terminal sequence as it is.
@@ -543,6 +588,16 @@ mod tests {
         assert!(!plain_id("a;b"));
         assert!(!plain_id("a\x07b"));
         assert!(!plain_id(&"a".repeat(101)));
+    }
+
+    #[test]
+    fn a_tab_is_marked_only_in_ghosttys_own_terminal() {
+        assert!(
+            is_ghostty("ghostty") && is_ghostty("ghostty-debug") && !is_ghostty("tmux: server")
+        );
+        // The tests run under no Ghostty this process started a terminal for.
+        assert_eq!(ghostty_terminal(&[]), None);
+        assert_eq!(ghostty_terminal(&[std::process::id()]), None);
     }
 
     #[test]

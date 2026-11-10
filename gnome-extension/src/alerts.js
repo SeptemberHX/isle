@@ -5,7 +5,7 @@
 
 import GLib from 'gi://GLib';
 
-import {words} from './daemonWords.js';
+import {deviceName, words} from './daemonWords.js';
 import * as Format from './format.js';
 import {_, N_, ngettext} from './i18n.js';
 import * as Playback from './playback.js';
@@ -20,7 +20,7 @@ const REMINDER_DURATION = 8000;
 const NOTIFICATION_DURATION = 4000;
 const TRANSIENT_NOTIFICATION_DURATION = 2500;
 /** Buttons that turn something down, never shown as the one to press (the word whole: no letter after it). */
-const DECLINING = /^(decline|reject|deny|dismiss|cancel|ignore|hang up|end call|not now|tolak|abaikan|batal|tutup|отклонить|отказаться|отменить|отмена|закрыть|игнорировать|не сейчас|завершить|сбросить)(?![\p{L}\p{N}_])/iu;
+const DECLINING = /^(decline|reject|deny|dismiss|cancel|ignore|hang up|end call|not now|tolak|abaikan|batal|tutup|отклонить|отказаться|отменить|отмена|закрыть|игнорировать|не сейчас|завершить (?:звонок|вызов)|сбросить|拒绝|拒接|取消|忽略|关闭|挂断|稍后|暂不|以后再说)(?![\p{L}\p{N}_])/iu;
 /** As many of a notification's buttons as GNOME's banner shows. */
 const MAX_NOTIFICATION_BUTTONS = 3;
 /** The longest an answer stays to be read, as the open island gives it (see VOICE_READ_MS in controller.js). */
@@ -169,7 +169,7 @@ export function system(event) {
             key: `bluetooth:${device.path}`,
             icon: deviceIcon(device.icon),
             ring: battery !== null ? battery / 100 : null,
-            title: words(device.name),
+            title: deviceName(device.name),
             subtitle: event.connected ? _('Connected') : _('Disconnected'),
             value: battery !== null ? percentText(battery) : null,
             tone: !event.connected ? 'neutral' : battery !== null && battery <= LOW_BATTERY ? 'bad' : 'good',
@@ -183,7 +183,7 @@ export function system(event) {
             key: `bluetooth:${device.path}`,
             icon: deviceIcon(device.icon),
             ring: device.battery / 100,
-            title: words(device.name),
+            title: deviceName(device.name),
             subtitle: _('Low battery'),
             value: percentText(device.battery),
             tone: 'bad',
@@ -787,7 +787,7 @@ export function notificationsSummary(items) {
  * shows it in full. */
 export function assistant(state, open) {
     const failed = state.phase === 'error';
-    const text = failed ? words(state.error) || _('Something went wrong') : Format.answerPlain(words(state.reply)) || _('Done');
+    const text = failed ? words(state.error) || _('Something went wrong') : Format.answerPlain(state.reply ?? '') || _('Done');
     return {
         key: 'assistant',
         icon: failed ? 'dialog-warning-symbolic' : 'isle-mic-symbolic',

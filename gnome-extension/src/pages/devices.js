@@ -14,7 +14,7 @@ import Pango from 'gi://Pango';
 import St from 'gi://St';
 
 import {VERTICAL, px} from '../compat.js';
-import {words} from '../daemonWords.js';
+import {deviceName} from '../daemonWords.js';
 import {_} from '../i18n.js';
 import {LOW_BATTERY, deviceIcon, icon, label} from '../widgets.js';
 import {Page} from './page.js';
@@ -164,7 +164,7 @@ class DeviceCard extends St.BoxLayout {
     /** Shows `device` ({name, icon, battery}) as it is now; a new level only moves the fill and the number. */
     update(device) {
         this._icon.gicon = icon(deviceIcon(device.icon));
-        this._name.text = words(device.name);
+        this._name.text = deviceName(device.name);
         const percent = device.battery ?? null;
         if (percent === this._percent)
             return;

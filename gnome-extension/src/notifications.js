@@ -15,12 +15,13 @@ import * as Signals from 'resource:///org/gnome/shell/misc/signals.js';
  * GNOME 51 the shell's calendar server's own, with the same ids. */
 const CALENDAR_REMINDERS = ['org.gnome.Evolution-alarm-notify', 'org.gnome.Shell.CalendarServer'];
 
-/** Ghostty, and the title of the notification an agent's hook has its tab post for Isle (isled's hook.rs
+/** The title of the notification an agent's hook has its Ghostty tab post for Isle (isled's hook.rs
  * `mark_tab`): its body the agent's session, its default action the tab's own `present-surface`. */
-const GHOSTTY = 'com.mitchellh.ghostty';
 const TAB_MARK = 'isle-agent-tab';
 /** The agent sessions whose Ghostty tab is known, at most. */
 const MAX_TABS = 64;
+/** How long (ms) after asking Ghostty for a tab its window may ask for attention, and get the focus. */
+const PRESENT_WITHIN_MS = 1000;
 
 /** `source`'s app id, without `.desktop`. */
 const appOf = source => source.policy?.id ?? source.app?.get_id?.()?.replace(/\.desktop$/, '');
@@ -40,8 +41,10 @@ export class NotificationCenter extends Signals.EventEmitter {
         super();
         this._tray = Main.messageTray;
         this._sources = new Map();
-        /** Each agent session's Ghostty tab, as `present-surface`'s target (see `_takesTab`). */
-        this._tabs = new Map();
+        /** Each agent session's Ghostty tab, as {app, target}: Ghostty's id and `present-surface`'s target (see
+         * `_takesTab`). Kept on the tray, so it lasts while Isle is turned off and on again (each screen lock):
+         * the hook tells a tab once in a while, not with each event. */
+        this._tabs = this._tray.isleAgentTabs ??= new Map();
 
         this._settings = new Gio.Settings({schema_id: 'org.gnome.desktop.notifications'});
         this._settingsChanged = this._settings.connect('changed::show-banners', () => this.emit('dnd-changed'));
@@ -186,9 +189,10 @@ export class NotificationCenter extends Signals.EventEmitter {
         this.emit('changed');
     }
 
-    /** Whether `notification` is an agent's Ghostty tab saying where it is, for Isle only. */
-    _isTabMark(source, notification) {
-        return appOf(source) === GHOSTTY && notification.title === TAB_MARK;
+    /** Whether `notification` is an agent's Ghostty tab saying where it is, for Isle only: by its title, whatever
+     * Ghostty's id (a debug or nightly build has its own), so none is ever left for the user to see. */
+    _isTabMark(_source, notification) {
+        return notification.title === TAB_MARK;
     }
 
     /** An agent's Ghostty tab saying where it is: kept by its session (the body), and taken away (true). Its
@@ -197,10 +201,11 @@ export class NotificationCenter extends Signals.EventEmitter {
         if (!this._isTabMark(source, notification))
             return false;
         const session = String(notification.body ?? '');
+        const app = appOf(source);
         const target = notification._defaultAction === 'app.present-surface' ? notification._defaultActionTarget : null;
-        if (session && target instanceof GLib.Variant) {
+        if (session && app && Gio.Application.id_is_valid(app) && target instanceof GLib.Variant) {
             this._tabs.delete(session);
-            this._tabs.set(session, target);
+            this._tabs.set(session, {app, target});
             if (this._tabs.size > MAX_TABS)
                 this._tabs.delete(this._tabs.keys().next().value);
         }
@@ -212,13 +217,39 @@ export class NotificationCenter extends Signals.EventEmitter {
         return Boolean(session) && this._tabs.has(session);
     }
 
-    /** Brings agent `session`'s Ghostty tab to the front; false when its tab isn't known. */
+    /** Asks Ghostty to bring agent `session`'s tab to the front, and gives its window the focus Ghostty may not
+     * take by itself (GNOME then only marks the window as asking for attention). False when the tab isn't known. */
     presentTab(session) {
-        const target = session ? this._tabs.get(session) : null;
-        if (!target)
+        const tab = session ? this._tabs.get(session) : null;
+        if (!tab)
             return false;
-        Gio.DBus.session.call(GHOSTTY, '/com/mitchellh/ghostty', 'org.gtk.Actions', 'Activate',
-            new GLib.Variant('(sava{sv})', ['present-surface', [target], {}]),
+        // The window Ghostty presents, for a moment after asking: no other of its windows, no other app's.
+        const display = global.display;
+        const stop = () => {
+            if (!this._presenting)
+                return;
+            display.disconnect(this._presenting.id);
+            GLib.source_remove(this._presenting.timeout);
+            this._presenting = null;
+        };
+        stop();
+        this._presenting = {
+            id: display.connect('window-demands-attention', (_display, window) => {
+                if (window.get_gtk_application_id() !== tab.app)
+                    return;
+                stop();
+                Main.activateWindow(window);
+            }),
+            timeout: GLib.timeout_add(GLib.PRIORITY_DEFAULT, PRESENT_WITHIN_MS, () => {
+                // Removed by returning: `stop` only forgets it.
+                display.disconnect(this._presenting.id);
+                this._presenting = null;
+                return GLib.SOURCE_REMOVE;
+            }),
+        };
+        this._stopPresenting = stop;
+        Gio.DBus.session.call(tab.app, `/${tab.app.replace(/\./g, '/').replace(/-/g, '_')}`, 'org.gtk.Actions', 'Activate',
+            new GLib.Variant('(sava{sv})', ['present-surface', [tab.target], {}]),
             null, Gio.DBusCallFlags.NO_AUTO_START, 1000, null, null);
         return true;
     }
@@ -301,6 +332,7 @@ export class NotificationCenter extends Signals.EventEmitter {
     destroy() {
         // Tell no one about changes made while tearing down.
         this.disconnectAll();
+        this._stopPresenting?.();
         this._tray.disconnect(this._sourceAdded);
         this._tray.disconnect(this._sourceRemoved);
         for (const source of [...this._sources.keys()])

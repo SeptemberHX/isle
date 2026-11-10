@@ -549,7 +549,8 @@ export const ChatView = GObject.registerClass({
             if (item.at && (!last?.at || item.at - last.at > TIME_GAP_MS))
                 this._list.add_child(label(Format.timeOfDay(GLib.DateTime.new_from_unix_local(Math.floor(item.at / 1000))),
                     'isle-chat-time', {x_align: Clutter.ActorAlign.CENTER}));
-            const row = this._row(item, last?.role !== 'assistant');
+            // isled's own words follow a command it ran ("…: done."); an AI's own answer shows as it came.
+            const row = this._row(item, last?.role !== 'assistant', last?.role === 'command');
             this._list.add_child(row);
             if (index >= known && St.Settings.get().enable_animations) {
                 const delay = 60 * (index - known);
@@ -568,7 +569,7 @@ export const ChatView = GObject.registerClass({
     }
 
     /** One message: your bubble, a command line, or an answer with or without the face. */
-    _row(item, withFace) {
+    _row(item, withFace, fromIsled = false) {
         if (item.role === 'user') {
             const bubble = new Bubble({style_class: 'isle-chat-user', x_align: Clutter.ActorAlign.END}, BUBBLE_MAX);
             const text = label(item.text ?? '', 'isle-chat-user-text', {x_expand: true});
@@ -601,7 +602,7 @@ export const ChatView = GObject.registerClass({
         const text = label('', 'isle-chat-reply', {x_expand: true});
         copyable(text, () => this._copied(), () => this.emit('settled'));
         text.clutter_text.set({line_wrap: true, line_wrap_mode: Pango.WrapMode.WORD_CHAR, ellipsize: Pango.EllipsizeMode.NONE});
-        text.clutter_text.set_markup(answerMarkup(words(item.text)));
+        text.clutter_text.set_markup(answerMarkup(fromIsled ? words(item.text) : item.text ?? ''));
         row.add_child(text);
         return row;
     }
