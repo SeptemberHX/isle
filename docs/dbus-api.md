@@ -369,6 +369,20 @@ Whether a newer Isle is out: GitHub's latest release, looked up at most once a d
 | `SetEnabled(b enabled)` | | Look, or not (Settings → New versions); off until set. |
 | `Latest` | `s` | The latest release's version (`0.8.0`) when it is newer than this isled; empty otherwise. |
 
+## io.github.zickrian.isle.Weather1
+
+The weather now and the week ahead for one place, read from Open-Meteo every quarter of an hour while enabled
+(after a look that failed: 20 and 40 seconds, then 2, 4, 8, 16 and every 30 minutes); through the desktop's proxy when GNOME has one set
+by hand and the login names none. With no place picked, the place is where the network's address is, as ipwho.is
+tells it (asked again after three hours). The last report is kept across restarts.
+
+| Member | Signature | |
+|---|---|---|
+| `SetConfig(s config)` | | JSON `{enabled, place: {label, region, lat, lon} \| null, lang}`, from Settings: whether to look, for which place (`null`: where the network is), and the language places are named in. Off until set. |
+| `Refresh()` | | Looks again now, unless it did in the last 30 seconds. |
+| `Search(s name, s lang)` | `s` | The places called `name` (at least two characters), as JSON `[{label, region, lat, lon}]`, the likeliest first, at most 8, named in `lang`: for Settings to pick one from. A Chinese name is also looked up without its kind ("广州市" as "广州"), and a province by its capital. Fails with `offline`, `unreachable` or `failed`. |
+| `Weather` | `s` | JSON `{report, error}`. `report`: `{place, auto, temp, feels, humidity, wind, code, day, sunrise_ms, sunset_ms, utc_offset, days: [{date, high, low, code, rain}], at_ms}` (°C, km/h, percent; `code` a WMO weather code; `auto` when the place is the network's; `date` the place's own), or `null` with none read yet. `error`: why the last look failed (`offline`, `unreachable`: online, but the server did not answer in time, `place`: where the network is could not be told, `failed`), or empty; an older report stays beside it. |
+
 ## io.github.zickrian.isle.System1
 
 | Member | Signature | |

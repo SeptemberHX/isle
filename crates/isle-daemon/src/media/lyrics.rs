@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 zickrian
 
-//! Lyrics from LRCLIB (<https://lrclib.net>), a free database of synced lyrics,
-//! cached on disk so each song is only looked up once (a song without any, once a week).
+//! Lyrics from LRCLIB (<https://lrclib.net>), a free database of synced lyrics, and for the songs it has
+//! none for from NetEase Cloud Music and QQ Music (lyrics_cn.rs); cached on disk so each song is only
+//! looked up once (a song without any, once a week).
 
 use std::fmt;
 use std::fs;
@@ -17,6 +18,7 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 
 use super::art::fnv1a;
+use super::lyrics_cn;
 use crate::store::cache_dir;
 
 const API: &str = "https://lrclib.net/api";
@@ -26,6 +28,9 @@ const USER_AGENT: &str = concat!(
     env!("CARGO_PKG_VERSION"),
     " (https://github.com/zickrian/isle)"
 );
+/// Which services are asked, as part of a cached answer's name: with another one to ask, "none" from before
+/// is asked again instead of standing for a week.
+const SOURCES: &str = "lrclib+netease+qq";
 /// How far a search result's length may differ from the track's, in seconds.
 const DURATION_TOLERANCE: f64 = 3.0;
 /// LRCLIB often answers "busy" (HTTP 503) or "slow down" (429) for a moment;
@@ -171,14 +176,49 @@ pub fn fetch(query: &TrackQuery) -> Lyrics {
         return cached;
     }
 
-    let lyrics = match lookup(query, title, artist) {
-        Ok(Some(record)) => from_record(query, record),
-        Ok(None) => query.status(LyricsStatus::NotFound),
-        Err(err) => {
-            warn!("lyrics lookup failed: {err}");
-            return query.status(err.status());
+    // NetEase and QQ Music have what LRCLIB lacks, Chinese songs above all: asked first for a song named in
+    // Chinese, Japanese or Korean, and otherwise only when LRCLIB has no synced lyrics (or does not answer).
+    // One of them not answering leaves what it has unknown: "none" is then for now, and not kept.
+    let mut unanswered = false;
+    let mut elsewhere = || match lyrics_cn::synced(&title, &artist, query.length_s) {
+        Ok(lines) => lines.map(|lines| Lyrics {
+            track: query.key(),
+            status: LyricsStatus::Synced,
+            lines,
+        }),
+        Err(lyrics_cn::Unanswered) => {
+            unanswered = true;
+            None
         }
     };
+    let cjk = lyrics_cn::has_cjk(&title) || lyrics_cn::has_cjk(&artist);
+    let first = if cjk { elsewhere() } else { None };
+    // Asked first, they are not asked again after LRCLIB.
+    let mut elsewhere = || if cjk { None } else { elsewhere() };
+    let lyrics = match first {
+        Some(lyrics) => lyrics,
+        None => match lookup(query, title.clone(), artist.clone()) {
+            Ok(Some(record)) => {
+                let lyrics = from_record(query, record);
+                if lyrics.status == LyricsStatus::Synced {
+                    lyrics
+                } else {
+                    elsewhere().unwrap_or(lyrics)
+                }
+            }
+            Ok(None) => elsewhere().unwrap_or_else(|| query.status(LyricsStatus::NotFound)),
+            Err(err) => {
+                warn!("lyrics lookup failed: {err}");
+                match elsewhere() {
+                    Some(lyrics) => lyrics,
+                    None => return query.status(err.status()),
+                }
+            }
+        },
+    };
+    if unanswered && lyrics.status != LyricsStatus::Synced {
+        return lyrics;
+    }
     // Misses too, with the file's time saying when (see `cached`).
     if let Some(parent) = cache.parent() {
         let _ = fs::create_dir_all(parent);
@@ -366,11 +406,12 @@ fn from_record(query: &TrackQuery, record: Record) -> Lyrics {
     }
 }
 
-/// Where the track's lyrics are cached, named by a hash of its key.
+/// Where the track's lyrics are cached, named by a hash of its key and of [`SOURCES`].
 fn cache_path(query: &TrackQuery) -> PathBuf {
-    cache_dir()
-        .join("lyrics")
-        .join(format!("{:016x}.json", fnv1a(&query.key())))
+    cache_dir().join("lyrics").join(format!(
+        "{:016x}.json",
+        fnv1a(&format!("{}\u{1f}{SOURCES}", query.key()))
+    ))
 }
 
 #[cfg(test)]

@@ -13,8 +13,8 @@ All notable changes to Isle are listed here. The format follows
   fit; it lays itself out for it as at Large (a larger month, cover or ring). A page left at Size's height (150,
   or 210 on Large) follows Size. The island grows and shrinks as you move between pages of different heights.
 - **Open the page you point at.** Rest the pointer on (or click) a side of the closed island to open that
-  side's page: the cover opens Music, the bell Notifications, the timer Timer, the phone Call. The clock still
-  opens the usual page.
+  side's page: the cover opens Music, the bell Notifications, the timer Timer, the phone Call, the time
+  Calendar and the weather beside it Weather. Anywhere else opens the usual page.
 - Isle in Russian: the island, its alerts, the assistant's panel and Settings follow the desktop's language,
   through gettext (`po/`, compiled on install). Settings → Assistant → Language offers Russian, and Russian or
   English, for speech, and speech recognition drops the credits Whisper makes up from silence in Russian
@@ -26,12 +26,58 @@ All notable changes to Isle are listed here. The format follows
 - Notification buttons that turn something down are also known in Russian ("Отклонить"), so they are never
   the one shown to press.
 
+- **Weather.** Settings → Weather turns on a Weather page: the weather now (temperature, what it feels like,
+  humidity, wind, sunrise and sunset) and the week ahead, for a place you search for and pick, or with none picked
+  where your network is. The closed island shows its icon and the temperature beside the clock. Read from
+  Open-Meteo every quarter of an hour, with no account; where the network is comes from ipwho.is. isled asks
+  through the desktop's proxy when GNOME has one set by hand. Off until you turn it on. How a place is found
+  follows [Daozai](https://github.com/Renly1994/xiaotang-daozai)'s (MIT).
+- **Apps with notifications beside the open island.** While the island is open on its Notifications page, a round icon for each app with
+  notifications in the list, read or not (a chat app, mail…), shows in a capsule on its right, the latest first,
+  with how many; so does an app whose window asks for attention without a notification (a dot). A click goes to
+  the app, to the window that asks or as a click on its latest notification does, and takes its notifications
+  off the list; a right click only takes them off. As the closed island's bell, a bubble stays until its
+  notifications are cleared. Moving the pointer onto it does not close the island. Settings → Island → Alerts. The idea is
+  [Daozai](https://github.com/Renly1994/xiaotang-daozai)'s.
+- **Three more looks for the island: Cream, Light glass and Floating cloud.** Settings → Island → Appearance →
+  Island. Cream is warm white paper with dark brown ink and orange for what is chosen; Light glass is white
+  frosted glass over what is behind it, with near-black ink; the Floating cloud is half-clear grey that takes
+  the song's colour, with a soft light that follows the pointer. On the two light ones every colour of the
+  island, its icons, its drawings and the companion's eyes are mapped from the black island's (white becomes
+  ink, black becomes paper, colours are deepened until they read), so every page follows; changing to or from
+  one builds the island again. They are [Daozai](https://github.com/Renly1994/xiaotang-daozai)'s skins, their
+  palettes and its colour mapping carried over (MIT, see `gnome-extension/NOTICE-daozai.txt`); Black and Glass
+  are its Classic and Dark glass. The light skins' part of the stylesheet is written by `scripts/skins.mjs`.
+- **A companion on the closed island.** Settings → Island → Appearance: a little face of two eyes lives on the
+  closed island, on a side nothing else takes (the left; across from the bell when there are notifications)
+  and in the music bars' place while a song plays. It blinks and follows the pointer, plays one of twelve
+  expressions now and then (and one as the pointer comes by), sings along with a microphone, narrows its eyes
+  during a focus session, worries when the battery is low or the network is gone, dozes after 45 seconds with
+  no one at the computer and sleeps after three minutes, wakes as you come back, and cheers when a focus
+  session ends, a reminder is done or a file is put on the shelf. Off by default. It is
+  [Daozai](https://github.com/Renly1994/xiaotang-daozai)'s pet, its behaviour and its drawings carried over
+  (MIT, see `gnome-extension/NOTICE-daozai.txt`).
+- **Pixel shift for OLED displays.** Settings → Island → Appearance: the closed island, at rest, moves one pixel
+  sideways every 45 seconds, up to 3 pixels each way, so the time and its signs do not light the same pixels
+  for hours. Off by default. The idea is [Daozai](https://github.com/Renly1994/xiaotang-daozai)'s.
+- **Lyrics on the closed island.** Settings → Island → Appearance → Lyrics on the closed island: while a song
+  with synced lyrics plays, the closed island is wider and shows the line being sung in place of the clock (a
+  note between lines). Off until you turn it on.
+- **More lyrics, Chinese songs above all.** A song LRCLIB has no synced lyrics for is looked up at NetEase Cloud
+  Music and QQ Music too (first, for a song named in Chinese, Japanese or Korean), and taken only when title,
+  artists and length are the song's. They are told the title and the artist, as LRCLIB is; nothing while
+  "Look up lyrics online" is off. Which services, and how a result is held to the song, follows
+  [Daozai](https://github.com/Renly1994/xiaotang-daozai)'s (MIT).
 - **Claude Code's alerts go to its Ghostty tab.** Clicking Show (or Open terminal) on an alert from Claude Code
   running in Ghostty brings up the very tab it runs in, not only Ghostty's window: its hook has the tab post a
-  notification Isle takes its id from and takes away again, so none shows.
+  notification Isle takes its id from and takes away again, so none shows. Claude Code's own notification there
+  ("Claude is waiting for your input") no longer comes beside Isle's alert of the same: Isle takes it away
+  while its own alert says it, and leaves it while Ghostty is in front or under Do Not Disturb.
 
 ### Changed
 
+- The closed island keeps its bell while there are notifications, read or not, until you clear them; the red
+  dot on it still says some are unread. Before, the bell went as soon as the Notifications page was opened.
 - **Click an agent's alert to go to it.** A click anywhere on an alert from Claude Code, Codex or Grok, not
   only on Show, brings its terminal up. An ask keeps its buttons alone: a click beside Allow answers nothing.
 - **Unread notifications show on the closed island.** A bell with a red dot, left of the clock, or on the

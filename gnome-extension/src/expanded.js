@@ -19,6 +19,7 @@ export {PAGE_HEIGHT};
 import * as Playback from './playback.js';
 import {watchClock} from './wallClock.js';
 import {Bars, PrivacyDots, RecordingDot, Ring, easeTo, fence, icon, iconButton, label, slideBy} from './widgets.js';
+import * as Theme from './theme.js';
 
 /** Sizes and distances in CSS pixels (see `px`). */
 export const EXPANDED_WIDTH = 600;
@@ -42,6 +43,7 @@ const TABS = {
     calendar: {icon: 'isle-calendar', label: N_('Calendar')},
     apps: {icon: 'isle-apps', label: N_('Apps')},
     devices: {icon: 'isle-headphones', label: N_('Devices')},
+    weather: {icon: 'isle-weather', label: N_('Weather')},
     usage: {icon: 'isle-gauge', label: N_('Usage')},
 };
 /** How bright a tab's icon is: open, under the pointer, otherwise. */
@@ -685,7 +687,7 @@ export const ExpandedView = GObject.registerClass({
         this._headerRing.visible = Boolean(timerActive);
         if (timerActive) {
             const remaining = pomodoro.running ? Math.max(0, pomodoro.ends_at_ms - Format.nowMs()) : pomodoro.remaining_ms;
-            this._headerRing.color = timerColor(pomodoro.phase);
+            this._headerRing.color = Theme.semantic(timerColor(pomodoro.phase));
             this._headerRing.progress = 1 - remaining / pomodoro.duration_ms;
         }
         const playing = Playback.isPlaying(nowPlaying);

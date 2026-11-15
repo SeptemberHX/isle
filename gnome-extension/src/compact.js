@@ -20,7 +20,9 @@ import * as Palette from './palette.js';
 import * as Playback from './playback.js';
 import * as Theme from './theme.js';
 import {watchClock} from './wallClock.js';
-import {Art, Bars, PrivacyDots, RecordingDot, Ring, icon, restsAt} from './widgets.js';
+import {Companion} from './companion.js';
+import {degrees, iconName, isStale} from './weather.js';
+import {Art, Bars, LOW_BATTERY, PrivacyDots, RecordingDot, Ring, icon, restsAt} from './widgets.js';
 
 /** Sizes hanging below the top bar, and inside it with smaller text, in CSS pixels. `clock` is the
  * island with nothing beside the clock, and the least it gets beside an activity. */
@@ -36,6 +38,11 @@ const PILL_CLOCK = {hanging: 128, inBar: 112};
 /** The room each side of the time (and the day before it) at least, in CSS pixels: past the clock's own width, the
  * island grows by what it shows, by this much each side. */
 const CLOCK_SIDE = {hanging: 26, inBar: 22};
+/** The companion's height over a sign's, in CSS pixels. */
+const PET_OVER = 4;
+/** The room the line sung has in place of the clock, in CSS pixels: about twenty Chinese characters, or a short
+ * English line. */
+const LYRIC_WIDTH = {hanging: 260, inBar: 240};
 const CORNER_RADIUS = {hanging: 16, inBar: 10};
 /** How far in from the island's end text on the right sits, in CSS pixels: as far as the round sign's ink on the
  * left looks, where the inset that suits a round sign would crowd text. */
@@ -76,7 +83,8 @@ class CentreLayout extends Clutter.LayoutManager {
     }
 });
 
-/** The unread bell: the Notifications tab's icon, a red dot on its corner. */
+/** The notifications' bell: the Notifications tab's icon, and a red dot on its corner (its last child) while some
+ * are unread. */
 function unreadBell() {
     const bell = new St.Widget({layout_manager: new Clutter.BinLayout(), y_align: Clutter.ActorAlign.CENTER});
     bell.add_child(new St.Icon({gicon: icon('isle-bell'), icon_size: 15, style_class: 'isle-unread-bell'}));
@@ -139,8 +147,15 @@ export const CompactView = GObject.registerClass({
         // In a slot as big as the cover's, as far in from the edge; a little smaller, as a solid shape looks bigger.
         this._assistant = new BotIcon(SIZES.hanging.art, this._botLook(), {body: SIZES.hanging.bot});
         this._assistant.y_align = Clutter.ActorAlign.CENTER;
+        // The companion (Settings): a face of two eyes on a side nothing else takes, in the music bars' place
+        // while a song plays (see companion.js). A little taller than the signs: it is mostly air.
+        this._pet = new Companion(SIZES.hanging.art + PET_OVER);
+        this._pet.y_align = Clutter.ActorAlign.CENTER;
+        /** What the companion is pleased by, as it was last: reminders done, files on the shelf, the timer's phase. */
+        this._petSeen = {};
         this._botLookChanged = ['bot-shape', 'bot-color', 'bot-glow'].map(key =>
             settings.connect(`changed::${key}`, () => (this._assistant.look = this._botLook())));
+        this._botLookChanged.push(settings.connect('changed::companion', () => this._refresh()));
 
         const center = new St.Widget({layout_manager: new CentreLayout(), x_expand: true});
         const times = new St.Widget({layout_manager: new CentreLayout(), y_align: Clutter.ActorAlign.CENTER});
@@ -153,8 +168,34 @@ export const CompactView = GObject.registerClass({
         this._clock.add_child(this._clockDate);
         this._clock.add_child(this._clockTime);
         this._clock.add_child(this._meridiem);
+        // The weather after the time (Settings → Weather): its icon and the temperature, quieter, and as the day
+        // only while no activity takes the sides' room.
+        this._weatherIcon = new St.Icon({style_class: 'isle-compact-weather-icon', y_align: Clutter.ActorAlign.CENTER});
+        this._weatherTemp = new St.Label({style_class: 'isle-compact-weather-temp', y_align: Clutter.ActorAlign.CENTER});
+        this._weatherTemp.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
+        this._clockWeather = new St.BoxLayout({style_class: 'isle-compact-weather', y_align: Clutter.ActorAlign.CENTER, visible: false});
+        this._clockWeather.add_child(this._weatherIcon);
+        this._clockWeather.add_child(this._weatherTemp);
+        this._clock.add_child(this._clockWeather);
+        /** Whether there is weather to show beside the clock (see `_syncWeather`). */
+        this._weatherOn = false;
+        // The same on the island's right, across from the bell alone: the time stays in the middle, a sign on
+        // each side of it, where the weather after the time would leave the right bare and the time off centre.
+        this._sideWeatherIcon = new St.Icon({style_class: 'isle-compact-weather-icon', y_align: Clutter.ActorAlign.CENTER});
+        this._sideWeatherTemp = new St.Label({style_class: 'isle-compact-weather-temp', y_align: Clutter.ActorAlign.CENTER});
+        this._sideWeatherTemp.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
+        this._sideWeather = new St.BoxLayout({style_class: 'isle-compact-weather isle-compact-weather-side', y_align: Clutter.ActorAlign.CENTER});
+        this._sideWeather.add_child(this._sideWeatherIcon);
+        this._sideWeather.add_child(this._sideWeatherTemp);
         // How long the screen has been recording, in place of the clock. A call keeps the clock.
         this._elapsed = new St.Label({style_class: 'isle-compact-clock', x_align: Clutter.ActorAlign.CENTER, y_align: Clutter.ActorAlign.CENTER, visible: false});
+        // The line being sung, in place of the clock (Settings → Appearance → Lyrics on the closed island): while a
+        // song with synced lyrics plays and is the island's first activity. As wide whatever the line, so the island
+        // keeps its width from one line to the next; a longer line ends in "…".
+        this._lyric = new St.Label({style_class: 'isle-compact-lyric', x_align: Clutter.ActorAlign.CENTER, y_align: Clutter.ActorAlign.CENTER, visible: false});
+        this._lyric.clutter_text.ellipsize = Pango.EllipsizeMode.END;
+        /** Whether the line sung stands in for the clock (see `_syncLyric`). */
+        this._lyricOn = false;
         // Never "1:0…": the one fading out may be wider than the room left for the one fading in.
         for (const time of [this._clockDate, this._clockTime, this._meridiem, this._elapsed])
             time.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
@@ -162,6 +203,7 @@ export const CompactView = GObject.registerClass({
         this._clockWidth = 0;
         times.add_child(this._clock);
         times.add_child(this._elapsed);
+        times.add_child(this._lyric);
         // Do Not Disturb: a moon before the time (or what takes its place), whatever the sides hold.
         this._moon = new St.Icon({gicon: icon('isle-moon'), icon_size: 14, style_class: 'isle-dnd-moon', y_align: Clutter.ActorAlign.CENTER, visible: false});
         // As wide as the moon after the time, so the time itself is centred and the moon hangs before it.
@@ -198,19 +240,30 @@ export const CompactView = GObject.registerClass({
         this._inset = -1;
         // The sides are told not to expand, or their children's x_expand (which the alignment needs) would widen them.
         for (const actor of [this._timerIcon, this._ring, this._art, this._bell, this._recordingDot, this._phone, this._bars, this._micOff,
-            this._serviceDown, this._assistant, this._secondRing, this._secondArt, this._secondPhone, this._secondBell])
+            this._serviceDown, this._assistant, this._secondRing, this._secondArt, this._secondPhone, this._secondBell, this._pet])
             actor.set({x_align: Clutter.ActorAlign.CENTER, x_expand: true});
         // From its square's start: the room `_fit` leaves after it keeps it off the island's end.
         this._timerTime.set({x_align: Clutter.ActorAlign.START, x_expand: true});
+        // As the timer's time: from its side's start, the room after it keeping it off the island's end.
+        this._sideWeather.set({x_align: Clutter.ActorAlign.START, x_expand: true});
 
         row.add_child(this._left);
         row.add_child(center);
         row.add_child(this._rightSide);
 
         this._daemonChanged = daemon.connect('changed', (_daemon, key) => {
+            this._petNotices(key);
             if (['nowPlaying', 'pomodoro', 'share'].includes(key))
                 this._refresh();
+            else if (key === 'weather')
+                this._syncWeather();
+            else if (key === 'lyrics')
+                this._refresh();
         });
+        this._lyricsChanged = settings.connect('changed::closed-lyrics', () => this._refresh());
+        this._weatherChanged = ['weather-enabled', 'weather-closed'].map(key =>
+            settings.connect(`changed::${key}`, () => this._syncWeather()));
+        this._syncWeather();
         this._settingsChanged = settings.connect('changed::privacy-indicators', () => this._refresh());
         this._dateChanged = settings.connect('changed::clock-date', () => {
             this._tickClock();
@@ -222,6 +275,7 @@ export const CompactView = GObject.registerClass({
         // Music bars only dance, and the times and the timer's ring only tick, while this view is on screen.
         this.connect('notify::mapped', () => {
             this._syncBars();
+            this._tickLyric();
             this._tickRecording();
             this._refreshRing();
             this._tickSecond();
@@ -243,14 +297,21 @@ export const CompactView = GObject.registerClass({
     /** The page the side at stage `x` opens (its sign's: music, the timer, a call, notifications), or null for
      * the clock, an empty side or a sign with no page of its own (the screen recording, the assistant). */
     pageAt(x) {
+        const over = actor => {
+            if (!actor.mapped)
+                return false;
+            const [actorX] = actor.get_transformed_position();
+            const [width] = actor.get_transformed_size();
+            return x >= actorX && x < actorX + width;
+        };
         for (const [slot, page] of [[this._left, this._leftPage], [this._rightSide, this._rightPage]]) {
-            if (!page || !slot.mapped)
-                continue;
-            const [slotX] = slot.get_transformed_position();
-            const [width] = slot.get_transformed_size();
-            if (x >= slotX && x < slotX + width)
+            if (page && over(slot))
                 return page;
         }
+        // The time (and the day before it) is the calendar's, the weather after it the weather's; not the line
+        // sung or a recording's time in their place.
+        if (this._clock.visible && over(this._clock))
+            return over(this._clockWeather) ? 'weather' : 'calendar';
         return null;
     }
 
@@ -297,18 +358,20 @@ export const CompactView = GObject.registerClass({
             this._row.style = `padding: 0 ${inset}px;`;
         }
         const square = Math.round(px(size.art));
-        setWidth(this._lead, square);
+        // The companion is wider than a sign's square.
+        const lead = this._lead.child === this._pet ? Math.max(square, widthOf(this._pet)) : square;
+        setWidth(this._lead, lead);
         // Each part measured itself, never a box round one just resized: Clutter may still hand back the box's
         // size from before (a paused timer's time ran past the island's end so).
         const dots = this._privacyDots.visible ? widthOf(this._privacyDots) : 0;
         // Text last on the right keeps further in than a round sign.
-        const text = this._right.child === this._timerTime && !dots ? Math.round(px(Math.max(0, TEXT_INSET[place] - inset))) : 0;
+        const text = [this._timerTime, this._sideWeather].includes(this._right.child) && !dots ? Math.round(px(Math.max(0, TEXT_INSET[place] - inset))) : 0;
         const right = this._right.visible ? Math.max(square, widthOf(this._right.child) + text) : 0;
         setWidth(this._right, right || square);
         const spacing = right && dots && stage ? this._trail.get_theme_node().get_length('spacing') : 0;
         // The dots alone sit in the end's square, as a sign would.
         this._trail.x_align = right ? Clutter.ActorAlign.END : Clutter.ActorAlign.CENTER;
-        const side = Math.max(this._lead.visible ? square : 0, right + spacing + dots, dots && square);
+        const side = Math.max(this._lead.visible ? lead : 0, right + spacing + dots, dots && square);
         // Off the stage (Isle starting mid-song) there is no style to read: St complains and returns a blank one.
         const gap = side && stage ? this._left.get_theme_node().get_padding(St.Side.RIGHT) : 0;
         for (const slot of [this._left, this._rightSide])
@@ -318,19 +381,27 @@ export const CompactView = GObject.registerClass({
         this._moonBalance.visible = this._moon.visible;
         // The day before the time, the two centred together; not beside an activity (music, a call, the timer, a
         // recording, the assistant at work), whose sides take its room. The unread bell alone leaves it.
-        const activity = (this._lead.visible && this._lead.child !== this._bell) || this._right.visible;
+        const beside = this._right.visible && this._right.child === this._sideWeather;
+        // The bell and the companion are no activity: beside them the day and the weather keep their room.
+        const quiet = sign => sign === this._bell || sign === this._pet;
+        const activity = (this._lead.visible && !quiet(this._lead.child)) ||
+            (this._right.visible && !beside && !quiet(this._right.child));
         const date = this._settings.get_boolean('clock-date') && !activity && !this._privacy.recording;
         this._clockDate.visible = date;
+        this._clockWeather.visible = this._weatherOn && !activity && !beside && !this._privacy.recording;
         // The time (and the day), each label measured itself, not the row round them, which may still give its size
         // from before; the moon's room on both sides of it.
         let time = 0, moonRoom = 0;
         if (stage) {
-            const labels = [this._clockDate, this._clockTime, this._meridiem].filter(label => label.visible);
+            const labels = [this._clockDate, this._clockTime, this._meridiem, this._clockWeather].filter(label => label.visible);
             const dayGap = date ? Math.ceil(this._clockDate.get_theme_node().get_margin(St.Side.RIGHT)) : 0;
             time = this._privacy.recording ? widthOf(this._elapsed)
+                : this._lyricOn ? Math.round(px(LYRIC_WIDTH[place]))
                 : labels.reduce((sum, label) => sum + widthOf(label), 0) +
                   this._clock.get_theme_node().get_length('spacing') * (labels.length - 1) + dayGap;
             moonRoom = moon ? 2 * (moon + this._centerRow.get_theme_node().get_length('spacing')) : 0;
+            if (this._lyricOn)
+                setWidth(this._lyric, time);
         }
         // The clock alone with its sides: the island no wider than that needs, nor than the clock alone.
         const clockWidth = !side && time ? time + moonRoom + 2 * px(CLOCK_SIDE[place]) : 0;
@@ -368,12 +439,49 @@ export const CompactView = GObject.registerClass({
         return this._settings.get_boolean('privacy-indicators') && this._privacy.any;
     }
 
-    /** Shows the unread bell: on the left if free, else on the right in place of what goes with the first
-     * activity, else as a red dot on the left sign. */
+    /** Whether some notifications are unread: the bell's red dot. With the left taken the bell goes on the right
+     * in place of what goes with the first activity, else it is a red dot on the left sign. */
     set unseenNotifications(unseen) {
         if (unseen === this._unseen)
             return;
         this._unseen = unseen;
+        this._refresh();
+    }
+
+    // The companion is pleased when something is done: a focus session over, a reminder ticked, a file put on
+    // the shelf (as Daozai's is). `key` is what changed in isled's state.
+    _petNotices(key) {
+        const {state} = this._daemon;
+        const seen = this._petSeen;
+        const more = (name, count) => {
+            const before = seen[name];
+            seen[name] = count;
+            return before !== undefined && count > before;
+        };
+        let pleased = false;
+        if (key === 'tasks')
+            pleased = more('done', (state.tasks ?? []).filter(task => task.done).length);
+        else if (key === 'shelf')
+            pleased = more('shelf', (state.shelf ?? []).length);
+        else if (key === 'pomodoro') {
+            const phase = state.pomodoro?.phase;
+            pleased = seen.phase === 'focus' && phase !== 'focus' && phase !== 'idle' && phase !== undefined;
+            seen.phase = phase;
+        } else if (key === 'system') {
+            const {battery, network} = state.system ?? {};
+            this._pet.worried = Boolean(battery && battery.percent <= LOW_BATTERY && !battery.charging) ||
+                network?.connected === false;
+        }
+        if (pleased && this._settings.get_boolean('companion'))
+            this._pet.cheer();
+    }
+
+    /** Whether there are notifications, read or not: the bell stays, on a side that is free, until they are
+     * cleared; without its red dot once all are read. */
+    set waitingNotifications(waiting) {
+        if (waiting === this._waiting)
+            return;
+        this._waiting = waiting;
         this._refresh();
     }
 
@@ -455,6 +563,7 @@ export const CompactView = GObject.registerClass({
         this._art.resize(size.art, size.artRadius);
         this._secondArt.resize(size.art, size.artRadius);
         this._assistant.resize(size.art, size.bot);
+        this._pet.resize(size.art + PET_OVER);
         this._ring.resize(size.ring);
         this._secondRing.resize(size.ring);
     }
@@ -472,6 +581,7 @@ export const CompactView = GObject.registerClass({
 
     /** Picks what each side shows, and emits `width-changed` when the island needs another width. */
     _refresh() {
+        this._refreshed = true;
         const {nowPlaying, pomodoro} = this._daemon.state;
         const playing = Playback.isPlaying(nowPlaying);
         // A paused song stays until its player closes, a browser's until it is over; none with the Music page left out.
@@ -493,15 +603,20 @@ export const CompactView = GObject.registerClass({
         const phone = Boolean(this._daemon.state.share?.active);
         const dots = {camera: privacy.camera, microphone, screenShare: privacy.screenShare, phone};
         const anyDot = Object.values(dots).some(Boolean);
-        // Left: the activity's sign, else the unread bell.
+        // Left: the activity's sign, else the notifications' bell.
         const timerSign = anyDot ? this._ring : this._timerIcon;
         let left = {recording: this._recordingDot, call: this._phone, music: this._art, timer: timerSign}[primary] ?? null;
         /** The page each side opens when the pointer rests on it (see `pageAt`). */
         this._leftPage = {call: 'call', music: 'music', timer: 'focus'}[primary] ?? null;
-        if (!left && this._unseen) {
+        const bell = this._unseen || this._waiting;
+        if (!left && bell) {
             left = this._bell;
             this._leftPage = 'notifications';
         }
+        // The companion on the left when nothing is there.
+        const pet = this._settings.get_boolean('companion');
+        if (!left && pet)
+            left = this._pet;
         if (this._lead.child !== left)
             this._swap(this._lead, left);
         this._lead.visible = Boolean(left);
@@ -512,9 +627,23 @@ export const CompactView = GObject.registerClass({
         this._rightPage = right ? {music: 'music', timer: 'focus', call: 'call'}[second ?? primary] ?? null : null;
         // Unread with the left taken: the bell on a free right, or in place of the song's bars (they only go
         // with the cover), never before the timer's time left, another activity's sign or what follows.
-        if (this._unseen && left !== this._bell && (!right || right === this._bars)) {
+        // Read ones waiting take a free right only.
+        if (bell && left !== this._bell && (!right || (this._unseen && right === this._bars))) {
             right = this._secondBell;
             this._rightPage = 'notifications';
+        }
+        // The bell alone on the left and the right free: the weather there, not after the time (see `_sideWeather`).
+        // The bell on the left: the companion across from it, the weather staying after the time. A song
+        // playing: it sings where the music bars would be.
+        if (pet && !anyDot && !recording && ((left === this._bell && !right) || right === this._bars)) {
+            right = this._pet;
+            this._rightPage = left === this._art ? 'music' : null;
+        }
+        this._pet.singing = playing && primary === 'music';
+        this._pet.focusing = Boolean(pomodoro?.running && pomodoro.phase === 'focus');
+        if ((left === this._bell || left === this._pet) && !right && this._weatherOn && !anyDot && !recording) {
+            right = this._sideWeather;
+            this._rightPage = this._settings.get_strv('hidden-pages').includes('weather') ? null : 'weather';
         }
         if (onCall && this._call.muted) {
             right = this._micOff;
@@ -531,6 +660,8 @@ export const CompactView = GObject.registerClass({
         }
         // Both sides taken: the unread bell is a red dot on the left sign.
         this._leadBadge.visible = Boolean(this._unseen && left && left !== this._bell && right !== this._secondBell);
+        for (const sign of [this._bell, this._secondBell])
+            sign.get_last_child().visible = Boolean(this._unseen);
         this._privacyDots.update(dots);
         if (this._right.child !== right)
             this._swap(this._right, right);
@@ -561,13 +692,18 @@ export const CompactView = GObject.registerClass({
         if (hasTrack)
             (primary === 'music' ? this._art : this._secondArt).setPath(nowPlaying.art_path);
 
+        // The line sung in place of the clock: the song playing, first of the activities, its lyrics timed.
+        const {lyrics} = this._daemon.state;
+        this._lyricOn = primary === 'music' && playing && this._settings.get_boolean('closed-lyrics') &&
+            lyrics?.status === 'synced' && lyrics.lines?.length > 0;
         if (recording) {
             this._crossfade(this._elapsed);
             this._tickRecording();
         } else {
             this._cancel('recording');
-            this._crossfade(this._clock);
+            this._crossfade(this._lyricOn ? this._lyric : this._clock);
         }
+        this._tickLyric();
 
         this._fit();
         if (this.preferredWidth !== widthBefore)
@@ -587,7 +723,7 @@ export const CompactView = GObject.registerClass({
 
     /** Fades `actor` in and the other centre actors out. */
     _crossfade(actor) {
-        for (const other of [this._clock, this._elapsed]) {
+        for (const other of [this._clock, this._elapsed, this._lyric]) {
             if (other === actor) {
                 if (!other.visible) {
                     other.opacity = 0;
@@ -668,6 +804,57 @@ export const CompactView = GObject.registerClass({
         this._later('recording', 1000 - (elapsedMs % 1000) + 10, () => this._tickRecording());
     }
 
+    /** The line sung now in place of the clock, and the next as it comes, while on screen. Between lines (the
+     * intro, a break) a note stands for the music. */
+    _tickLyric() {
+        if (!this._lyricOn || !this.mapped) {
+            this._cancel('lyric');
+            return;
+        }
+        const {nowPlaying, lyrics} = this._daemon.state;
+        const index = Playback.lineIndexAt(lyrics.lines, Playback.positionMs(nowPlaying));
+        const text = lyrics.lines[index]?.text.trim() || '♪';
+        if (this._lyric.text !== text) {
+            this._lyric.text = text;
+            if (St.Settings.get().enable_animations && this._lyric.visible) {
+                this._lyric.remove_transition('opacity');
+                this._lyric.opacity = 90;
+                this._lyric.ease({opacity: 255, duration: 180, mode: Clutter.AnimationMode.EASE_OUT_QUAD});
+            }
+        }
+        const wait = Playback.msUntilLine(nowPlaying, lyrics.lines, index);
+        if (wait === null)
+            this._cancel('lyric');
+        else
+            this._later('lyric', wait + 10, () => this._tickLyric());
+    }
+
+    /** The weather beside the clock, as isled last read it: its icon and the temperature, dimmer once it is old
+     * (isled could not read it for an hour); none while its switches are off or nothing is read yet. */
+    _syncWeather() {
+        const report = this._daemon.state.weather?.report;
+        const on = Boolean(report) && this._settings.get_boolean('weather-enabled') && this._settings.get_boolean('weather-closed');
+        const text = on ? degrees(report.temp) : '';
+        const name = on ? iconName(report.code, report.day) : null;
+        const old = on && isStale(report.at_ms, Date.now());
+        if (on === this._weatherOn && text === this._weatherTemp.text && name === this._weatherIconName && old === this._weatherOld)
+            return;
+        this._weatherOn = on;
+        this._weatherIconName = name;
+        this._weatherOld = old;
+        this._weatherTemp.text = this._sideWeatherTemp.text = text;
+        if (name)
+            this._weatherIcon.gicon = this._sideWeatherIcon.gicon = icon(name);
+        // On the parts, not the boxes: a sign put on a side fades in to full (see `_swap`).
+        for (const part of [this._weatherIcon, this._weatherTemp, this._sideWeatherIcon, this._sideWeatherTemp])
+            part.opacity = old ? 140 : 255;
+        // Where it goes is the sides' to say (see `_refresh`); before the first one, only its room.
+        if (this._refreshed)
+            this._refresh();
+        else
+            this._refit();
+    }
+
     /** Sets the clock's text; `watchClock` calls it again as the minute changes. */
     _tickClock() {
         const before = `${this._clockTime.text}${this._meridiem.text}`;
@@ -715,6 +902,8 @@ export const CompactView = GObject.registerClass({
         this._daemon.disconnect(this._daemonChanged);
         this._settings.disconnect(this._settingsChanged);
         this._settings.disconnect(this._dateChanged);
+        this._weatherChanged.forEach(id => this._settings.disconnect(id));
+        this._settings.disconnect(this._lyricsChanged);
         this._settings.disconnect(this._pagesChanged);
         for (const id of this._botLookChanged)
             this._settings.disconnect(id);
@@ -722,7 +911,7 @@ export const CompactView = GObject.registerClass({
         this._call.disconnect(this._callChanged);
         // Slots may hold actors that are not currently children.
         for (const actor of [this._timerIcon, this._ring, this._art, this._bell, this._recordingDot, this._bars, this._phone, this._micOff, this._assistant, this._serviceDown,
-            this._timerTime, this._secondRing, this._secondArt, this._secondPhone, this._secondBell]) {
+            this._timerTime, this._secondRing, this._secondArt, this._secondPhone, this._secondBell, this._sideWeather, this._pet]) {
             if (!actor.get_parent())
                 actor.destroy();
         }

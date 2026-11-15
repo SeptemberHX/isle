@@ -14,10 +14,13 @@
       <choices>
         <choice value="black"/>
         <choice value="glass"/>
+        <choice value="cream"/>
+        <choice value="glass-light"/>
+        <choice value="fluid"/>
       </choices>
       <default>'black'</default>
       <summary>The island's look</summary>
-      <description>black: Isle's own black island. glass: clear glass over what is behind it, blurred, its edge catching the light.</description>
+      <description>black: Isle's own black island. glass: clear glass over what is behind it, blurred, its edge catching the light. cream: warm white paper, dark brown ink, orange for what is chosen. glass-light: white frosted glass, dark ink. fluid: the floating cloud, half-clear grey taking the cover's colour, a light following the pointer. The last three are Daozai's skins.</description>
     </key>
     <key name="open-size" type="s">
       <choices>
@@ -32,6 +35,16 @@
       <default>false</default>
       <summary>The day beside the closed island's clock</summary>
       <description>"Fri 6" before the time while the island shows the clock alone.</description>
+    </key>
+    <key name="unread-bubbles" type="b">
+      <default>true</default>
+      <summary>Apps with notifications beside the open island</summary>
+      <description>While the island is open on its Notifications page and there are notifications, read or not, a round icon for each app they are from shows beside it, with how many, until they are cleared. A click goes to the app and clears its notifications; a right click only clears them.</description>
+    </key>
+    <key name="closed-lyrics" type="b">
+      <default>false</default>
+      <summary>The line being sung on the closed island</summary>
+      <description>While a song with synced lyrics plays (and nothing comes before it: a recording, a call), the closed island is wider and shows the line being sung in place of the clock.</description>
     </key>
     <key name="clock-format" type="s">
       <choices>
@@ -128,6 +141,16 @@
       <default>3</default>
       <summary>How long the closed island waits before hiding, in seconds</summary>
     </key>
+    <key name="companion" type="b">
+      <default>false</default>
+      <summary>A companion on the closed island</summary>
+      <description>A little face of two eyes lives on the closed island, on a side nothing else takes and in the music bars' place while a song plays: it blinks and follows the pointer, plays an expression now and then, sings along with a microphone, narrows its eyes during a focus session, worries when the battery is low or the network is gone, dozes and then sleeps while no one is at the computer, and cheers when a focus session ends, a reminder is done or a file is put on the shelf. It is Daozai's pet.</description>
+    </key>
+    <key name="oled-shift" type="b">
+      <default>false</default>
+      <summary>Pixel shift for OLED displays</summary>
+      <description>The closed island, at rest, moves one pixel sideways every 45 seconds, up to 3 pixels each way, so the time and its signs do not light the same pixels for hours. It lessens the marks a still picture leaves on an OLED display; it does not promise none.</description>
+    </key>
     <key name="alerts-over-fullscreen" type="b">
       <default>false</default>
       <summary>Alerts over full-screen apps</summary>
@@ -212,7 +235,7 @@
     <key name="page-heights" type="a{si}">
       <default>{}</default>
       <summary>Height of each page</summary>
-      <description>How tall the open island's pages are, in pixels (150 to 400), by page name: call, music, notifications, focus, reminders, shelf, calendar, apps, usage. A page not listed is 150 tall.</description>
+      <description>How tall the open island's pages are, in pixels (150 to 400), by page name: call, music, notifications, focus, reminders, shelf, calendar, apps, devices, weather, usage. A page not listed is 150 tall.</description>
     </key>
     <key name="app-usage" type="b">
       <default>false</default>
@@ -347,6 +370,11 @@
       <summary>Shortcut to the Devices page</summary>
       <description>Opens the island on the Devices page from anywhere, holding the keyboard; pressed again, it closes. None at first.</description>
     </key>
+    <key name="shortcut-weather" type="as">
+      <default>[]</default>
+      <summary>Shortcut to the Weather page</summary>
+      <description>Opens the island on the Weather page from anywhere, holding the keyboard; pressed again, it closes. None at first.</description>
+    </key>
     <key name="shortcut-usage" type="as">
       <default>[]</default>
       <summary>Shortcut to the AI Usage page</summary>
@@ -440,6 +468,21 @@
       <default>false</default>
       <summary>Let the voice assistant read notifications</summary>
       <description>Send the last few notifications with each request, so the AI (Claude Code, Codex, Grok, opencode or Antigravity) can read them out or summarise them.</description>
+    </key>
+    <key name="weather-enabled" type="b">
+      <default>false</default>
+      <summary>The Weather page</summary>
+      <description>Shows the Weather page and the temperature beside the clock: the weather now and the week ahead, read from Open-Meteo every quarter of an hour. Off until you turn it on; off, nothing is asked.</description>
+    </key>
+    <key name="weather-place" type="s">
+      <default>''</default>
+      <summary>The place the weather is for</summary>
+      <description>JSON {label, region, lat, lon}, as picked in Settings. Empty: where the network's address is, as ipwho.is tells it (it is sent nothing but the request).</description>
+    </key>
+    <key name="weather-closed" type="b">
+      <default>true</default>
+      <summary>The temperature beside the clock</summary>
+      <description>With the Weather page on, shows the weather's icon and the temperature beside the clock on the closed island.</description>
     </key>
     <key name="usage-enabled" type="b">
       <default>true</default>

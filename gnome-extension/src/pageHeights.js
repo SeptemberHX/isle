@@ -13,7 +13,7 @@ export const MAX_PAGE_HEIGHT = 400;
 
 /** Every page, in tab order: each may have a height of its own. */
 export const PAGE_NAMES = ['call', 'music', 'notifications', 'focus', 'reminders', 'shelf', 'calendar', 'apps', 'devices',
-    'usage'];
+    'weather', 'usage'];
 
 /** The height of page `name` given the setting's `heights` (name → px): within bounds, `base` (the size's) if unset. */
 export function heightOf(heights, name, base = PAGE_HEIGHT) {

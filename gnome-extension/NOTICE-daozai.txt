@@ -1,0 +1,31 @@
+The companion on the closed island (gnome-extension/src/pet.js, the way it is drawn in
+gnome-extension/src/companion.js, and the twelve expressions in gnome-extension/pet/*.png) is the pet of
+Daozai, https://github.com/Renly1994/xiaotang-daozai (src/pet.rs, src/pet_expressions.rs,
+assets/pet/expressions/), carried over to GNOME Shell. The pixel shift for OLED displays
+(gnome-extension/src/oledShift.js), the weather's way of finding a place, and the looks Cream, Light glass and
+Floating cloud (their palettes and the colour mapping in gnome-extension/src/skinRules.js, from
+src/skin_paint.rs and src/glass.rs; the cloud's body and light in gnome-extension/src/island.js, from
+src/fluid.rs, a skin by 啵, @hanhb123) follow Daozai too. Under this
+licence:
+
+MIT License
+
+Copyright (c) 2026 小唐的Token and Daozai contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

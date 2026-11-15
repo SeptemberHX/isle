@@ -5,6 +5,7 @@
 // cross-fades views. On a bar that is not black it hangs from the screen's top edge, like a notch.
 
 import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Meta from 'gi://Meta';
 import St from 'gi://St';
@@ -111,8 +112,18 @@ vec3 edgeAt = edgeMin(edgeMax(outlineBody(p), outlineBeside(p)), vec3(p.y, 0.0, 
 float inside = edgeAt.x;
 float cover = coverage(edgeAt, pixel);
 vec4 color = vec4(fill.rgb, 1.0) * fill.a * cover;
+float down = clamp((p.y - top) / max(bottom - top, 0.001), 0.0, 1.0);
+if (grade.x > 0.0) {
+    // The floating cloud: a grey that clears and darkens downwards.
+    color = vec4(vec3(mix(grade.z, grade.w, down)), 1.0) * mix(grade.x, grade.y, pow(down, 1.3)) * cover;
+}
 vec4 tinted = vec4(tint.rgb, 1.0) * tint.a * cover;
-if (style > 1.5) {
+if (style > 2.5) {
+    // The cloud's wash: the colour over all of it, strongest at the left, where the cover is.
+    float u = (p.x - left) / max(right - left, 0.001);
+    float a = 0.22 * (0.22 + 0.78 * exp(-(u / 0.32) * (u / 0.32)));
+    color = tinted * a + color * (1.0 - tinted.a * a);
+} else if (style > 1.5) {
     // A pool of light at each bottom corner, joined by a faint band along the bottom edge.
     float r = max(min((right - left) * 0.36, max(0.0, bottom - top) * 1.05), 0.001);
     float a = 0.2 * clamp((p.y - bottom + 0.4 * r) / (0.4 * r), 0.0, 1.0);
@@ -127,6 +138,12 @@ if (style > 1.5) {
     float a = 0.75 * clamp((p.y - top) / max(bottom - top, 0.001), 0.0, 1.0);
     color = tinted * a + color * (1.0 - tinted.a * a);
 }
+if (spot.z > 0.0) {
+    // A soft white light where the pointer is.
+    vec2 d = (p - spot.xy) / vec2(152.0, 100.0);
+    float a = 0.12 * exp(-1.5 * dot(d, d)) * spot.z * cover;
+    color = vec4(a) + color * (1.0 - a);
+}
 if (edge.a > 0.0) {
     // A hairline inside the shape, none along the screen's top edge, lit from above and fading downwards.
     float band = max(0.0, min(inside + 0.5 / pixel, 1.0) - max(inside - 0.5 / pixel, 0.0)) * pixel *
@@ -138,7 +155,8 @@ cogl_color_out = color * cogl_color_in.a;
 `;
 
 /** The island's shape, drawn by the GPU as it changes (see `_syncShape`). */
-const ShapeFill = shaderEffect('ShapeFill', {frame: 4, body: 4, corner: 4, pill: 2, fill: 4, tint: 4, style: 1, edge: 4, edgeAlpha: 2},
+const ShapeFill = shaderEffect('ShapeFill', {frame: 4, body: 4, corner: 4, pill: 2, fill: 4, tint: 4, style: 1, edge: 4, edgeAlpha: 2,
+    grade: 4, spot: 4},
     SHAPE_CODE, OUTLINE);
 
 // What the views draw, cut to the outline as the shape is (see SHAPE_CODE).
@@ -166,6 +184,10 @@ const FADE_IN_DELAY = 120;
 /** How far (CSS px) the views slide as the shape grows or shrinks: they travel with it. Whole
  * pixels only, never a scale: a scaled picture or text is resampled every frame and seems to shiver. */
 const VIEW_SHIFT = 8;
+/** The floating cloud's colour with no song to take one from. */
+const CLOUD_NEUTRAL = [0.62, 0.66, 0.74];
+/** Its light follows the pointer every this many ms, while the pointer is on it or the light still fades. */
+const SPOT_FRAME_MS = 33;
 /** A pill's hairline on a look with none of its own (black): faint, lit from above. */
 const PILL_EDGE = {color: [1, 1, 1], top: 0.16, bottom: 0.06};
 /** Below this shoulder size (CSS px) the corners may climb into the top bar, so the island rounds smoothly. */
@@ -196,6 +218,11 @@ export const Island = GObject.registerClass({
         /** A pill's room above it, in stage pixels; null for the notch (see `pillGap`). */
         this._pillGap = null;
         this._hovered = false;
+        /** Actors beside the island that count as it for the pointer (see `addCompanion`). */
+        this._companions = new Set();
+        /** The floating cloud's light: where it is on the island, and how bright (see `_syncSpot`). */
+        this._spot = {x: 0, y: 0, alpha: 0};
+        this._spotTick = 0;
         this._autoHidden = false;
         this._band = 0;
         /** How far auto-hide has drawn the island's layers up, in whole pixels (≤ 0), and the timeline doing it. */
@@ -279,10 +306,38 @@ export const Island = GObject.registerClass({
         this.notify('hovered');
     }
 
+    /** Whether `actor` is the island, in it, or in one of its companions. */
+    holds(actor) {
+        return Boolean(actor) && (this.contains(actor) || [...this._companions].some(companion => companion.contains(actor)));
+    }
+
+    /** Has `actor`, drawn beside the island (the unread bubbles), count as the island for the pointer: resting on
+     * it is resting on the island, and moving between the two is no leave. Until `actor` is destroyed. */
+    addCompanion(actor) {
+        this._companions.add(actor);
+        const ids = [
+            actor.connect('enter-event', (_actor, event) => {
+                if (!event.get_event_sequence())
+                    this._setHovered(true);
+                return Clutter.EVENT_PROPAGATE;
+            }),
+            actor.connect('leave-event', (_actor, event) => {
+                if (!event.get_event_sequence() && !this.holds(event.get_related()))
+                    this._setHovered(false);
+                return Clutter.EVENT_PROPAGATE;
+            }),
+        ];
+        actor.connect('destroy', () => this._companions.delete(actor));
+        this.connect('destroy', () => {
+            if (this._companions.delete(actor))
+                ids.forEach(id => actor.disconnect(id));
+        });
+    }
+
     /** Whether the pointer is on it, read again: a keyboard grab keeps the leave from it while it lasts. */
     syncHover() {
         const [x, y] = global.get_pointer();
-        this._setHovered(this.contains(global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE, x, y)));
+        this._setHovered(this.holds(global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE, x, y)));
     }
 
     // A finger is no pointer resting on it: a tap's own enter and leave are not hovers.
@@ -295,7 +350,7 @@ export const Island = GObject.registerClass({
     /** Leaving into one of its own children is no leave. */
     vfunc_leave_event(event) {
         const related = event.get_related();
-        if (!event.get_event_sequence() && (!related || !this.contains(related)))
+        if (!event.get_event_sequence() && !this.holds(related))
             this._setHovered(false);
         return super.vfunc_leave_event(event);
     }
@@ -831,7 +886,14 @@ export const Island = GObject.registerClass({
         const {left, right, top, radius, shoulder, crown, gap} = this._box(height);
         const shift = SHAPE_PAD + this._islandFraction;
         const [width, actorHeight] = this._shape.get_size();
-        const tinted = this._tint && this._tintStyle !== 'aura';
+        // The floating cloud (Daozai's skin): its grey clearer and darker open than closed, always washed with a
+        // colour (the song's, else a grey-blue), and lit where the pointer is.
+        const cloud = Theme.name() === 'fluid';
+        const open = Math.max(0, Math.min(1, (height - px(40)) / px(90)));
+        const mix = (a, b) => a + (b - a) * open;
+        const tinted = (this._tint && this._tintStyle !== 'aura') || cloud;
+        const wash = this._tint && this._tintStyle !== 'aura'
+            ? [...this._tint, cloud ? mix(0.55, 1) : this._tintStrength] : [...CLOUD_NEUTRAL, mix(0.55, 1)];
         // A pill stands apart from what is behind it: a hairline round it on black too.
         const edge = Theme.edge() ?? (gap > 0 ? PILL_EDGE : null);
         this._fill.setUniforms({
@@ -840,8 +902,10 @@ export const Island = GObject.registerClass({
             corner: [radius, shoulder, 0, 0],
             pill: [crown, gap],
             fill: Theme.fill(),
-            tint: tinted ? [...this._tint, this._tintStrength] : [0, 0, 0, 0],
-            style: {wash: 1, glow: 2}[this._tintStyle] ?? 0,
+            tint: tinted ? wash : [0, 0, 0, 0],
+            style: cloud ? 3 : {wash: 1, glow: 2}[this._tintStyle] ?? 0,
+            grade: cloud ? [mix(0.52, 0.88), mix(0.52, 0.34), mix(54, 36) / 255, mix(50, 22) / 255] : [0, 0, 0, 0],
+            spot: cloud && this._spot.alpha > 0 ? [this._spot.x + shift, this._spot.y, this._spot.alpha, 0] : [0, 0, 0, 0],
             edge: edge ? [...edge.color, 1] : [0, 0, 0, 0],
             edgeAlpha: edge ? [edge.top, edge.bottom] : [0, 0],
         });
@@ -851,6 +915,7 @@ export const Island = GObject.registerClass({
      * the island's colour (the bot's badge ring, a call's corners) drawn again. A rare change: a walk is fine. */
     refreshTheme() {
         this._backdrop.look = Theme.blur();
+        this._syncSpot();
         this._sync();
         // Parts with more to change than a drawing (a call's rounded preview) follow in `syncTheme`; disabled
         // buttons take the look's dimming.
@@ -863,6 +928,49 @@ export const Island = GObject.registerClass({
             actor.get_children().forEach(repaint);
         };
         repaint(this);
+    }
+
+    // The floating cloud's light: it comes up where the pointer is on the island, follows it, and fades once it
+    // has left; nothing runs while it is dark and the pointer away (looked for four times a second).
+    _syncSpot() {
+        const cloud = Theme.name() === 'fluid';
+        if (!cloud) {
+            if (this._spotTick)
+                GLib.source_remove(this._spotTick);
+            this._spotTick = 0;
+            this._spot.alpha = 0;
+            return;
+        }
+        if (this._spotTick)
+            return;
+        let fast = false;
+        const tick = () => {
+            const [pointerX, pointerY] = global.get_pointer();
+            const [x, y] = this.get_transformed_position();
+            const [width, height] = this.get_transformed_size();
+            const on = this.mapped && pointerX >= x && pointerX < x + width && pointerY >= y && pointerY < y + height;
+            const spot = this._spot;
+            const dt = (fast ? SPOT_FRAME_MS : 250) / 1000;
+            const before = spot.alpha;
+            // On coming it is at the pointer at once; then it follows.
+            if (on && spot.alpha === 0)
+                [spot.x, spot.y] = [pointerX - x, pointerY - y];
+            const k = Math.min(1, dt * 15);
+            spot.x += (pointerX - x - spot.x) * k;
+            spot.y += (pointerY - y - spot.y) * k;
+            spot.alpha = on ? Math.min(1, spot.alpha + dt * 5.5) : Math.max(0, spot.alpha - dt * 6.5);
+            if (spot.alpha < 0.003)
+                spot.alpha = 0;
+            if (spot.alpha > 0 || before > 0)
+                this._syncShape();
+            const lit = on || spot.alpha > 0;
+            if (lit === fast)
+                return GLib.SOURCE_CONTINUE;
+            fast = lit;
+            this._spotTick = GLib.timeout_add(GLib.PRIORITY_DEFAULT, fast ? SPOT_FRAME_MS : 250, tick);
+            return GLib.SOURCE_REMOVE;
+        };
+        this._spotTick = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 250, tick);
     }
 
     /** Whether an 'aura' tint lights the glow layer. */
@@ -986,6 +1094,9 @@ export const Island = GObject.registerClass({
 
     /** Stops the springs and a pending glow redraw. */
     _onDestroy() {
+        if (this._spotTick)
+            GLib.source_remove(this._spotTick);
+        this._spotTick = 0;
         this._pulse?.stop();
         this._pulse = null;
         this._liftTimeline?.stop();

@@ -139,6 +139,14 @@ const INTERFACES = {
             <property name="Latest" type="s" access="read"/>`),
         properties: {Latest: 'updates'},
     },
+    weather: {
+        xml: node('Weather1', `
+            <method name="SetConfig"><arg name="config" type="s" direction="in"/></method>
+            <method name="Refresh"/>
+            <method name="Search"><arg name="name" type="s" direction="in"/><arg name="lang" type="s" direction="in"/><arg name="places" type="s" direction="out"/></method>
+            <property name="Weather" type="s" access="read"/>`),
+        properties: {Weather: 'weather'},
+    },
     agents: {
         xml: node('Agents1', `
             <method name="SetHooked"><arg name="provider" type="s" direction="in"/><arg name="on" type="b" direction="in"/></method>

@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 zickrian
 
-// The island's look: Isle's own black, or glass over what is behind it. What Cairo paints in the island's
-// colour asks here; CSS does the rest. Settings loads it too: no shell imports.
+// The island's look: Isle's own black, glass over what is behind it, or one of Daozai's skins (cream, light
+// glass, the floating cloud; see skinRules.js). What Cairo paints in the island's colour asks here; CSS does
+// the rest. Settings loads it too: no shell imports.
+
+import {isLight, mapColor, PALETTES} from './skinRules.js';
 
 // What is behind is blurred and toned in one pass (glass.js): its lightness mapped to lo + span × l^gamma, its
 // colour kept × saturation (`small` on a closed island or an alert, `large` open), a sheen and a glow added.
@@ -16,6 +19,16 @@ const LOOKS = {
         edge: {color: [1, 1, 1], top: 0.16, bottom: 0.1},
         blur: {radius: 14, brightness: 1, small: 0.95, large: 1.15, lo: 0.03, span: 0.64, gamma: 1, deep: 0.52,
             knee: 0.22, sheen: 0.03, glow: 0.05, lens: 26, band: 24, spread: 0.7, rim: 0.5, rimWidth: 1.1}},
+    // Cream: warm white paper, dark brown ink, orange where the theme is blue.
+    cream: {fill: [1, 243 / 255, 228 / 255, 1], solid: [1, 243 / 255, 228 / 255], edge: null, blur: null},
+    // Light glass: white frosted glass, what is behind it blurred well and lifted nearly to white, its colours
+    // faint; near-black ink; a rim of light.
+    'glass-light': {fill: [248 / 255, 248 / 255, 250 / 255, 0.3], solid: [0.93, 0.93, 0.94],
+        edge: {color: [1, 1, 1], top: 0.55, bottom: 0.55},
+        blur: {radius: 40, brightness: 1, small: 0.5, large: 0.6, lo: 0.7, span: 0.27, gamma: 1, deep: 0, knee: 1,
+            sheen: 0.06, glow: 0, lens: 0, band: 20, spread: 0, rim: 0, rimWidth: 1.1}},
+    // The floating cloud: half-clear grey, washed with the cover's colour (the controller's tint); white ink.
+    fluid: {fill: [52 / 255, 52 / 255, 52 / 255, 0.52], solid: [0.2, 0.2, 0.2], edge: null, blur: null},
 };
 
 // Glass at its darkest (Settings' tint at 100): dark smoked glass, as GNOME's blurred menus look: what is behind
@@ -52,6 +65,31 @@ export function setTheme(name, tint = 0) {
 /** The look in use, glass with its tint. */
 const look = () => current === 'glass' ? tinted : LOOKS[current];
 
+/** The look's name, as Settings has it. */
+export function name() {
+    return current;
+}
+
+/** The skin's palette, for a look whose colours are mapped from the black island's (see skinRules.js); else null. */
+export function palette() {
+    return PALETTES[current] ?? null;
+}
+
+/** Whether the island is light: its ink is then dark. */
+export function light() {
+    const colours = palette();
+    return Boolean(colours) && isLight(colours);
+}
+
+/** A colour drawn for the black island (RGB in 0..1, and its alpha), as the look has it: [r, g, b, a] in 0..1.
+ * On black and on glass it is as given. */
+export function ink(rgb, alpha = 1) {
+    const colours = palette();
+    if (!colours || !isLight(colours))
+        return [...rgb, alpha];
+    return mapColor([...rgb.map(c => Math.round(c * 255)), Math.round(alpha * 255)], colours).map(c => c / 255);
+}
+
 /** Whether the island shows what is behind it (glass), with all on it made to match. */
 export function translucent() {
     return current === 'glass';
@@ -75,7 +113,9 @@ export function edge() {
 /** A signal colour (green, red, orange…) as RGB for the island: on black as it is, lifted a quarter towards white on
  * glass, whose lighter grey would dull it (an icon, a ring, a badge). */
 export function semantic(rgb) {
-    return current === 'black' ? rgb : rgb.map(c => c + (1 - c) * 0.25);
+    if (light())
+        return ink(rgb).slice(0, 3);
+    return current === 'glass' ? rgb.map(c => c + (1 - c) * 0.25) : rgb;
 }
 
 /** How what is behind the island is blurred and toned (see above and glass.js), or null for not at all. */

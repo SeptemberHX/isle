@@ -20,6 +20,11 @@ const CALENDAR_REMINDERS = ['org.gnome.Evolution-alarm-notify', 'org.gnome.Shell
 const TAB_MARK = 'isle-agent-tab';
 /** The agent sessions whose Ghostty tab is known, at most. */
 const MAX_TABS = 64;
+/** Claude Code's own notifications, as it has Ghostty post them ("Claude is waiting for your input"): its hook
+ * tells Isle the same at the same moment, and Isle's alert of it stands in for this one. */
+const CLAUDE_TITLE = 'Claude Code';
+/** A notification of Claude Code's and its hook's event this close together (ms) are about the same thing. */
+const SAME_NOTICE_MS = 2000;
 /** How long (ms) after asking Ghostty for a tab its window may ask for attention, and get the focus. */
 const PRESENT_WITHIN_MS = 1000;
 
@@ -52,6 +57,9 @@ export class NotificationCenter extends Signals.EventEmitter {
         this._isleSettings = isleSettings;
         /** Whether Isle's own event alert stands in for the calendar reminder with this id, as (id) => boolean. */
         this.remindsOf = null;
+        /** Whether Isle alerts of what Claude Code says in the terminal app `app` (its id) by itself now, as
+         * (app) => boolean: then Claude Code's own notification there is taken away (see `_takesNotice`). */
+        this.alertsOfAgent = null;
         this._bannersChanged = isleSettings.connect('changed::gnome-banners', () => this._syncBanners());
         this._syncBanners();
         this._eventAlertsChanged = isleSettings.connect('changed::event-alerts', () => {
@@ -82,6 +90,49 @@ export class NotificationCenter extends Signals.EventEmitter {
     /** Whether the unread bell shows. */
     get hasUnseen() {
         return [...this._sources.keys()].some(source => source.notifications.some(isUnread));
+    }
+
+    /** The notifications in the list, read or not, by the app they are from, the app with the latest first:
+     * [{key, title, gicon, count, notifications}], each app's own latest first. Apps are told apart by their id,
+     * else their name. */
+    byApp() {
+        const at = notification => notification.isleUnreadSince || notification.datetime.to_unix() * 1000;
+        const groups = new Map();
+        for (const source of this._sources.keys()) {
+            const listed = [...source.notifications];
+            if (!listed.length)
+                continue;
+            const key = appOf(source) || source.title || '';
+            const group = groups.get(key) ?? {key, title: source.title ?? '', gicon: null, notifications: []};
+            group.notifications.push(...listed);
+            // The app's own icon; one with none (a script's notify-send) shows its notification's.
+            group.gicon ??= source.app?.get_icon?.() ?? source.icon ?? listed.find(notification => notification.gicon)?.gicon ?? null;
+            groups.set(key, group);
+        }
+        const list = [...groups.values()];
+        for (const group of list) {
+            group.notifications.sort((a, b) => at(b) - at(a));
+            group.count = group.notifications.length;
+        }
+        return list.sort((a, b) => at(b.notifications[0]) - at(a.notifications[0]));
+    }
+
+    /** Takes `notifications` off the list, as Clear does all of them; one gone meanwhile is left alone. */
+    dismiss(notifications) {
+        for (const notification of notifications) {
+            if (notification.source?.notifications.includes(notification))
+                notification.destroy(MessageTray.NotificationDestroyedReason.DISMISSED);
+        }
+    }
+
+    /** Goes to the app of `group` (one of `byApp`) as a click on its latest notification does, and takes its
+     * notifications off the list: they are looked at there. */
+    openApp(group) {
+        const [latest, ...rest] = group.notifications;
+        this.dismiss(rest);
+        latest.activate();
+        // One the app keeps after a click (a "resident" one) goes too.
+        this.dismiss([latest]);
     }
 
     /** When the latest unread one came or changed (ms since the epoch), 0 with none. */
@@ -169,7 +220,8 @@ export class NotificationCenter extends Signals.EventEmitter {
             return;
         const ids = [
             source.connect('notification-added', (_source, notification) => {
-                if (this._takesTab(source, notification) || this._standsInFor(source, notification)) {
+                if (this._takesTab(source, notification) || this._takesNotice(source, notification) ||
+                    this._standsInFor(source, notification)) {
                     // Once GNOME queued its banner, which this takes back too.
                     Promise.resolve().then(() => notification.destroy(MessageTray.NotificationDestroyedReason.EXPIRED));
                     return;
@@ -180,7 +232,8 @@ export class NotificationCenter extends Signals.EventEmitter {
             }),
             source.connect('notification-removed', () => this.emit('changed')),
             source.connect('notification-request-banner', (_source, notification) => {
-                if (!this._isTabMark(source, notification) && !this._standsInFor(source, notification))
+                if (!this._isTabMark(source, notification) && !notification.isleStoodIn &&
+                    !this._standsInFor(source, notification))
                     this._onBannerRequest(notification);
             }),
         ];
@@ -210,6 +263,44 @@ export class NotificationCenter extends Signals.EventEmitter {
                 this._tabs.delete(this._tabs.keys().next().value);
         }
         return true;
+    }
+
+    /** Claude Code's own notification, posted by the Ghostty tab it runs in: taken away (true) while Isle's
+     * alert of the same says it instead, in the user's language and with the way to that tab. Under Do Not
+     * Disturb, or with Ghostty in front (Isle then alerts of nothing), it stays as it is. Its target is the
+     * tab's: the session whose hook speaks at the same moment is in that tab (see `agentSpoke`). */
+    _takesNotice(source, notification) {
+        const target = notification._defaultAction === 'app.present-surface' ? notification._defaultActionTarget : null;
+        const app = appOf(source);
+        if (notification.title !== CLAUDE_TITLE || !(target instanceof GLib.Variant) || !app ||
+            !Gio.Application.id_is_valid(app) || this.dnd || !this.alertsOfAgent?.(app))
+            return false;
+        const now = Date.now();
+        if (this._spoke && now - this._spoke.at < SAME_NOTICE_MS)
+            this._learnTab(this._spoke.session, {app, target});
+        this._noticed = {tab: {app, target}, at: now};
+        notification.isleStoodIn = true;
+        return true;
+    }
+
+    /** Claude Code's hook just spoke for `session`: a notification of its own taken a moment ago, or about to
+     * be, tells that session's tab. */
+    agentSpoke(session) {
+        if (!session)
+            return;
+        const now = Date.now();
+        if (this._noticed && now - this._noticed.at < SAME_NOTICE_MS)
+            this._learnTab(session, this._noticed.tab);
+        this._spoke = {session, at: now};
+    }
+
+    /** Keeps `tab` for `session`, unless its own mark told one already (that one is certain). */
+    _learnTab(session, tab) {
+        if (this._tabs.has(session))
+            return;
+        this._tabs.set(session, tab);
+        if (this._tabs.size > MAX_TABS)
+            this._tabs.delete(this._tabs.keys().next().value);
     }
 
     /** Whether agent `session`'s Ghostty tab is known. */

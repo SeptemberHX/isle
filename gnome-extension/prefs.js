@@ -27,6 +27,7 @@ const DAEMON_PATH = '/io/github/zickrian/isle/Daemon';
 const POMODORO_INTERFACE = 'io.github.zickrian.isle.Pomodoro1';
 const CLIPBOARD_INTERFACE = 'io.github.zickrian.isle.Clipboard1';
 const AGENTS_INTERFACE = 'io.github.zickrian.isle.Agents1';
+const WEATHER_INTERFACE = 'io.github.zickrian.isle.Weather1';
 const ASSISTANT_INTERFACE = 'io.github.zickrian.isle.Assistant1';
 /** Edits to the timer are sent once typing pauses for this long. */
 const SAVE_DELAY_MS = 400;
@@ -49,6 +50,7 @@ export default class IslePreferences extends ExtensionPreferences {
         window.add(this._timerPage(settings, window));
         window.add(this._voicePage(settings, window));
         window.add(this._usagePage(settings, window));
+        window.add(this._weatherPage(settings, window));
         window.add(this._aboutPage(settings, window));
         // A page asked for by the island (its Update button: About), once, also while open.
         const showAsked = () => {
@@ -109,6 +111,24 @@ export default class IslePreferences extends ExtensionPreferences {
         }));
         reset.add(resetRow);
         page.add(reset);
+        return page;
+    }
+
+    // The weather: its switch, the temperature beside the clock, and the place it is for.
+    _weatherPage(settings, window) {
+        const page = new Adw.PreferencesPage({title: _('Weather'), icon_name: 'weather-few-clouds-symbolic'});
+        const group = new Adw.PreferencesGroup({
+            title: _('Weather'),
+            description: _('The weather now and the week ahead, on a Weather page in the open island. Read from ' +
+                'Open-Meteo every quarter of an hour; no account, and nothing asked while this is off.'),
+        });
+        group.add(switchRow(settings, 'weather-enabled', _('Show the weather'), _('The Weather page and its tab')));
+        const closed = switchRow(settings, 'weather-closed', _('Temperature beside the clock'),
+            _('The weather’s icon and the temperature on the closed island'));
+        settings.bind('weather-enabled', closed, 'sensitive', Gio.SettingsBindFlags.GET);
+        group.add(closed);
+        page.add(group);
+        page.add(weatherPlaceGroup(settings, window));
         return page;
     }
 
@@ -368,9 +388,12 @@ export default class IslePreferences extends ExtensionPreferences {
         const page = new Adw.PreferencesPage({title: _('Island'), icon_name: 'preferences-desktop-appearance-symbolic'});
 
         const look = new Adw.PreferencesGroup({title: _('Appearance')});
-        look.add(choiceRow(settings, 'island-theme', _('Island'), _('Black, or clear glass that shows what is behind it, blurred'), [
+        look.add(choiceRow(settings, 'island-theme', _('Island'), _('Black, glass that shows what is behind it, or a skin'), [
             ['black', _('Black')],
             ['glass', _('Glass')],
+            ['cream', _('Cream')],
+            ['glass-light', _('Light glass')],
+            ['fluid', _('Floating cloud')],
         ]));
         look.add(glassRow(settings, window));
         look.add(choiceRow(settings, 'island-shape', _('Shape'), _('Joined to the top of the screen, or floating free'), [
@@ -410,6 +433,10 @@ export default class IslePreferences extends ExtensionPreferences {
             ['large', _('Large')],
         ]));
         look.add(switchRow(settings, 'clock-date', _('Show the date'), _('The day beside the time on the closed island, as “Fri 6”')));
+        look.add(switchRow(settings, 'closed-lyrics', _('Lyrics on the closed island'),
+            _('The line being sung in place of the clock, while a song with synced lyrics plays')));
+        look.add(switchRow(settings, 'companion', _('A companion on the closed island'),
+            _('A little face that lives there: it blinks, follows the pointer, sings along with your music, dozes while you are away and cheers when something is done')));
         look.add(switchRow(settings, 'privacy-indicators', _('Privacy indicators'), _('Dots when the camera, microphone or screen sharing is in use')));
         look.add(choiceRow(settings, 'island-monitor', _('Display'), _('With more than one display, where the island is'), [
             ['primary', _('Main display')],
@@ -442,6 +469,8 @@ export default class IslePreferences extends ExtensionPreferences {
         hideDelay.connect('destroy', () => settings.disconnect(waitsChanged));
         waits();
         look.add(hideDelay);
+        look.add(switchRow(settings, 'oled-shift', _('Pixel shift for OLED displays'),
+            _('The closed island moves a pixel sideways now and then, so its time does not mark the display')));
         page.add(look);
         page.add(pagesGroup(settings, window));
         page.add(pageHeightsGroup(settings, window));
@@ -458,6 +487,8 @@ export default class IslePreferences extends ExtensionPreferences {
             subtitle: _('Apps’ notifications in the island, with their buttons, as GNOME shows them')});
         settings.bind('gnome-banners', notifications, 'active', Gio.SettingsBindFlags.INVERT_BOOLEAN);
         alerts.add(notifications);
+        alerts.add(switchRow(settings, 'unread-bubbles', _('Apps with notifications beside the open island'),
+            _('An icon for each app with notifications, and how many, until they are cleared; click one to go to the app, right-click to clear its notifications')));
         alerts.add(switchRow(settings, 'replace-osd', _('Volume and brightness'), _('Show them in the island instead of the centre of the screen')));
         alerts.add(switchRow(settings, 'alerts-over-fullscreen', _('Over full-screen apps'),
             _('Alerts show over a video or game, then hide again; off, they wait until it leaves full screen')));
@@ -963,7 +994,7 @@ const PAGES = [
 /** The pages a shortcut of their own may open from anywhere, as the controller's SHORTCUT_PAGES, with their names. */
 const SHORTCUT_PAGES = [...PAGES.map(([name, title, iconName]) => [name, title, iconName]),
     ['apps', N_('Apps'), 'view-app-grid-symbolic'], ['devices', N_('Devices'), 'bluetooth-active-symbolic'],
-    ['usage', N_('AI Usage'), 'power-profile-performance-symbolic']];
+    ['weather', N_('Weather'), 'weather-few-clouds-symbolic'], ['usage', N_('AI Usage'), 'power-profile-performance-symbolic']];
 
 /** A shortcut per page, none at first: GNOME's own shortcuts keep their keys (see `shortcutRow`). */
 function shortcutsGroup(settings) {
@@ -1079,6 +1110,9 @@ function pagesGroup(settings, window) {
     group.add(devices);
     const usage = switchRow(settings, 'usage-enabled', _('AI Usage'), _('Your AI plans’ limits, and warnings as one nears its end'));
     usage.add_prefix(new Gtk.Image({icon_name: 'power-profile-performance-symbolic'}));
+    const weather = switchRow(settings, 'weather-enabled', _('Weather'), _('The weather now and the week ahead, from Open-Meteo'));
+    weather.add_prefix(new Gtk.Image({icon_name: 'weather-few-clouds-symbolic'}));
+    group.add(weather);
     if (!usageProviders().length) {
         usage.sensitive = false;
         usage.subtitle = _('Sign in to Claude Code, Codex or Grok to see your plan');
@@ -1118,8 +1152,101 @@ const PAGE_TITLES = {
     calendar: [N_('Calendar')],
     apps: [N_('Apps')],
     devices: [N_('Devices'), N_('Only while a device is connected')],
+    weather: [N_('Weather')],
     usage: [N_('AI Usage')],
 };
+
+/** The place the weather is for (`weather-place`): where the network is, until one is searched for and picked. */
+function weatherPlaceGroup(settings, window) {
+    const group = new Adw.PreferencesGroup({
+        title: _('Place'),
+        description: _('With none picked, Isle asks ipwho.is where your network’s address is, and nothing else.'),
+    });
+    const current = new Adw.ActionRow();
+    const automatic = new Gtk.Button({label: _('Automatic'), valign: Gtk.Align.CENTER});
+    automatic.connect('clicked', () => settings.set_string('weather-place', ''));
+    current.add_suffix(automatic);
+    group.add(current);
+    const picked = () => {
+        try {
+            return JSON.parse(settings.get_string('weather-place') || 'null');
+        } catch {
+            return null;
+        }
+    };
+    const sync = () => {
+        const place = picked();
+        current.title = place?.label ? GLib.markup_escape_text(place.label, -1) : _('Where your network is');
+        current.subtitle = place?.label ? GLib.markup_escape_text(place.region ?? '', -1) : _('Found by itself');
+        automatic.sensitive = Boolean(place?.label);
+    };
+    const changed = settings.connect('changed::weather-place', sync);
+    sync();
+
+    // A name typed, then Enter (or the tick): the places isled finds, a row each to pick.
+    const search = new Adw.EntryRow({title: _('Search for a town or city'), show_apply_button: true});
+    group.add(search);
+    let found = [];
+    let asked = 0;
+    const clear = () => {
+        found.forEach(row => group.remove(row));
+        found = [];
+    };
+    const say = text => {
+        const row = new Adw.ActionRow({title: text, css_classes: ['dim-label']});
+        group.add(row);
+        found.push(row);
+    };
+    search.connect('apply', () => {
+        const name = search.text.trim();
+        clear();
+        if (name.length < 2)
+            return;
+        say(_('Searching…'));
+        const mine = ++asked;
+        Gio.DBus.session.call(DAEMON, DAEMON_PATH, WEATHER_INTERFACE, 'Search',
+            new GLib.Variant('(ss)', [name, GLib.get_language_names()[0] ?? '']), null, Gio.DBusCallFlags.NONE, 30000, null,
+            (bus, result) => {
+                let places = null;
+                try {
+                    places = JSON.parse(bus.call_finish(result).deepUnpack()[0]);
+                } catch {
+                    // isled not running, or the search out of reach.
+                }
+                // Another search began meanwhile, or the window closed.
+                if (mine !== asked)
+                    return;
+                clear();
+                if (!places) {
+                    say(_('Couldn’t search just now. Try again in a moment.'));
+                } else if (!places.length) {
+                    say(_('No place called “{name}”', {name}));
+                } else {
+                    for (const place of places) {
+                        const row = new Adw.ActionRow({
+                            title: GLib.markup_escape_text(place.label, -1),
+                            subtitle: GLib.markup_escape_text(place.region ?? '', -1),
+                            activatable: true,
+                        });
+                        row.add_suffix(new Gtk.Image({icon_name: 'go-next-symbolic'}));
+                        row.connect('activated', () => {
+                            settings.set_string('weather-place', JSON.stringify(place));
+                            search.text = '';
+                            clear();
+                        });
+                        group.add(row);
+                        found.push(row);
+                    }
+                }
+            });
+    });
+    window.connect('close-request', () => {
+        asked = -1;
+        settings.disconnect(changed);
+        return false;
+    });
+    return group;
+}
 
 /** Whether page `name` is in the island now, by its switch in the Pages group. */
 function pageShown(settings, name) {
@@ -1129,6 +1256,8 @@ function pageShown(settings, name) {
         return settings.get_boolean('usage-enabled');
     if (name === 'devices')
         return settings.get_boolean('devices-page');
+    if (name === 'weather')
+        return settings.get_boolean('weather-enabled');
     return !settings.get_strv('hidden-pages').includes(name);
 }
 
@@ -1163,7 +1292,7 @@ function pageHeightsGroup(settings, window) {
             row.sensitive = pageShown(settings, name);
         }
     };
-    const changed = ['page-heights', 'open-size', 'hidden-pages', 'app-usage', 'devices-page', 'usage-enabled'].map(key =>
+    const changed = ['page-heights', 'open-size', 'hidden-pages', 'app-usage', 'devices-page', 'weather-enabled', 'usage-enabled'].map(key =>
         settings.connect(`changed::${key}`, sync));
     window.connect('close-request', () => {
         changed.forEach(id => settings.disconnect(id));

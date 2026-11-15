@@ -18,6 +18,7 @@ import {words} from './daemonWords.js';
 import * as Format from './format.js';
 import {_, N_} from './i18n.js';
 import {icon, iconButton, playMotion, slideBy, wrapLines} from './widgets.js';
+import * as Theme from './theme.js';
 
 /** The little face beside its answers, in CSS pixels (see `px`). */
 const FACE_SIZE = 18;
@@ -164,12 +165,12 @@ class Sweep extends St.DrawingArea {
         cr.arc(r, r, r, Math.PI / 2, 1.5 * Math.PI);
         cr.arc(width - r, r, r, -Math.PI / 2, Math.PI / 2);
         cr.closePath();
-        cr.setSourceRGBA(1, 1, 1, 0.1);
+        cr.setSourceRGBA(...Theme.ink([1, 1, 1], 0.1));
         cr.fillPreserve();
         const at = (this._time * 0.55) % 1.4 - 0.2;
         const light = new Cairo.LinearGradient(0, 0, width, 0);
         for (const [offset, alpha] of [[at - 0.22, 0], [at, 0.85], [at + 0.22, 0]])
-            light.addColorStopRGBA(Math.max(0, Math.min(1, offset)), 1, 1, 1, alpha);
+            light.addColorStopRGBA(Math.max(0, Math.min(1, offset)), ...Theme.ink([1, 1, 1]).slice(0, 3), alpha);
         cr.setSource(light);
         cr.fill();
         cr.$dispose();
@@ -184,11 +185,14 @@ export function answerMarkup(text) {
         const listed = bullet.test(line);
         // Code spans first, as written; bold only in the words between them, so the markup always nests.
         const body = (listed ? line.replace(bullet, '') : line).split(/(`[^`]+`)/).map((part, i) => i % 2
-            ? `<span font_family="monospace" background="#ffffff" bgalpha="12%">${GLib.markup_escape_text(part.slice(1, -1), -1)}</span>`
+            ? `<span font_family="monospace" background="${inkHex()}" bgalpha="12%">${GLib.markup_escape_text(part.slice(1, -1), -1)}</span>`
             : GLib.markup_escape_text(part, -1).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')).join('');
         return listed ? `  •  ${body}` : body;
     }).join('\n');
 }
+
+/** White as the look has it (a light skin's ink), for Pango: "#rrggbb". */
+const inkHex = () => `#${Theme.ink([1, 1, 1]).slice(0, 3).map(c => Math.round(c * 255).toString(16).padStart(2, '0')).join('')}`;
 
 /** How a command's words are coloured: a little like a shell's own highlighting. */
 const SHELL = {
@@ -202,7 +206,7 @@ const SHELL = {
 };
 /** A span of `text` in one of SHELL's colours (Pango wants its alpha apart). */
 const span = ([color, alpha], text, bold = false) =>
-    `<span foreground="${color}" fgalpha="${alpha}%"${bold ? ' weight="bold"' : ''}>${text}</span>`;
+    `<span foreground="${color === '#ffffff' ? inkHex() : color}" fgalpha="${alpha}%"${bold ? ' weight="bold"' : ''}>${text}</span>`;
 const JOINERS = new Set(['|', '||', '&&', ';', '>', '>>', '<', '2>&1']);
 
 /** `command` as Pango markup: the program bright, sudo amber, flags dim, links and quotes blue, pipes pink. */

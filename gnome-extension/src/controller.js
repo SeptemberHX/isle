@@ -49,6 +49,11 @@ import {ShelfPage} from './pages/shelf.js';
 import {TasksPage} from './pages/tasks.js';
 import {TimerPage} from './pages/timer.js';
 import {UsagePage} from './pages/usage.js';
+import {WeatherPage} from './pages/weather.js';
+import {BUBBLES_GAP, UnreadBubbles} from './bubbles.js';
+import {shiftAt, STEP_MS} from './oledShift.js';
+import {PALETTES} from './skinRules.js';
+import {resetIcons} from './widgets.js';
 import {ReminderWatcher} from './reminders.js';
 import {PAGE_HEIGHT} from './pageHeights.js';
 import * as Theme from './theme.js';
@@ -141,7 +146,7 @@ const PILL_HEADER_TOP = 8;
 /** The pages a shortcut of their own may open from anywhere (Settings → Shortcuts; `shortcut-<page>`, none set at
  * first: the usual ones are GNOME's). As prefs.js lists them. */
 const SHORTCUT_PAGES = ['music', 'notifications', 'focus', 'reminders', 'shelf', 'calendar', 'apps', 'devices',
-    'usage'];
+    'weather', 'usage'];
 
 /** A question back is shown this long before the island listens for the reply. */
 const VOICE_LISTEN_AGAIN_MS = 900;
@@ -185,6 +190,11 @@ export class Controller {
     constructor(extension) {
         this._extension = extension;
         this._settings = extension.getSettings();
+        // Before anything is built: a light skin's icons and drawings take its ink as they are made.
+        Theme.setTheme(this._settings.get_string('island-theme'), this._settings.get_int('glass-tint'));
+        resetIcons();
+        /** The look the island was built in: another light one builds it again (see `_syncTheme`). */
+        this._skin = Theme.name();
         // Before any view shows a time: 24 or 12 hours, or as GNOME's clock (Settings → Appearance → Clock).
         Format.setClockFormat(this._settings.get_string('clock-format'));
         this._daemon = new Daemon();
@@ -291,6 +301,9 @@ export class Controller {
         }
         this._notifications = new NotificationCenter(this._settings);
         this._notifications.remindsOf = id => this._expanded?.pageNamed('calendar')?.remindsOf(id) ?? false;
+        // As `_showAgentEvent` decides: no alert with the agent's terminal in front, so its own notification stays.
+        this._notifications.alertsOfAgent = app => this._alertsOn('claude') && this._island.visible &&
+            global.display.focus_window?.get_gtk_application_id() !== app;
         this._privacy = new PrivacyMonitor(this._daemon);
         this._call = new CallMonitor(this._privacy, this._settings);
         this._audio = new AudioOutputs();
@@ -323,6 +336,12 @@ export class Controller {
             this._island.addView(view);
         Main.layoutManager.addChrome(this._island, this._chromeParams());
         this._chrome = this._chromeParams();
+        // The unread apps, beside the open island (Settings → Notifications): the island's own for the pointer.
+        this._bubbles = new UnreadBubbles(this._notifications);
+        Main.layoutManager.addChrome(this._bubbles, {trackFullscreen: true});
+        this._island.addCompanion(this._bubbles);
+        this._island.connect('geometry-changed', () => this._placeBubbles());
+        this._bubbles.connect('opened', () => this.collapse());
         // GNOME Shell shutting down takes the island with the stage, Isle still on, and GNOME 51 runs on a
         // moment after: nothing of Isle's may run on it then.
         this._island.connect('destroy', () => {
@@ -409,6 +428,7 @@ export class Controller {
         this._syncVoiceEnabled();
         this._bindPageShortcuts();
         this._syncUsage();
+        this._syncWeather();
         this._syncEventAlerts();
         this._syncPages();
         // The pointer met while it was still being built (after unlocking, at rest on it) is told now.
@@ -432,6 +452,7 @@ export class Controller {
             () => new CalendarPage(this._daemon, this._settings, size),
             () => new AppsPage(this._daemon, this._appUsage, size),
             () => new DevicesPage(this._daemon, size),
+            () => new WeatherPage(this._daemon, size),
             () => new UsagePage(this._daemon, size),
         ];
     }
@@ -452,6 +473,7 @@ export class Controller {
             if (expanded.page === this._shelf)
                 this._shelfHelper?.prepare();
             this._shelfHelper?.sync();
+            this._syncBubbles();
         });
         expanded.connect('page-settled', () => this._shelfHelper?.sync());
         expanded.pageNamed('shelf').connect('helper-area-changed', () => this._shelfHelper?.sync());
@@ -577,7 +599,12 @@ export class Controller {
             this._settingsChanged.push(this._settings.connect(`changed::${key}`, () => this._syncUsage()));
         for (const key of ['event-alerts', 'event-alert-minutes'])
             this._settingsChanged.push(this._settings.connect(`changed::${key}`, () => this._syncEventAlerts()));
-        for (const key of ['hidden-pages', 'world-clocks', 'app-usage', 'devices-page', 'open-size'])
+        this._settingsChanged.push(this._settings.connect('changed::unread-bubbles', () => this._render()));
+        this._settingsChanged.push(this._settings.connect('changed::oled-shift', () => this._syncOledShift()));
+        this._syncOledShift();
+        for (const key of ['weather-enabled', 'weather-place'])
+            this._settingsChanged.push(this._settings.connect(`changed::${key}`, () => this._syncWeather()));
+        for (const key of ['hidden-pages', 'world-clocks', 'app-usage', 'devices-page', 'weather-enabled', 'open-size'])
             this._settingsChanged.push(this._settings.connect(`changed::${key}`, () => this._syncPages()));
         this._settingsChanged.push(this._settings.connect('changed::app-usage-clear', () => this._syncAppUsage()));
         for (const key of ['island-theme', 'glass-tint'])
@@ -655,6 +682,8 @@ export class Controller {
         daemon.connect('appeared', (_daemon, name) => {
             if (name === 'usage')
                 this._syncUsage();
+            else if (name === 'weather')
+                this._syncWeather();
             else if (name === 'updates')
                 this._syncUpdates();
             else if (name === 'media')
@@ -775,10 +804,12 @@ export class Controller {
             compact[name] = value;
     }
 
-    /** The unread dot, unless the Notifications page it leads to is left out. */
+    /** The bell while there are notifications, its red dot while some are unread; neither with the Notifications
+     * page they lead to left out. */
     _syncUnseen() {
-        this._setCompact('unseenNotifications', this._notifications.unseenCount > 0 &&
-            !this._settings.get_strv('hidden-pages').includes('notifications'));
+        const page = !this._settings.get_strv('hidden-pages').includes('notifications');
+        this._setCompact('unseenNotifications', page && this._notifications.unseenCount > 0);
+        this._setCompact('waitingNotifications', page && this._notifications.notifications.length > 0);
     }
 
     // Layout
@@ -1169,6 +1200,9 @@ export class Controller {
             // Devices is off until turned on, as an app is installed: its own switch, not `hidden-pages`.
             else if (page.name === 'devices')
                 page.hidden = !this._settings.get_boolean('devices-page');
+            // Weather too: off, isled asks no one for it.
+            else if (page.name === 'weather')
+                page.hidden = !this._settings.get_boolean('weather-enabled');
             else if (page.name !== 'call' && page.name !== 'usage')
                 page.hidden = hidden.includes(page.name);
         }
@@ -1182,7 +1216,14 @@ export class Controller {
 
     /** The island in Isle's black or in glass, the glass with GNOME's accent (see theme.js). */
     _syncTheme() {
+        const light = Theme.light();
         Theme.setTheme(this._settings.get_string('island-theme'), this._settings.get_int('glass-tint'));
+        // To or from a light skin every icon and drawing changes its ink: the island is built again.
+        if (Theme.light() !== light || (light && this._skin !== Theme.name())) {
+            this._skin = Theme.name();
+            this._extension.rebuild();
+            return;
+        }
         for (const island of [this._island, ...this._mirrors.map(mirror => mirror.island)])
             this._styleIsland(island);
         // An agent's alert glows in the new theme's colours on the copies too.
@@ -1198,6 +1239,15 @@ export class Controller {
     /** The theme on `island` (the island, or a copy of it on another display): its style, shape and parts. */
     _styleIsland(island) {
         const see = Theme.translucent();
+        // A light skin's colours are the stylesheet's own, mapped (its "Skins, generated" part).
+        for (const actor of [island, this._bubbles]) {
+            for (const name of Object.keys(PALETTES)) {
+                if (Theme.light() && name === Theme.name())
+                    actor?.add_style_class_name(`isle-skin-${name}`);
+                else
+                    actor?.remove_style_class_name(`isle-skin-${name}`);
+            }
+        }
         // The controls follow the tint in three steps (CSS can't blend): clear, middle, and dark like GNOME's menus.
         const tint = see ? this._settings.get_int('glass-tint') : 0;
         for (const [name, on] of [['isle-translucent', see], ['isle-accent-system', see && HAS_ACCENT],
@@ -1331,6 +1381,8 @@ export class Controller {
 
     /** Claude Code, Codex or Grok needs the user, or is done: an alert, unless its window is the one in front. */
     _onAgentEvent(event) {
+        if (event.provider === 'claude' && event.kind !== 'done')
+            this._notifications.agentSpoke(event.session);
         if (!this._alertsOn(event.provider) || this._notifications.dnd)
             return;
         // A permission the island asked for itself needs no second alert; one it could not ask (a long
@@ -1387,6 +1439,53 @@ export class Controller {
         if (!project)
             return null;
         return windows.filter(named).sort((a, b) => b.get_user_time() - a.get_user_time())[0] ?? null;
+    }
+
+    /** The pixel shift for OLED displays (Settings): on, the closed island moves a pixel sideways every `STEP_MS`
+     * (see oledShift.js); off, it is back in its place. */
+    _syncOledShift() {
+        const on = this._settings.get_boolean('oled-shift');
+        if (!on) {
+            this._cancel('oled-shift');
+            this._shiftSteps = 0;
+            this._applyOledShift();
+        } else if (!this._timeouts.has('oled-shift')) {
+            this._later('oled-shift', STEP_MS, () => {
+                // At rest only: open, or showing an alert or the assistant, it stays where it is.
+                if (this._presentation === 'compact') {
+                    this._shiftSteps = (this._shiftSteps ?? 0) + 1;
+                    this._applyOledShift();
+                }
+                this._syncOledShift();
+            });
+        }
+    }
+
+    /** The island and its copies on other monitors, as far to a side as the steps so far say. */
+    _applyOledShift() {
+        const shift = shiftAt(this._shiftSteps ?? 0);
+        for (const island of [this._island, ...this._mirrors.map(mirror => mirror.island)]) {
+            if (island)
+                island.translation_x = shift;
+        }
+    }
+
+    /** The apps' bubbles show beside the open island on its Notifications page only: they are that page's, the
+     * apps its notifications are from. */
+    _syncBubbles() {
+        if (!this._bubbles)
+            return;
+        this._bubbles.wanted = this._presentation === 'expanded' && this._settings.get_boolean('unread-bubbles') &&
+            this._expanded?.page?.name === 'notifications';
+    }
+
+    /** The unread bubbles beside the island's right side, below the top bar, as the island moves and grows. */
+    _placeBubbles() {
+        if (!this._bubbles || this._destroying)
+            return;
+        const [x, y] = this._island.get_transformed_position();
+        const top = (this._onBar ? this._topBar.height : 0) + px(BUBBLES_GAP);
+        this._bubbles.set_position(Math.round(x + this._island.width + px(BUBBLES_GAP)), Math.round(y + top));
     }
 
     /** Sizes and shapes the island for what it shows now: the assistant, the pages, an alert, or nothing. */
@@ -1463,6 +1562,8 @@ export class Controller {
             this._topBar.reserveWidth(this._compact.preferredWidth);
         this._island.morph(size, view);
         this._expanded.setActive(presentation === 'expanded');
+        this._syncBubbles();
+        this._placeBubbles();
         this._voice.setActive(presentation === 'voice');
         // A new alert under the pointer: its × shows (or not) at once.
         this._syncClose();
@@ -2179,7 +2280,7 @@ export class Controller {
                 // The shelf helper's window lies over the island: inside too.
                 const press = [Clutter.EventType.BUTTON_PRESS, Clutter.EventType.TOUCH_BEGIN].includes(event.type());
                 if (press && !this._shelfHelper.containsPointer() &&
-                    !this._island.contains(global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE, ...event.get_coords()))) {
+                    !this._island.holds(global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE, ...event.get_coords()))) {
                     this.collapse();
                     // Nothing in the island takes it; its release is let go in `_onClick`.
                     return Clutter.EVENT_STOP;
@@ -2520,6 +2621,22 @@ export class Controller {
         };
         this._expanded.pageNamed('usage')?.setMarks(config.warn, config.critical);
         this._daemon.call('usage', 'SetConfig', JSON.stringify(config));
+    }
+
+    /** Sends the weather's settings to isled: whether to look, for which place (none picked: where the network
+     * is), and the language places are named in. */
+    _syncWeather() {
+        let place = null;
+        try {
+            place = JSON.parse(this._settings.get_string('weather-place') || 'null');
+        } catch {
+            // Not a place: where the network is.
+        }
+        this._daemon.call('weather', 'SetConfig', JSON.stringify({
+            enabled: this._settings.get_boolean('weather-enabled'),
+            place,
+            lang: GLib.get_language_names()[0] ?? '',
+        }));
     }
 
     // Voice
@@ -3271,6 +3388,7 @@ export class Controller {
 
         // The views listen to the services below, so they go first.
         this._destroyMirrors();
+        this._bubbles.destroy();
         this._island.destroy();
         this._writer.destroy();
         this._installedApps.destroy();

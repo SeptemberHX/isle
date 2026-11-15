@@ -73,7 +73,7 @@ const css = ([r, g, b], alpha = 1) =>
 /** The badge behind an icon, lit from the top in the alert's colour; grey when neutral. */
 function badgeStyle(rgb, neutral) {
     const [top, bottom] = neutral ? [0.16, 0.08] : [0.34, 0.16];
-    const base = neutral ? [1, 1, 1] : rgb;
+    const base = neutral ? Theme.ink([1, 1, 1]).slice(0, 3) : rgb;
     return `background-gradient-direction: vertical; background-gradient-start: ${css(base, top)}; ` +
         `background-gradient-end: ${css(base, bottom)};`;
 }
@@ -372,7 +372,7 @@ export const PeekView = GObject.registerClass({
             this._setChild(this._accessory, this._value);
         } else if (alert.status) {
             this._status.text = alert.status;
-            this._status.style = `color: ${color}; background-color: ${css(alert.tone === 'neutral' || !alert.tone ? [1, 1, 1] : rgb, 0.14)};`;
+            this._status.style = `color: ${color}; background-color: ${css(alert.tone === 'neutral' || !alert.tone ? Theme.ink([1, 1, 1]).slice(0, 3) : rgb, 0.14)};`;
             this._setChild(this._accessory, this._status);
         } else {
             this._setChild(this._accessory, null);

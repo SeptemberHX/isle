@@ -15,6 +15,7 @@ import {typedMinutes} from '../timerRules.js';
 import {Ring, icon, iconButton, label, setEnabled} from '../widgets.js';
 import {PAGE_HEIGHT} from '../expanded.js';
 import {Page} from './page.js';
+import * as Theme from '../theme.js';
 
 /** The phase's name inside the ring, under the time (translated as it shows). */
 const PHASES = {
@@ -302,7 +303,7 @@ class TimerPage extends Page {
         const idle = state.phase === 'idle';
         const remaining = this._remaining(state);
 
-        this._ring.color = timerColor(state.phase);
+        this._ring.color = Theme.semantic(timerColor(state.phase));
         this._ring.progress = idle ? 0 : 1 - remaining / state.duration_ms;
         this._time.text = Format.duration(remaining);
         this._phase.text = _(PHASES[state.phase] ?? PHASES.focus);

@@ -26,6 +26,7 @@ mod todo;
 mod updates;
 mod uri;
 mod usage;
+mod weather;
 
 use anyhow::{Context, bail};
 use futures_util::StreamExt;
@@ -48,6 +49,7 @@ use crate::system::SystemService;
 use crate::todo::TodoService;
 use crate::updates::UpdatesService;
 use crate::usage::UsageService;
+use crate::weather::WeatherService;
 
 const BUS_NAME: &str = "io.github.zickrian.isle.Daemon";
 const OBJECT_PATH: &str = "/io/github/zickrian/isle/Daemon";
@@ -151,6 +153,7 @@ async fn run() -> anyhow::Result<()> {
     let (assistant, assistant_commands) = AssistantService::new();
     let (usage, usage_refresh) = UsageService::new();
     let (updates, updates_wake) = UpdatesService::new();
+    let (weather, weather_wake) = WeatherService::new();
     let (media, media_wishes) = MediaService::new();
     let server = session.object_server();
     server.at(OBJECT_PATH, media).await?;
@@ -166,6 +169,7 @@ async fn run() -> anyhow::Result<()> {
     server.at(OBJECT_PATH, assistant).await?;
     server.at(OBJECT_PATH, usage).await?;
     server.at(OBJECT_PATH, updates).await?;
+    server.at(OBJECT_PATH, weather).await?;
     server.at(OBJECT_PATH, AgentsService::default()).await?;
 
     let media = server.interface::<_, MediaService>(OBJECT_PATH).await?;
@@ -178,6 +182,8 @@ async fn run() -> anyhow::Result<()> {
     tokio::spawn(usage::run(usage, usage_refresh));
     let updates = server.interface::<_, UpdatesService>(OBJECT_PATH).await?;
     tokio::spawn(updates::run(updates, updates_wake));
+    let weather = server.interface::<_, WeatherService>(OBJECT_PATH).await?;
+    tokio::spawn(weather::run(weather, weather_wake));
     let agents = server.interface::<_, AgentsService>(OBJECT_PATH).await?;
     tokio::spawn(agents::watch(agents));
     tokio::spawn(shelf::prune(

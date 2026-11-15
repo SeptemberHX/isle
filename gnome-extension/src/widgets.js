@@ -22,6 +22,41 @@ const icons = new Map();
 /** The desktop's icon theme, asked by `isSymbolic` (made when first needed). */
 let iconTheme = null;
 
+/** A file of the extension's, by its path from the extension's folder ("pet", "00-wink.png"); null before
+ * `setIconDir`. */
+export function extensionFile(...path) {
+    return path.reduce((file, name) => file?.get_child(name) ?? null, iconDir?.get_parent() ?? null);
+}
+
+/** Forgets the icons made: the look changed, and a light skin's are in its ink (see `inked`). */
+export function resetIcons() {
+    icons.clear();
+}
+
+// A light skin's weather: the sun deeper, the clouds a grey that shows on its paper, the rain and the snow blue
+// (Daozai's tones).
+const LIGHT_WEATHER = {'#ffffff': '#c8d4e6', '#ffd60a': '#ffb224', '#ffe08a': '#f0a020', '#64d2ff': '#2e90fa'};
+
+// One of Isle's own icons drawn in white (not a `-symbolic` one, which takes the style's colour), in a light
+// skin's ink: its file's white, outside a mask (where white means "show"), written as the ink. null for one that
+// is not white, or that cannot be read.
+function inked(file, name) {
+    try {
+        const [, bytes] = file.load_contents(null);
+        const text = new TextDecoder().decode(bytes);
+        const weather = name.startsWith('isle-wx-');
+        const [r, g, b] = Theme.ink([1, 1, 1]).map(c => Math.round(c * 255).toString(16).padStart(2, '0'));
+        const recolour = part => weather
+            ? part.replace(/#[0-9a-f]{6}/gi, colour => LIGHT_WEATHER[colour.toLowerCase()] ?? colour)
+            : part.replace(/#ffffff\b|#fff\b/gi, `#${r}${g}${b}`);
+        // Every other part is a mask, kept as it is.
+        const next = text.split(/(<mask[\s\S]*?<\/mask>)/).map((part, index) => index % 2 ? part : recolour(part)).join('');
+        return next === text ? null : Gio.BytesIcon.new(new TextEncoder().encode(next));
+    } catch {
+        return null;
+    }
+}
+
 /** Tells `icon()` where the extension's bundled icons live. */
 export function setIconDir(dir) {
     iconDir = dir;
@@ -110,7 +145,9 @@ export function icon(name) {
     name = ownName(name) ?? name;
     if (!icons.has(name)) {
         const file = iconDir?.get_child(`${name}.svg`);
-        icons.set(name, file?.query_exists(null) ? new Gio.FileIcon({file}) : new Gio.ThemedIcon({name}));
+        const own = file?.query_exists(null);
+        const light = own && Theme.light() && !name.includes('-symbolic') ? inked(file, name) : null;
+        icons.set(name, light ?? (own ? new Gio.FileIcon({file}) : new Gio.ThemedIcon({name})));
     }
     return icons.get(name);
 }
@@ -366,7 +403,7 @@ export const Ring = GObject.registerClass({
     },
 }, class Ring extends St.Widget {
     /** `size` in CSS pixels; `child` (a badge) sits in the middle and pops in with a sweep. */
-    _init({size, lineWidth = 2.5, color = [1, 1, 1], trackOpacity = 0.18, child = null}) {
+    _init({size, lineWidth = 2.5, color = Theme.ink([1, 1, 1]).slice(0, 3), trackOpacity = 0.18, child = null}) {
         super._init({
             layout_manager: new Clutter.BinLayout(),
             y_align: Clutter.ActorAlign.CENTER,

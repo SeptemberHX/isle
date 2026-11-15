@@ -7,6 +7,7 @@
 mod art;
 mod gap;
 mod lyrics;
+mod lyrics_cn;
 mod mpris;
 
 use log::warn;

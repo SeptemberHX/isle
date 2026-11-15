@@ -79,8 +79,34 @@ it) and see-through like glass, with no colour of its own. Settings → Appearan
 black while an app's window on the main display reaches it (its top within 5 px
 of the bar: maximized, tiled or moved up there), not in the overview; the bar
 eases between the two as GNOME's does, and the island stays where it is. The island has
-two looks, chosen in Settings → Appearance → Island ("Black, or clear glass
-that shows what is behind it, blurred"); Black is the default:
+five looks, chosen in Settings → Appearance → Island ("Black, glass that shows
+what is behind it, or a skin"); Black is the default. Cream, Light glass and
+Floating cloud are Daozai's skins (its Classic is Black, its Dark glass Glass):
+
+- **Cream**: warm white paper (255, 243, 228), dark brown ink (46, 32, 22),
+  orange (240, 138, 36) where the black island is blue. No rim, no shadow.
+- **Light glass**: white frosted glass: what is behind it blurred (40 px) and
+  lifted nearly to white, under a white wash; near-black ink (22, 22, 26), blue
+  (10, 112, 230) for what is chosen, a rim of light all round; cards and
+  buttons a clearer white.
+- **Floating cloud**: half-clear grey with nothing blurred behind it (closed:
+  grey 54 to 50 at 52%; open: grey 36 at 88% at the top to 22 at 34% at the
+  bottom), washed with the song's colour, else a grey-blue, strongest at the
+  left; a soft white light (12%, 152 × 100 px) comes up under the pointer and
+  follows it. White ink, as on Black.
+
+  On Cream and Light glass every colour is the black island's, mapped
+  (skinRules.js, Daozai's `map_color`): a neutral's lightness the other way
+  round (white becomes ink, black paper), the theme's blues the accent, a dark
+  block of a colour the paper with a little of its hue, any other colour
+  deepened until it reads at 3 to 1; white on a solid block of colour stays
+  white, shadows stay shadows. The stylesheet's rules for them are generated
+  (scripts/skins.mjs); Isle's white icons are redrawn in ink, the weather's in
+  tones that show on paper; what Cairo draws (rings, the alerts' badges, the
+  companion's eyes and its expressions) asks the look. Changing to or from one
+  of the two builds the island again. The top bar never blends into them, and
+  the shelf's own window keeps its dark look.
+
 
 - **Black**: a black notch hanging from the top edge of the screen with
   concave shoulders.
@@ -214,8 +240,10 @@ Shortcuts are set in one place, Settings → Island → Shortcuts, one a page: S
 
 **Opening where the pointer is.** Resting on (or clicking) a side of the closed island opens the page of
 the sign there: the bell Notifications, the cover or the music bars Music, the timer's glyph, ring or time
-left Timer, the green phone or the muted microphone Call. The clock, an empty side and a sign with no page
-(the screen recording, the bot, the warning) open the default page. A side counts from the island's end to
+left Timer, the green phone or the muted microphone Call, the weather (after the time or on the right)
+Weather; the time, and the day before it, opens Calendar. An empty side, the line sung or a recording's time
+in the clock's place, and a sign with no page (the screen recording, the bot, the warning) open the default
+page. A side counts from the island's end to
 the clock (the sign and its gap). Opening a page so is not a page picked by hand.
 
 **Default page on open**, first match wins: the page of the alert being
@@ -252,6 +280,22 @@ with the wheel or touchpad and never show a scrollbar.
   and the copies stay instead, hidden but for alerts, as below. Auto-hide hides each copy as it would the
   island on that display, each with its own wait; pointing at a hidden copy's band brings the island
   there.
+- The companion (Settings → Appearance, off by default): Daozai's pet, a face of two white eyes in a box of
+  48 × 30 units (as tall as a sign plus 4 px), drawn 20 times a second while seen (10 asleep). On the left when
+  no activity and no bell is there; on the right across from the bell when that side is free; in the music
+  bars' place while a song is the first activity; never in another sign's place. Its state is the first that
+  applies: a reaction (happy when a focus session ends, a reminder is done or a file is put on the shelf: an
+  expression, then itself), waking (2.2 s after input ends a rest), focused (a focus session: narrow eyes),
+  worried (the battery at 20% or less and not charging, or no network: uneven eyes and a yellow "!"), music
+  (six singing poses of 16 s in turn, a microphone or a note beside the mouth, one of the twelve expressions
+  between two poses), curious (the pointer within 110 units of it at the screen's top: one eye larger, and an
+  expression at most every 18 s), sleeping (no input for 180 s: closed eyes, "z z"), dozing (45 s: eyes nearly
+  shut, "z"), else awake (the eyes follow the pointer, a blink every 5.6 s, an expression after 8 s and then
+  every 22 to 31 s). With animations off it holds still. It has no page: its side opens the default page,
+  Music where it sings.
+- Pixel shift for OLED displays (Settings → Appearance, off by default): the closed island, at rest, moves
+  one pixel sideways every 45 s, 0 → 3 → −3 → 0 pixels of the display and again; open, or showing an alert
+  or the assistant, it stays where it is. Its copies on other monitors move with it.
 - Auto-hide (Settings → Appearance, off by default): **Always**, after the pointer has been off the
   closed island for the chosen wait (3 s by default); **With the top bar**, at once as another
   extension hides the bar (Hide Top Bar, Just Perfection) and back with it; **Beside windows**, after
@@ -276,15 +320,17 @@ with the wheel or touchpad and never show a scrollbar.
 - One island, one sign on each side of the clock. Left: the first activity that applies, in the order
   screen recording → a call → music (a song playing or paused, until its player closes; a browser's
   video or voice note until it is over, at its end or paused a minute; none with the Music page left out) → the timer (a session or break under way); with none, the
-  unread bell while notifications are unread (see §3; none with the Notifications page left out): the
-  Notifications tab's bell (15 px, 14 in the bar) with a red 6 px dot on its corner. Right, first that applies:
+  bell while there are notifications, read or not, until they are cleared (see §3; none with the Notifications
+  page left out): the Notifications tab's bell (15 px, 14 in the bar), with a red 6 px dot on its corner while
+  some are unread. Right, first that applies:
   1. a warning (Isle's service stopped; a click offers to restart it);
   2. the bot, 18 px, in the look chosen, blinking and glancing every few seconds (the assistant works
      on a request or a command runs with the island closed; a click shows it);
   3. a red crossed-out microphone while a call is muted;
   4. the second activity's sign: the timer's ring (filling as the phase runs), the song's cover, or a
      call's green phone;
-  5. the unread bell, when the left is taken;
+  5. the bell, when the left is taken (with all read, only on a right that is free: it does not take the
+     music bars' place);
   6. what goes with the first activity: the song's music bars, or the timer's time left (which the bell
      never takes the place of).
 
@@ -302,6 +348,11 @@ with the wheel or touchpad and never show a scrollbar.
   | Call and music | green phone | the song's cover |
   | Music and timer | cover art | the timer's ring |
   | Unread notifications | bell, red dot | – |
+  | Notifications, all read | bell | – |
+  | The companion (Settings) and nothing else | the companion | the weather, else – |
+  | Music and the companion | cover art | the companion, singing (not the music bars) |
+  | Notifications and the companion | bell | the companion (the weather stays after the time) |
+  | Notifications and the weather | bell | the weather's icon and the temperature (not after the time: the time stays centred) |
   | Music and unread | cover art | bell, red dot |
   | Timer alone and unread | timer glyph, red dot | its time left |
 
@@ -679,6 +730,40 @@ the page is closed. A stretch past local midnight counts for each day it
 spans. `isled` keeps 30 days in `~/.local/share/isle/app-usage.json`, and
 only GNOME Shell may report, read or clear them. Settings → App Usage
 clears them.
+
+**Weather**: the weather now and the week ahead for one place, from
+Open-Meteo (no account). Off until its switch in Settings → Weather (or
+Pages) is on; off, isled asks no one. On the left the weather's icon (the
+desktop's own, the moon in it by night) and the temperature in °C, 38 px,
+then what it is called and the place ("Overcast · Hangzhou"), today's high
+and low with what it feels like and the humidity, and the wind (km/h) with
+sunrise and sunset on the place's own clock. On the right a column a day,
+five of them (the whole week, seven, on Large): the day ("Today", then the
+weekday), its icon, the chance of rain from 20% up in blue, the high and the
+low. Opening the page asks isled for a fresh look (at most one every half a
+minute). While a look fails or the report is over an hour old, the last line
+says "As of 14:20" in orange instead; with none read yet the page says why
+in its middle ("You're offline", "The weather service isn't answering", "Couldn't tell where you are · Pick a place
+in Settings → Weather"). The place is the one searched for and picked in
+Settings → Weather → Place, or with none picked where the network's address
+is (ipwho.is). With "Temperature beside the clock" on (it is, once Weather
+is), the closed island shows the icon and the temperature after the time,
+as quiet as the day before it, and like the day only while no activity
+takes the sides; dimmer once the report is over an hour old.
+
+**App bubbles**: not a page. While the island is open on its Notifications page (on no other) and an app has
+notifications in the list, read or not (as the closed island's bell: until
+they are cleared), or a window asking for attention (GNOME's "is ready"),
+a capsule shows 8 px right of the island, below the top bar: a 34 px round
+button per app, the latest first, six at most, the app's icon in it and a
+red count of them on its corner (99+ at most; a dot for a window that asks
+with no notification). A click goes to the app (the window that asks, else
+as a click on its latest notification) and takes its notifications off the
+list, closing the island; a right click only takes them off. The pointer on
+it is on the island: moving between the two closes nothing. Clear on the
+Notifications page takes every bubble away; opening the page does not.
+Settings → Island → Alerts → Apps with notifications beside the open
+island (on).
 
 **Devices**: the connected Bluetooth devices' batteries. Off until its
 switch in Settings → Pages is on; then its tab (headphones) shows only while
