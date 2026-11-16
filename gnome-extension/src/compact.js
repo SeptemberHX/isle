@@ -712,6 +712,11 @@ export const CompactView = GObject.registerClass({
 
     /** Puts `sign` in `side`, fading in once on screen: one sign giving way to another reads as a change. */
     _swap(side, sign) {
+        // The companion goes from one side to the other (the bell came or went): out of the one first, or the
+        // other could not take it and stayed bare.
+        const from = sign?.get_parent();
+        if (from && from !== side)
+            from.child = null;
         side.child = sign;
         if (!sign || !this.mapped || !St.Settings.get().enable_animations)
             return;
