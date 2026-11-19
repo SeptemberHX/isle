@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Isle\n"
 "Report-Msgid-Bugs-To: https://github.com/zickrian/isle/issues\n"
-"POT-Creation-Date: 2026-11-15 09:52-0800\n"
+"POT-Creation-Date: 2026-11-19 04:33-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -782,7 +782,7 @@ msgstr ""
 #: gnome-extension/prefs.js:1738 gnome-extension/src/alerts.js:49
 #: gnome-extension/src/alerts.js:51 gnome-extension/src/alerts.js:53
 #: gnome-extension/src/alerts.js:55 gnome-extension/src/alerts.js:57
-#: gnome-extension/src/alerts.js:104
+#: gnome-extension/src/alerts.js:104 gnome-extension/src/cameraRules.js:13
 #, no-javascript-format
 msgid "Off"
 msgstr ""
@@ -2108,7 +2108,7 @@ msgstr ""
 msgid "Microphone"
 msgstr ""
 
-#: gnome-extension/src/alerts.js:45 gnome-extension/src/pages/call.js:338
+#: gnome-extension/src/alerts.js:45 gnome-extension/src/pages/call.js:380
 #: gnome-extension/src/pages/media.js:468
 #, no-javascript-format
 msgid "Muted"
@@ -2505,7 +2505,7 @@ msgstr ""
 msgid "Update its package to get it"
 msgstr ""
 
-#: gnome-extension/src/alerts.js:754 gnome-extension/src/controller.js:2792
+#: gnome-extension/src/alerts.js:754 gnome-extension/src/controller.js:2794
 #, no-javascript-format
 msgid "Isle’s service isn’t running"
 msgstr ""
@@ -2678,6 +2678,21 @@ msgid_plural "{app}: {count} notifications"
 msgstr[0] ""
 msgstr[1] ""
 
+#: gnome-extension/src/cameraRules.js:13
+#, no-javascript-format
+msgid "High"
+msgstr ""
+
+#: gnome-extension/src/cameraRules.js:13
+#, no-javascript-format
+msgid "Low"
+msgstr ""
+
+#: gnome-extension/src/cameraRules.js:13
+#, no-javascript-format
+msgid "Medium"
+msgstr ""
+
 #: gnome-extension/src/chat.js:31
 #, no-javascript-format
 msgid "Removes files or apps"
@@ -2748,23 +2763,23 @@ msgstr ""
 msgid "Conversation"
 msgstr ""
 
-#: gnome-extension/src/controller.js:2792
+#: gnome-extension/src/controller.js:2794
 #, no-javascript-format
 msgid "Isle couldn’t take that"
 msgstr ""
 
-#: gnome-extension/src/controller.js:2848
+#: gnome-extension/src/controller.js:2850
 #, no-javascript-format
 msgid "Press {shortcut} to ask again."
 msgstr ""
 
-#: gnome-extension/src/controller.js:2849
+#: gnome-extension/src/controller.js:2851
 #, no-javascript-format
 msgid "Ask again from the mic in the island."
 msgstr ""
 
-#: gnome-extension/src/controller.js:3192
-#: gnome-extension/src/controller.js:3198
+#: gnome-extension/src/controller.js:3194
+#: gnome-extension/src/controller.js:3200
 #, no-javascript-format
 msgid "Isle restarted"
 msgstr ""
@@ -3441,43 +3456,54 @@ msgstr ""
 msgid "Remove event"
 msgstr ""
 
-#: gnome-extension/src/pages/call.js:244
+#: gnome-extension/src/pages/call.js:248
 #, no-javascript-format
 msgid "Go to the call"
 msgstr ""
 
-#: gnome-extension/src/pages/call.js:270 gnome-extension/src/pages/call.js:338
+#: gnome-extension/src/pages/call.js:274 gnome-extension/src/pages/call.js:380
 #: gnome-extension/src/pages/media.js:317
 #, no-javascript-format
 msgid "Mute"
 msgstr ""
 
-#: gnome-extension/src/pages/call.js:271
+#: gnome-extension/src/pages/call.js:275
 #, no-javascript-format
 msgid "Open"
 msgstr ""
 
-#: gnome-extension/src/pages/call.js:330
+#: gnome-extension/src/pages/call.js:277 gnome-extension/src/pages/call.js:348
+#: gnome-extension/src/pages/call.js:349
+#, no-javascript-format
+msgid "Brighten"
+msgstr ""
+
+#: gnome-extension/src/pages/call.js:349
+#, no-javascript-format
+msgid "Brighten: {level}"
+msgstr ""
+
+#: gnome-extension/src/pages/call.js:372
 #, no-javascript-format
 msgid "Video call"
 msgstr ""
 
-#: gnome-extension/src/pages/call.js:330
+#: gnome-extension/src/pages/call.js:372
 #, no-javascript-format
 msgid "Voice call"
 msgstr ""
 
-#: gnome-extension/src/pages/call.js:339
+#: gnome-extension/src/pages/call.js:381
 #, no-javascript-format
 msgid "Mute the microphone"
 msgstr ""
 
-#: gnome-extension/src/pages/call.js:339
+#: gnome-extension/src/pages/call.js:381
 #, no-javascript-format
 msgid "Unmute the microphone"
 msgstr ""
 
-#: gnome-extension/src/pages/call.js:355
+#: gnome-extension/src/pages/call.js:397
 #, no-javascript-format
 msgid "Hidden while sharing"
 msgstr ""

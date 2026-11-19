@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Isle\n"
 "Report-Msgid-Bugs-To: https://github.com/zickrian/isle/issues\n"
-"POT-Creation-Date: 2026-11-15 09:52-0800\n"
+"POT-Creation-Date: 2026-11-19 04:33-0800\n"
 "PO-Revision-Date: 2026-11-05 12:00+0800\n"
 "Last-Translator: Isle contributors\n"
 "Language-Team: Chinese (simplified)\n"
@@ -792,7 +792,7 @@ msgstr "隐藏收起的灵动岛；提示仍会显示，指针移到它的位置
 #: gnome-extension/prefs.js:1738 gnome-extension/src/alerts.js:49
 #: gnome-extension/src/alerts.js:51 gnome-extension/src/alerts.js:53
 #: gnome-extension/src/alerts.js:55 gnome-extension/src/alerts.js:57
-#: gnome-extension/src/alerts.js:104
+#: gnome-extension/src/alerts.js:104 gnome-extension/src/cameraRules.js:13
 #, no-javascript-format
 msgid "Off"
 msgstr "关闭"
@@ -2130,7 +2130,7 @@ msgstr "音量"
 msgid "Microphone"
 msgstr "麦克风"
 
-#: gnome-extension/src/alerts.js:45 gnome-extension/src/pages/call.js:338
+#: gnome-extension/src/alerts.js:45 gnome-extension/src/pages/call.js:380
 #: gnome-extension/src/pages/media.js:468
 #, no-javascript-format
 msgid "Muted"
@@ -2523,7 +2523,7 @@ msgstr "一键更新；你的内容都会保留"
 msgid "Update its package to get it"
 msgstr "更新对应的软件包即可获取"
 
-#: gnome-extension/src/alerts.js:754 gnome-extension/src/controller.js:2792
+#: gnome-extension/src/alerts.js:754 gnome-extension/src/controller.js:2794
 #, no-javascript-format
 msgid "Isle’s service isn’t running"
 msgstr "Isle 的后台服务没有运行"
@@ -2693,6 +2693,21 @@ msgid "{app}: {count} notification"
 msgid_plural "{app}: {count} notifications"
 msgstr[0] "{app}：{count} 条通知"
 
+#: gnome-extension/src/cameraRules.js:13
+#, no-javascript-format
+msgid "High"
+msgstr "强"
+
+#: gnome-extension/src/cameraRules.js:13
+#, no-javascript-format
+msgid "Low"
+msgstr "轻度"
+
+#: gnome-extension/src/cameraRules.js:13
+#, no-javascript-format
+msgid "Medium"
+msgstr "中度"
+
 #: gnome-extension/src/chat.js:31
 #, no-javascript-format
 msgid "Removes files or apps"
@@ -2763,23 +2778,23 @@ msgstr "隐藏对话"
 msgid "Conversation"
 msgstr "对话"
 
-#: gnome-extension/src/controller.js:2792
+#: gnome-extension/src/controller.js:2794
 #, no-javascript-format
 msgid "Isle couldn’t take that"
 msgstr "Isle 没能接收这个请求"
 
-#: gnome-extension/src/controller.js:2848
+#: gnome-extension/src/controller.js:2850
 #, no-javascript-format
 msgid "Press {shortcut} to ask again."
 msgstr "按 {shortcut} 重新提问。"
 
-#: gnome-extension/src/controller.js:2849
+#: gnome-extension/src/controller.js:2851
 #, no-javascript-format
 msgid "Ask again from the mic in the island."
 msgstr "点击灵动岛中的麦克风重新提问。"
 
-#: gnome-extension/src/controller.js:3192
-#: gnome-extension/src/controller.js:3198
+#: gnome-extension/src/controller.js:3194
+#: gnome-extension/src/controller.js:3200
 #, no-javascript-format
 msgid "Isle restarted"
 msgstr "Isle 已重启"
@@ -3457,43 +3472,54 @@ msgstr "到 {time}"
 msgid "Remove event"
 msgstr "删除日程"
 
-#: gnome-extension/src/pages/call.js:244
+#: gnome-extension/src/pages/call.js:248
 #, no-javascript-format
 msgid "Go to the call"
 msgstr "回到通话"
 
-#: gnome-extension/src/pages/call.js:270 gnome-extension/src/pages/call.js:338
+#: gnome-extension/src/pages/call.js:274 gnome-extension/src/pages/call.js:380
 #: gnome-extension/src/pages/media.js:317
 #, no-javascript-format
 msgid "Mute"
 msgstr "静音"
 
-#: gnome-extension/src/pages/call.js:271
+#: gnome-extension/src/pages/call.js:275
 #, no-javascript-format
 msgid "Open"
 msgstr "打开"
 
-#: gnome-extension/src/pages/call.js:330
+#: gnome-extension/src/pages/call.js:277 gnome-extension/src/pages/call.js:348
+#: gnome-extension/src/pages/call.js:349
+#, no-javascript-format
+msgid "Brighten"
+msgstr "补光"
+
+#: gnome-extension/src/pages/call.js:349
+#, no-javascript-format
+msgid "Brighten: {level}"
+msgstr "补光：{level}"
+
+#: gnome-extension/src/pages/call.js:372
 #, no-javascript-format
 msgid "Video call"
 msgstr "视频通话"
 
-#: gnome-extension/src/pages/call.js:330
+#: gnome-extension/src/pages/call.js:372
 #, no-javascript-format
 msgid "Voice call"
 msgstr "语音通话"
 
-#: gnome-extension/src/pages/call.js:339
+#: gnome-extension/src/pages/call.js:381
 #, no-javascript-format
 msgid "Mute the microphone"
 msgstr "麦克风静音"
 
-#: gnome-extension/src/pages/call.js:339
+#: gnome-extension/src/pages/call.js:381
 #, no-javascript-format
 msgid "Unmute the microphone"
 msgstr "取消麦克风静音"
 
-#: gnome-extension/src/pages/call.js:355
+#: gnome-extension/src/pages/call.js:397
 #, no-javascript-format
 msgid "Hidden while sharing"
 msgstr "共享屏幕时隐藏"

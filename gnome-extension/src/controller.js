@@ -34,6 +34,7 @@ import * as Format from './format.js';
 import {refreshClocks} from './wallClock.js';
 import {NotificationCenter} from './notifications.js';
 import {PrivacyMonitor} from './privacy.js';
+import {CameraAdjuster} from './camera.js';
 import {PeekView} from './peek.js';
 import * as Playback from './playback.js';
 import {KeyboardWatcher, OsdHook, REACH_PX, TopBar, windowAtTop} from './shell.js';
@@ -306,6 +307,7 @@ export class Controller {
             global.display.focus_window?.get_gtk_application_id() !== app;
         this._privacy = new PrivacyMonitor(this._daemon);
         this._call = new CallMonitor(this._privacy, this._settings);
+        this._camera = new CameraAdjuster(this._daemon, this._settings);
         this._audio = new AudioOutputs();
         this._focusMode = new FocusMode(this._daemon, this._notifications, this._settings);
         this._clipboard = new ClipboardHistory(this._daemon, this._settings);
@@ -443,7 +445,7 @@ export class Controller {
     _pageMakers() {
         const size = {height: PAGE_HEIGHT};
         return [
-            () => new CallPage(this._daemon, this._call, this._privacy, this._settings, size),
+            () => new CallPage(this._daemon, this._call, this._privacy, this._camera, this._settings, size),
             () => new MediaPage(this._daemon, this._audio, size),
             () => new NotificationsPage(this._daemon, this._notifications, size),
             () => new TimerPage(this._daemon, size),
@@ -3395,6 +3397,7 @@ export class Controller {
         this._appUsage.destroy();
         this._clipboard.destroy();
         this._call.destroy();
+        this._camera.destroy();
         this._privacy.destroy();
         this._audio.destroy();
         this._notifications.destroy();

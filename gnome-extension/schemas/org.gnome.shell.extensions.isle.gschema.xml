@@ -247,6 +247,11 @@
       <summary>The Devices page</summary>
       <description>Shows the Devices page: each connected Bluetooth device with its battery. Its tab shows only while a device is connected. Off until you turn it on.</description>
     </key>
+    <key name="camera-levels" type="a{si}">
+      <default>{}</default>
+      <summary>How much the Call page brightens each camera</summary>
+      <description>For each camera, by the name it gives itself, the level picked at the Call page's right while the camera is in use (1 Low, 2 Medium, 3 High; a camera left at Off is not listed): set again each time the camera is taken up, as a camera forgets it on being unplugged or restarted.</description>
+    </key>
     <key name="app-usage-clear" type="b">
       <default>false</default>
       <summary>Clear app usage once</summary>

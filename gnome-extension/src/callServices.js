@@ -26,8 +26,10 @@ const IN_CALL = [/\b[a-z]{3}-[a-z]{4}-[a-z]{3}\b/, /\b(call|calling|meeting|hudd
 const ENGINE_NAMES = /webrtc|voice ?engine/i;
 
 /** Apps made for calls, by their names or ids: holding the microphone, they are in one (or recording a voice note).
+ * WeChat names its stream "Chromium input", so it is known here before being taken for a browser; its mini programs'
+ * runtime (WeChatAppEx) is not a call.
  * Anything else that holds it (dictation, a voice assistant, a recorder) is the microphone in use, not a call. */
-const CALL_APPS = /discord|vesktop|webcord|legcord|armcord|zoom|slack|teams|skype|telegram|signal|whatsapp|zapzap|whatsie|wasistlos|\belement\b|mumble|teamspeak|jitsi|webex|viber|jami|linphone|org\.gnome\.calls|ferdium|rambox|beeper|mattermost|rocket\.chat|\bwire\b|nextcloud|caprine|\bdino\b|nheko|neochat|zoiper/i;
+const CALL_APPS = /discord|vesktop|webcord|legcord|armcord|zoom|slack|teams|skype|telegram|signal|whatsapp|zapzap|whatsie|wasistlos|\belement\b|mumble|teamspeak|jitsi|webex|viber|jami|linphone|org\.gnome\.calls|ferdium|rambox|beeper|mattermost|rocket\.chat|\bwire\b|nextcloud|caprine|\bdino\b|nheko|neochat|zoiper|wechat(?!appex)|weixin|wemeet|feishu|\blark|dingtalk|\bqq\b/i;
 
 /** Browsers, whose tabs hold web calls (Meet, Zoom, Teams on the web...). */
 export const BROWSERS = /chrom|firefox|brave|edge|vivaldi|opera|epiphany|librewolf|zen/i;

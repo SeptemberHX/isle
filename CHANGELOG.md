@@ -8,6 +8,12 @@ All notable changes to Isle are listed here. The format follows
 
 ### Added
 
+- **Brighten, on the Call page.** While the camera is in use, a third round control beside Mute and Open lifts a
+  dim picture: each click a level further (Off, Low, Medium, High, then Off), a scroll either way. It turns the
+  camera itself through v4l2-ctl (v4l-utils), so the call and its preview show the change at once: brightness and
+  gamma up, contrast and saturation a little, each by a share of the camera's own range. The level is kept by
+  camera (`camera-levels`) and set again each time the camera is taken up, as a camera forgets on being unplugged
+  or restarted. Without v4l-utils the control does not show.
 - **A height for each page (#39).** Settings → Island → Page Height: give any page of the open island its own
   height, 150 to 400 pixels, so more notifications, more of the day's events or more of the clipboard history
   fit; it lays itself out for it as at Large (a larger month, cover or ring). A page left at Size's height (150,
@@ -91,6 +97,9 @@ All notable changes to Isle are listed here. The format follows
 
 ### Fixed
 
+- Calls in WeChat, Tencent Meeting, Feishu (Lark), DingTalk and QQ are calls: WeChat names its microphone stream
+  "Chromium input", so it was taken for a browser and waited for a call page that never came. WeChat's mini
+  programs' runtime (WeChatAppEx) is not one.
 - Translations: the assistant's "Reading notes.txt…" step and opencode's errors and hints are translated too; an
   AI's own answer and a Bluetooth device's own name are never taken for Isle's words and reworded; and a
   notification's 拒绝 or 取消 is known as turning something down, like Decline and Cancel.

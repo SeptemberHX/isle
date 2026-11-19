@@ -105,12 +105,18 @@ test('only apps made for calls are in a call by holding the microphone', () => {
     for (const [name, id] of [['Discord', 'discord.desktop'], ['Zoom Workplace', 'us.zoom.Zoom.desktop'],
         ['Slack', 'com.slack.Slack.desktop'], ['Telegram', 'org.telegram.desktop.desktop'], ['Signal', 'signal-desktop.desktop'],
         ['Element', 'im.riot.Riot.desktop'], ['Teams for Linux', 'teams-for-linux.desktop'], ['Calls', 'org.gnome.Calls.desktop'],
-        ['Vesktop', 'dev.vencord.Vesktop.desktop']])
+        ['Vesktop', 'dev.vencord.Vesktop.desktop'], ['wechat', 'wechat.desktop'], ['WemeetApp', 'wemeetapp.desktop'],
+        ['Feishu', 'bytedance-feishu.desktop'], ['LarkShell', null], ['DingTalk', 'com.alibabainc.dingtalk.desktop'],
+        ['QQ', 'qq.desktop']])
         assert.ok(isCallApp(name, id), name);
+    // As the sound server names their holders: WeChat's stream calls itself "Chromium input".
+    for (const binary of ['wechat', 'wemeetapp', 'feishu'])
+        assert.ok(isCallApp(binary), binary);
     // Dictation, an editor, a recorder, the assistant: the microphone, not a call.
     for (const [name, id] of [['Visual Studio Code', 'code.desktop'], ['Speech Note', 'net.mkiol.SpeechNote.desktop'],
         ['Code', 'io.elementary.code.desktop'], ['Sound Recorder', 'org.gnome.SoundRecorder.desktop'],
-        ['Google Chrome', 'google-chrome.desktop'], ['Firefox', 'firefox.desktop'], [null, null]])
+        ['Google Chrome', 'google-chrome.desktop'], ['Firefox', 'firefox.desktop'], ['WeChatAppEx', 'com.tencent.wechatappex.desktop'],
+        ['Skylark', null], ['qqmusic', null], [null, null]])
         assert.ok(!isCallApp(name, id), name);
 });
 

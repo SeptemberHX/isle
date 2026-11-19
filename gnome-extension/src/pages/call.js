@@ -2,7 +2,9 @@
 // Copyright (C) 2026 zickrian
 
 // The call going on, with round controls: a live preview of the call's window (you and
-// whoever you call), its app and duration, mute, and a way back. It only has a tab during a call.
+// whoever you call), its app and duration, mute, a way back, and while the camera is in use, Brighten: each click lifts
+// the camera's picture a level further (Off, Low, Medium, High, then Off again), the sun's rays and the caption saying
+// how far. It only has a tab during a call.
 
 import Cairo from 'cairo';
 import Clutter from 'gi://Clutter';
@@ -15,6 +17,7 @@ import {VERTICAL, onUiScale, px, uiScale} from '../compat.js';
 import {PAGE_HEIGHT} from '../expanded.js';
 import * as Format from '../format.js';
 import {roundCorners} from '../glass.js';
+import {LEVELS} from '../cameraRules.js';
 import {_} from '../i18n.js';
 import * as Theme from '../theme.js';
 import {icon, label, setEnabled} from '../widgets.js';
@@ -220,8 +223,9 @@ class WindowPreview extends St.Widget {
 /** The call page: preview on the left, app, duration and controls on the right. */
 export const CallPage = GObject.registerClass(
 class CallPage extends Page {
-    /** `call` is the call tracker; `privacy` says when the screen is shared or recorded. */
-    _init(daemon, call, privacy, settings, {height}) {
+    /** `call` is the call tracker; `privacy` says when the screen is shared or recorded; `camera` lifts the camera's
+     * picture, at the right while it is in use. */
+    _init(daemon, call, privacy, camera, settings, {height}) {
         super._init(daemon, {
             style_class: 'isle-page isle-call',
             // St's `spacing` only reaches St.BoxLayout, so it is set here, scaled as St would.
@@ -269,10 +273,24 @@ class CallPage extends Page {
         const controls = new St.BoxLayout({style_class: 'isle-call-controls'});
         this._mute = this._control('isle-mic-symbolic', _('Mute'), () => call.toggleMuted());
         this._show = this._control('isle-open-symbolic', _('Open'), () => this._open());
+        this._camera = camera;
+        this._brighten = this._control('isle-brighten-0-symbolic', _('Brighten'), () => this._stepBrighten(1));
+        // A scroll steps either way, and stops at the ends.
+        this._brighten.button.connect('scroll-event', (_button, event) => {
+            const direction = event.get_scroll_direction();
+            if (direction === Clutter.ScrollDirection.UP)
+                this._stepBrighten(1, false);
+            else if (direction === Clutter.ScrollDirection.DOWN)
+                this._stepBrighten(-1, false);
+            return Clutter.EVENT_STOP;
+        });
         controls.add_child(this._mute.box);
         controls.add_child(this._show.box);
+        controls.add_child(this._brighten.box);
         side.add_child(controls);
         this.add_child(side);
+        this._cameraChanged = camera.connect('changed', () => this._updateBrighten());
+        this._updateBrighten();
 
         this._callChanged = call.connect('changed', () => this._update());
         this._settingsChanged = settings.connect('changed::call-preview', () => this._update());
@@ -305,6 +323,30 @@ class CallPage extends Page {
         box.add_child(button);
         box.add_child(text);
         return {box, button, text};
+    }
+
+    /** The camera a level further by `by`: round past High back to Off (`wrap`), or held at the ends. A camera
+     * set otherwise (by another app) counts as Off. */
+    _stepBrighten(by, wrap = true) {
+        const level = Math.max(0, this._camera.level);
+        const next = wrap ? (level + by + LEVELS.length) % LEVELS.length
+            : Math.min(LEVELS.length - 1, Math.max(0, level + by));
+        if (next !== level || this._camera.level < 0)
+            this._camera.setLevel(next);
+    }
+
+    /** Brighten only while the camera can be lifted: its sun as many rays as the level, lit and named once on. */
+    _updateBrighten() {
+        const {box, button, text} = this._brighten;
+        box.visible = this._camera.available;
+        const level = Math.max(0, this._camera.level);
+        button.child.gicon = icon(`isle-brighten-${level}-symbolic`);
+        if (level > 0)
+            button.add_style_pseudo_class('checked');
+        else
+            button.remove_style_pseudo_class('checked');
+        text.text = level > 0 ? _(LEVELS[level]) : _('Brighten');
+        button.accessible_name = level > 0 ? _('Brighten: {level}', {level: _(LEVELS[level])}) : _('Brighten');
     }
 
     /** Raises the call's window and closes the island. */
@@ -382,9 +424,10 @@ class CallPage extends Page {
         this._preview.update({gicon: this._appIcon.gicon});
     }
 
-    /** Lets go of the call and settings signals. */
+    /** Lets go of the call, camera and settings signals. */
     _onDestroy() {
         this._call.disconnect(this._callChanged);
+        this._camera.disconnect(this._cameraChanged);
         this._settings.disconnect(this._settingsChanged);
     }
 });
