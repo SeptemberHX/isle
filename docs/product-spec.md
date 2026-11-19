@@ -782,9 +782,12 @@ they are cleared), or a window asking for attention (GNOME's "is ready"),
 a capsule shows 8 px right of the island, below the top bar: a 34 px round
 button per app, the latest first, six at most, the app's icon in it and a
 red count of them on its corner (99+ at most; a dot for a window that asks
-with no notification). A click goes to the app (the window that asks, else
-as a click on its latest notification) and takes its notifications off the
-list, closing the island; a right click only takes them off. The pointer on
+with no notification). A click on one is a filter: the page lists that app's
+notifications alone and the bubble is lit (34% white, a white ring), until it
+is clicked again, another is, the app has none left, or the page is left; Clear
+then clears only those listed. A click on an app with only a window that asks
+goes to the window, closing the island. A right click takes the app's
+notifications off the list. The pointer on
 it is on the island: moving between the two closes nothing. Clear on the
 Notifications page takes every bubble away; opening the page does not.
 Settings → Island → Alerts → Apps with notifications beside the open

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Isle\n"
 "Report-Msgid-Bugs-To: https://github.com/zickrian/isle/issues\n"
-"POT-Creation-Date: 2026-11-19 04:39-0800\n"
+"POT-Creation-Date: 2026-11-19 04:40-0800\n"
 "PO-Revision-Date: 2026-10-31 21:30+0000\n"
 "Last-Translator: Isle contributors\n"
 "Language-Team: Russian\n"
@@ -430,7 +430,7 @@ msgstr ""
 "собственной истории ИИ на этом компьютере."
 
 #: gnome-extension/prefs.js:322 gnome-extension/prefs.js:1416
-#: gnome-extension/prefs.js:1990 gnome-extension/src/pages/notifications.js:87
+#: gnome-extension/prefs.js:1990 gnome-extension/src/pages/notifications.js:89
 #, no-javascript-format
 msgid "Clear"
 msgstr "Очистить"
@@ -923,7 +923,7 @@ msgstr "Оповещения"
 
 #: gnome-extension/prefs.js:508 gnome-extension/prefs.js:1036
 #: gnome-extension/prefs.js:1242 gnome-extension/src/expanded.js:39
-#: gnome-extension/src/pages/notifications.js:82
+#: gnome-extension/src/pages/notifications.js:84
 #, no-javascript-format
 msgid "Notifications"
 msgstr "Уведомления"
@@ -943,11 +943,13 @@ msgstr "Приложения с уведомлениями рядом с отк�
 #: gnome-extension/prefs.js:513
 #, no-javascript-format
 msgid ""
-"An icon for each app with notifications, and how many, until they are "
-"cleared; click one to go to the app, right-click to clear its notifications"
+"An icon for each app with notifications, and how many, beside the "
+"Notifications page; click one to list that app’s alone, right-click to clear "
+"them"
 msgstr ""
-"Значок каждого приложения с уведомлениями и их число, пока их не очистят; "
-"щелчок открывает приложение, правый щелчок очищает его уведомления"
+"Значок каждого приложения с уведомлениями и их число рядом со страницей "
+"уведомлений; щелчок показывает только его уведомления, правый щелчок очищает "
+"их"
 
 #: gnome-extension/prefs.js:514
 #, no-javascript-format
@@ -1102,7 +1104,7 @@ msgstr "Таймер"
 msgid "While Focusing"
 msgstr "Во время фокуса"
 
-#: gnome-extension/prefs.js:550 gnome-extension/src/pages/notifications.js:85
+#: gnome-extension/prefs.js:550 gnome-extension/src/pages/notifications.js:87
 #, no-javascript-format
 msgid "Do Not Disturb"
 msgstr "Не беспокоить"
@@ -2701,7 +2703,7 @@ msgstr "Обновление в один щелчок; всё ваше сохр�
 msgid "Update its package to get it"
 msgstr "Обновите пакет, чтобы получить её"
 
-#: gnome-extension/src/alerts.js:754 gnome-extension/src/controller.js:2863
+#: gnome-extension/src/alerts.js:754 gnome-extension/src/controller.js:2868
 #, no-javascript-format
 msgid "Isle’s service isn’t running"
 msgstr "Служба Isle не запущена"
@@ -2859,17 +2861,17 @@ msgstr "Роза"
 msgid "Graphite"
 msgstr "Графит"
 
-#: gnome-extension/src/bubbles.js:66 gnome-extension/src/bubbles.js:70
+#: gnome-extension/src/bubbles.js:74 gnome-extension/src/bubbles.js:78
 #, no-javascript-format
 msgid "An app"
 msgstr "Приложение"
 
-#: gnome-extension/src/bubbles.js:66
+#: gnome-extension/src/bubbles.js:74
 #, no-javascript-format
 msgid "{app} wants your attention"
 msgstr "{app} просит внимания"
 
-#: gnome-extension/src/bubbles.js:69
+#: gnome-extension/src/bubbles.js:77
 #, no-javascript-format
 msgid "{app}: {count} notification"
 msgid_plural "{app}: {count} notifications"
@@ -2962,23 +2964,23 @@ msgstr "Скрыть разговор"
 msgid "Conversation"
 msgstr "Разговор"
 
-#: gnome-extension/src/controller.js:2863
+#: gnome-extension/src/controller.js:2868
 #, no-javascript-format
 msgid "Isle couldn’t take that"
 msgstr "Isle не смог это принять"
 
-#: gnome-extension/src/controller.js:2919
+#: gnome-extension/src/controller.js:2924
 #, no-javascript-format
 msgid "Press {shortcut} to ask again."
 msgstr "Нажмите {shortcut}, чтобы спросить снова."
 
-#: gnome-extension/src/controller.js:2920
+#: gnome-extension/src/controller.js:2925
 #, no-javascript-format
 msgid "Ask again from the mic in the island."
 msgstr "Спросите снова через микрофон в острове."
 
-#: gnome-extension/src/controller.js:3263
-#: gnome-extension/src/controller.js:3269
+#: gnome-extension/src/controller.js:3268
+#: gnome-extension/src/controller.js:3274
 #, no-javascript-format
 msgid "Isle restarted"
 msgstr "Isle перезапустился"
@@ -4014,22 +4016,22 @@ msgstr "Разрешить тексту песни закрываться"
 msgid "Switch to {player}"
 msgstr "Переключиться на {player}"
 
-#: gnome-extension/src/pages/notifications.js:99
+#: gnome-extension/src/pages/notifications.js:107
 #, no-javascript-format
 msgid "Do Not Disturb: new ones wait here; urgent ones still show"
 msgstr "«Не беспокоить»: новые ждут здесь, срочные всё равно показываются"
 
-#: gnome-extension/src/pages/notifications.js:121
+#: gnome-extension/src/pages/notifications.js:129
 #, no-javascript-format
 msgid "No notifications"
 msgstr "Нет уведомлений"
 
-#: gnome-extension/src/pages/notifications.js:122
+#: gnome-extension/src/pages/notifications.js:130
 #, no-javascript-format
 msgid "You’re all caught up"
 msgstr "Вы всё прочитали"
 
-#: gnome-extension/src/pages/notifications.js:220
+#: gnome-extension/src/pages/notifications.js:239
 #, no-javascript-format
 msgid "Dismiss"
 msgstr "Убрать"

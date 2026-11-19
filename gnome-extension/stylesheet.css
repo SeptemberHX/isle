@@ -1224,6 +1224,8 @@
 .isle-bubble { width: 34px; height: 34px; border-radius: 17px; background-color: rgba(255, 255, 255, 0.08); transition-duration: 120ms; }
 .isle-bubble:hover, .isle-bubble:focus { background-color: rgba(255, 255, 255, 0.2); }
 .isle-bubble:active { background-color: rgba(255, 255, 255, 0.28); }
+/* Chosen: the list shows this app's alone. */
+.isle-bubble:checked { background-color: rgba(255, 255, 255, 0.34); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.7); }
 .isle-bubble-badge {
   font-size: 9px;
   font-weight: 700;
@@ -2010,6 +2012,7 @@
 #isleIsland.isle-skin-cream .isle-bubble, #isleBubbles.isle-skin-cream .isle-bubble { background-color: rgba(46, 32, 22, 0.078); }
 #isleIsland.isle-skin-cream .isle-bubble:hover, #isleBubbles.isle-skin-cream .isle-bubble:hover, #isleIsland.isle-skin-cream .isle-bubble:focus, #isleBubbles.isle-skin-cream .isle-bubble:focus { background-color: rgba(46, 32, 22, 0.2); }
 #isleIsland.isle-skin-cream .isle-bubble:active, #isleBubbles.isle-skin-cream .isle-bubble:active { background-color: rgba(46, 32, 22, 0.278); }
+#isleIsland.isle-skin-cream .isle-bubble:checked, #isleBubbles.isle-skin-cream .isle-bubble:checked { background-color: rgba(46, 32, 22, 0.341); box-shadow: inset 0 0 0 1.5px rgba(46, 32, 22, 0.702); }
 #isleIsland.isle-skin-cream .isle-weather-facts, #isleBubbles.isle-skin-cream .isle-weather-facts { color: rgba(46, 32, 22, 0.549); }
 #isleIsland.isle-skin-cream .isle-weather-old, #isleBubbles.isle-skin-cream .isle-weather-old { color: #bf7707; }
 #isleIsland.isle-skin-cream .isle-weather-day, #isleBubbles.isle-skin-cream .isle-weather-day { background-color: rgba(46, 32, 22, 0.059); }
@@ -2294,6 +2297,7 @@
 #isleIsland.isle-skin-glass-light .isle-bubble, #isleBubbles.isle-skin-glass-light .isle-bubble { background-color: rgba(22, 22, 26, 0.078); }
 #isleIsland.isle-skin-glass-light .isle-bubble:hover, #isleBubbles.isle-skin-glass-light .isle-bubble:hover, #isleIsland.isle-skin-glass-light .isle-bubble:focus, #isleBubbles.isle-skin-glass-light .isle-bubble:focus { background-color: rgba(22, 22, 26, 0.2); }
 #isleIsland.isle-skin-glass-light .isle-bubble:active, #isleBubbles.isle-skin-glass-light .isle-bubble:active { background-color: rgba(22, 22, 26, 0.278); }
+#isleIsland.isle-skin-glass-light .isle-bubble:checked, #isleBubbles.isle-skin-glass-light .isle-bubble:checked { background-color: rgba(22, 22, 26, 0.341); box-shadow: inset 0 0 0 1.5px rgba(22, 22, 26, 0.702); }
 #isleIsland.isle-skin-glass-light .isle-weather-facts, #isleBubbles.isle-skin-glass-light .isle-weather-facts { color: rgba(22, 22, 26, 0.549); }
 #isleIsland.isle-skin-glass-light .isle-weather-old, #isleBubbles.isle-skin-glass-light .isle-weather-old { color: #cc7f08; }
 #isleIsland.isle-skin-glass-light .isle-weather-day, #isleBubbles.isle-skin-glass-light .isle-weather-day { background-color: rgba(22, 22, 26, 0.059); }

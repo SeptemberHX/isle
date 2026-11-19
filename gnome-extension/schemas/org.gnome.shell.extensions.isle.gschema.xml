@@ -39,7 +39,7 @@
     <key name="unread-bubbles" type="b">
       <default>true</default>
       <summary>Apps with notifications beside the open island</summary>
-      <description>While the island is open on its Notifications page and there are notifications, read or not, a round icon for each app they are from shows beside it, with how many, until they are cleared. A click goes to the app and clears its notifications; a right click only clears them.</description>
+      <description>While the island is open on its Notifications page and there are notifications, read or not, a round icon for each app they are from shows beside it, with how many, until they are cleared. A click lists that app's notifications alone on the page, another all of them again; a right click clears the app's notifications.</description>
     </key>
     <key name="closed-lyrics" type="b">
       <default>false</default>

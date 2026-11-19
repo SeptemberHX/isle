@@ -30,6 +30,12 @@ const PRESENT_WITHIN_MS = 1000;
 
 /** `source`'s app id, without `.desktop`. */
 const appOf = source => source.policy?.id ?? source.app?.get_id?.()?.replace(/\.desktop$/, '');
+/** What tells an app's notifications from another's: its id; for one GNOME knows no app for (a script's
+ * notify-send, all "generic" to it), the name it gives. */
+function groupOf(source) {
+    const id = appOf(source);
+    return id && id !== 'generic' ? id : `generic:${source.title ?? ''}`;
+}
 
 /** Whether `notification` is unread: it came or changed since the Notifications page was last opened. GNOME's
  * own `acknowledged` only says its banner was shown; an alert that came and went leaves it unread. Kept on the
@@ -102,7 +108,7 @@ export class NotificationCenter extends Signals.EventEmitter {
             const listed = [...source.notifications];
             if (!listed.length)
                 continue;
-            const key = appOf(source) || source.title || '';
+            const key = groupOf(source);
             const group = groups.get(key) ?? {key, title: source.title ?? '', gicon: null, notifications: []};
             group.notifications.push(...listed);
             // The app's own icon; one with none (a script's notify-send) shows its notification's.
@@ -115,6 +121,12 @@ export class NotificationCenter extends Signals.EventEmitter {
             group.count = group.notifications.length;
         }
         return list.sort((a, b) => at(b.notifications[0]) - at(a.notifications[0]));
+    }
+
+    /** The app a notification is from, as `byApp` names it (its `key`). */
+    keyOf(notification) {
+        const {source} = notification;
+        return source ? groupOf(source) : '';
     }
 
     /** Takes `notifications` off the list, as Clear does all of them; one gone meanwhile is left alone. */

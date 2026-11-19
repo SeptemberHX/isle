@@ -40,9 +40,10 @@ All notable changes to Isle are listed here. The format follows
   follows [Daozai](https://github.com/Renly1994/xiaotang-daozai)'s (MIT).
 - **Apps with notifications beside the open island.** While the island is open on its Notifications page, a round icon for each app with
   notifications in the list, read or not (a chat app, mail…), shows in a capsule on its right, the latest first,
-  with how many; so does an app whose window asks for attention without a notification (a dot). A click goes to
-  the app, to the window that asks or as a click on its latest notification does, and takes its notifications
-  off the list; a right click only takes them off. As the closed island's bell, a bubble stays until its
+  with how many; so does an app whose window asks for attention without a notification (a dot). A click on one
+  lists that app's notifications alone, as a filter (again: all of them; Clear then clears only those); on an
+  app with only a window that asks it goes to the window. A right click takes the app's notifications off the
+  list. As the closed island's bell, a bubble stays until its
   notifications are cleared. Moving the pointer onto it does not close the island. Settings → Island → Alerts. The idea is
   [Daozai](https://github.com/Renly1994/xiaotang-daozai)'s.
 - **Three more looks for the island: Cream, Light glass and Floating cloud.** Settings → Island → Appearance →

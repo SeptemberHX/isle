@@ -45,6 +45,8 @@ class NotificationsPage extends Page {
         });
         this.name = 'notifications';
         this._center = center;
+        /** The app whose notifications alone are listed, or null (see `filter`). */
+        this._filter = null;
 
         this.add_child(this._buildBar());
         this.add_child(this._buildDndNote());
@@ -84,7 +86,13 @@ class NotificationsPage extends Page {
             this._center.dnd = !this._center.dnd;
         }, {size: 13, accessibleName: _('Do Not Disturb')});
         this._dndButton.y_align = Clutter.ActorAlign.CENTER;
-        this._clearButton = pillButton(_('Clear'), 'isle-pill-small isle-notifications-clear', () => this._center.clearAll());
+        this._clearButton = pillButton(_('Clear'), 'isle-pill-small isle-notifications-clear', () => {
+            // With one app's listed, only those go.
+            if (this._filter === null)
+                this._center.clearAll();
+            else
+                this._center.dismiss(this._shown ?? []);
+        });
         this._clearButton.y_align = Clutter.ActorAlign.CENTER;
         bar.add_child(this._dndButton);
         bar.add_child(this._clearButton);
@@ -137,12 +145,23 @@ class NotificationsPage extends Page {
         this.emit('news-changed');
     }
 
+    /** The app whose notifications alone are listed (a key of `NotificationCenter.byApp`), or null for all. */
+    set filter(key) {
+        if (key === this._filter)
+            return;
+        this._filter = key;
+        this._update();
+    }
+
     /** Rebuilds every row; `seen` false leaves them unread even while shown. */
     _update({seen = true} = {}) {
         this._stale = false;
         /** Each row's "5m ago", with when it came, to bring up to date without a rebuild. */
         this._times = [];
-        const notifications = this._center.notifications;
+        // One app's alone, while its bubble beside the island is chosen (see `filter`).
+        const notifications = this._center.notifications.filter(notification =>
+            this._filter === null || this._center.keyOf(notification) === this._filter);
+        this._shown = notifications;
         this._clearButton.visible = notifications.length > 0;
 
         // Newest first, one row each, as a list to scroll.

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Isle\n"
 "Report-Msgid-Bugs-To: https://github.com/zickrian/isle/issues\n"
-"POT-Creation-Date: 2026-11-19 04:39-0800\n"
+"POT-Creation-Date: 2026-11-19 04:40-0800\n"
 "PO-Revision-Date: 2026-11-05 12:00+0800\n"
 "Last-Translator: Isle contributors\n"
 "Language-Team: Chinese (simplified)\n"
@@ -414,7 +414,7 @@ msgid ""
 msgstr "助手将重新开始；对话内容会从这里以及本机上 AI 自己的历史记录中删除。"
 
 #: gnome-extension/prefs.js:322 gnome-extension/prefs.js:1416
-#: gnome-extension/prefs.js:1990 gnome-extension/src/pages/notifications.js:87
+#: gnome-extension/prefs.js:1990 gnome-extension/src/pages/notifications.js:89
 #, no-javascript-format
 msgid "Clear"
 msgstr "清除"
@@ -886,7 +886,7 @@ msgstr "提示"
 
 #: gnome-extension/prefs.js:508 gnome-extension/prefs.js:1036
 #: gnome-extension/prefs.js:1242 gnome-extension/src/expanded.js:39
-#: gnome-extension/src/pages/notifications.js:82
+#: gnome-extension/src/pages/notifications.js:84
 #, no-javascript-format
 msgid "Notifications"
 msgstr "通知"
@@ -905,11 +905,12 @@ msgstr "在展开的灵动岛旁显示有通知的应用"
 #: gnome-extension/prefs.js:513
 #, no-javascript-format
 msgid ""
-"An icon for each app with notifications, and how many, until they are "
-"cleared; click one to go to the app, right-click to clear its notifications"
+"An icon for each app with notifications, and how many, beside the "
+"Notifications page; click one to list that app’s alone, right-click to clear "
+"them"
 msgstr ""
-"为每个有通知的应用显示一个图标和通知数，直到通知被清除；点击跳到该应用，右键"
-"清除它的通知"
+"在通知页旁为每个有通知的应用显示一个图标和通知数；点击只看该应用的通知，右键"
+"清除它们"
 
 #: gnome-extension/prefs.js:514
 #, no-javascript-format
@@ -1060,7 +1061,7 @@ msgstr "计时器"
 msgid "While Focusing"
 msgstr "专注期间"
 
-#: gnome-extension/prefs.js:550 gnome-extension/src/pages/notifications.js:85
+#: gnome-extension/prefs.js:550 gnome-extension/src/pages/notifications.js:87
 #, no-javascript-format
 msgid "Do Not Disturb"
 msgstr "勿扰模式"
@@ -2623,7 +2624,7 @@ msgstr "一键更新；你的内容都会保留"
 msgid "Update its package to get it"
 msgstr "更新对应的软件包即可获取"
 
-#: gnome-extension/src/alerts.js:754 gnome-extension/src/controller.js:2863
+#: gnome-extension/src/alerts.js:754 gnome-extension/src/controller.js:2868
 #, no-javascript-format
 msgid "Isle’s service isn’t running"
 msgstr "Isle 的后台服务没有运行"
@@ -2777,17 +2778,17 @@ msgstr "玫瑰"
 msgid "Graphite"
 msgstr "石墨"
 
-#: gnome-extension/src/bubbles.js:66 gnome-extension/src/bubbles.js:70
+#: gnome-extension/src/bubbles.js:74 gnome-extension/src/bubbles.js:78
 #, no-javascript-format
 msgid "An app"
 msgstr "某个应用"
 
-#: gnome-extension/src/bubbles.js:66
+#: gnome-extension/src/bubbles.js:74
 #, no-javascript-format
 msgid "{app} wants your attention"
 msgstr "{app} 有新动态"
 
-#: gnome-extension/src/bubbles.js:69
+#: gnome-extension/src/bubbles.js:77
 #, no-javascript-format
 msgid "{app}: {count} notification"
 msgid_plural "{app}: {count} notifications"
@@ -2878,23 +2879,23 @@ msgstr "隐藏对话"
 msgid "Conversation"
 msgstr "对话"
 
-#: gnome-extension/src/controller.js:2863
+#: gnome-extension/src/controller.js:2868
 #, no-javascript-format
 msgid "Isle couldn’t take that"
 msgstr "Isle 没能接收这个请求"
 
-#: gnome-extension/src/controller.js:2919
+#: gnome-extension/src/controller.js:2924
 #, no-javascript-format
 msgid "Press {shortcut} to ask again."
 msgstr "按 {shortcut} 重新提问。"
 
-#: gnome-extension/src/controller.js:2920
+#: gnome-extension/src/controller.js:2925
 #, no-javascript-format
 msgid "Ask again from the mic in the island."
 msgstr "点击灵动岛中的麦克风重新提问。"
 
-#: gnome-extension/src/controller.js:3263
-#: gnome-extension/src/controller.js:3269
+#: gnome-extension/src/controller.js:3268
+#: gnome-extension/src/controller.js:3274
 #, no-javascript-format
 msgid "Isle restarted"
 msgstr "Isle 已重启"
@@ -3921,22 +3922,22 @@ msgstr "允许歌词收起"
 msgid "Switch to {player}"
 msgstr "切换到 {player}"
 
-#: gnome-extension/src/pages/notifications.js:99
+#: gnome-extension/src/pages/notifications.js:107
 #, no-javascript-format
 msgid "Do Not Disturb: new ones wait here; urgent ones still show"
 msgstr "勿扰模式：新通知会在这里等候；紧急通知仍会显示"
 
-#: gnome-extension/src/pages/notifications.js:121
+#: gnome-extension/src/pages/notifications.js:129
 #, no-javascript-format
 msgid "No notifications"
 msgstr "没有通知"
 
-#: gnome-extension/src/pages/notifications.js:122
+#: gnome-extension/src/pages/notifications.js:130
 #, no-javascript-format
 msgid "You’re all caught up"
 msgstr "全部看完了"
 
-#: gnome-extension/src/pages/notifications.js:220
+#: gnome-extension/src/pages/notifications.js:239
 #, no-javascript-format
 msgid "Dismiss"
 msgstr "忽略"

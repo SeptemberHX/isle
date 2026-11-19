@@ -345,6 +345,11 @@ export class Controller {
         this._island.addCompanion(this._bubbles);
         this._island.connect('geometry-changed', () => this._placeBubbles());
         this._bubbles.connect('opened', () => this.collapse());
+        this._bubbles.connect('filter-changed', () => {
+            const page = this._expanded?.pageNamed('notifications');
+            if (page)
+                page.filter = this._bubbles.filter;
+        });
         // GNOME Shell shutting down takes the island with the stage, Isle still on, and GNOME 51 runs on a
         // moment after: nothing of Isle's may run on it then.
         this._island.connect('destroy', () => {

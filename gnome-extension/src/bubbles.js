@@ -5,7 +5,7 @@
 // has notifications in the list, read or not (WeChat, QQ, mail…), or a window asking for attention (what a flashing taskbar button
 // is elsewhere: a chat app that tells of a message so and sends no notification), the latest first, a red count
 // on its corner (a dot for a window alone). A click on one goes to that app, to the window that asks or as a
-// click on its latest notification does, and its notifications leave the list; a right click only takes them off it. As the closed island's bell, a bubble stays until its notifications are cleared, here or on the Notifications page. It shows while the island is open on its Notifications page and an app has something, and counts as the island for the
+// A click on one lists that app's notifications alone on the page (again: all of them), as a filter; on an app with only a window that asks it goes to the window. A right click takes the app's notifications off the list. As the closed island's bell, a bubble stays until its notifications are cleared, here or on the Notifications page. It shows while the island is open on its Notifications page and an app has something, and counts as the island for the
 // pointer: moving from the pages onto it closes nothing. The idea is Daozai's
 // (https://github.com/Renly1994/xiaotang-daozai): there the unread WeChat and QQ accounts sit beside the panel.
 
@@ -52,6 +52,14 @@ const Bubble = GObject.registerClass({
         stack.add_child(this._badge);
         this.set_child(stack);
         this.connect('clicked', (_button, which) => this.emit(which === 3 ? 'read' : 'opened'));
+    }
+
+    /** Lit while the list shows its app's notifications alone. */
+    setChosen(chosen) {
+        if (chosen)
+            this.add_style_pseudo_class('checked');
+        else
+            this.remove_style_pseudo_class('checked');
     }
 
     /** Shows `group` ({title, gicon, count}); a count of 0 (a window asking, no notification) is a dot. */
@@ -143,7 +151,9 @@ function merged(unread, asking) {
 /** Signals: `changed` when it has something to show, or no more. */
 export const UnreadBubbles = GObject.registerClass({
     // `opened`: the user went to an app from it.
-    Signals: {'changed': {}, 'opened': {}},
+    // `opened`: the user went to a window from it. `filter-changed`: another app's notifications alone are wanted
+    // (see `filter`), or all again.
+    Signals: {'changed': {}, 'opened': {}, 'filter-changed': {}},
 }, class UnreadBubbles extends St.BoxLayout {
     /** `center` is the NotificationCenter the notifications come from and are cleared in. */
     _init(center) {
@@ -170,7 +180,24 @@ export const UnreadBubbles = GObject.registerClass({
         if (wanted === this._wanted)
             return;
         this._wanted = wanted;
+        // Away from the Notifications page, or closed: all of them again next time.
+        if (!wanted)
+            this._setFilter(null);
         this._sync();
+    }
+
+    /** The app whose notifications alone the page is to list (a `byApp` key), or null for all: a click on its
+     * bubble picks it, another on the same lets go. */
+    get filter() {
+        return this._filter ?? null;
+    }
+
+    _setFilter(key) {
+        if (key === this.filter)
+            return;
+        this._filter = key;
+        this._groups?.forEach((group, index) => this._bubbles[index]?.setChosen(group.key === key));
+        this.emit('filter-changed');
     }
 
     _sync() {
@@ -206,13 +233,13 @@ export const UnreadBubbles = GObject.registerClass({
             const index = this._bubbles.length;
             bubble.connect('opened', () => {
                 const group = this._groups[index];
-                this.emit('opened');
-                // The window that asks, if one does: a notification's own click may open another.
-                if (group.window) {
-                    this._center.dismiss(group.notifications);
+                // An app with notifications: its bubble is a filter of the list. One with only a window that
+                // asks has nothing to list: the click goes to the window.
+                if (group.notifications.length) {
+                    this._setFilter(this.filter === group.key ? null : group.key);
+                } else if (group.window) {
+                    this.emit('opened');
                     Main.activateWindow(group.window);
-                } else {
-                    this._center.openApp(group);
                 }
             });
             bubble.connect('read', () => this._center.dismiss(this._groups[index].notifications));
@@ -220,7 +247,13 @@ export const UnreadBubbles = GObject.registerClass({
             this.add_child(bubble);
         }
         this._groups = groups;
-        groups.forEach((group, index) => this._bubbles[index].update(group));
+        // The app filtered by has none left: all of them again.
+        if (this.filter !== null && !groups.some(group => group.key === this.filter && group.notifications.length))
+            this._setFilter(null);
+        groups.forEach((group, index) => {
+            this._bubbles[index].update(group);
+            this._bubbles[index].setChosen(group.key === this.filter);
+        });
         if (this.any !== had)
             this.emit('changed');
         this._sync();

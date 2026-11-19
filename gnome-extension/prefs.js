@@ -510,7 +510,7 @@ export default class IslePreferences extends ExtensionPreferences {
         settings.bind('gnome-banners', notifications, 'active', Gio.SettingsBindFlags.INVERT_BOOLEAN);
         alerts.add(notifications);
         alerts.add(switchRow(settings, 'unread-bubbles', _('Apps with notifications beside the open island'),
-            _('An icon for each app with notifications, and how many, until they are cleared; click one to go to the app, right-click to clear its notifications')));
+            _('An icon for each app with notifications, and how many, beside the Notifications page; click one to list that app\u2019s alone, right-click to clear them')));
         alerts.add(switchRow(settings, 'replace-osd', _('Volume and brightness'), _('Show them in the island instead of the centre of the screen')));
         alerts.add(switchRow(settings, 'alerts-over-fullscreen', _('Over full-screen apps'),
             _('Alerts show over a video or game, then hide again; off, they wait until it leaves full screen')));
