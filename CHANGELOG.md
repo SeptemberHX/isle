@@ -105,10 +105,139 @@ All notable changes to Isle are listed here. The format follows
   notification's 拒绝 or 取消 is known as turning something down, like Decline and Cancel.
 - Glass: the open island's sides no longer run up through its shoulders as a line with a lit edge; up there the
   edge is the shoulder's curve, and the glass bends and glows along it.
+
+## [1.7.3] - 2026-11-18
+
+Put the tabs in your own order, Pi in the voice assistant, the clock where you want it, lyrics you can pin
+open, and a top bar whose colour you can leave to another extension. The lyrics no longer stutter the first
+time they show. To update: click Update on the new-version alert (or Settings → About → Update), then log out
+and back in.
+
+### Added
+
+- **Put the tabs in your own order.** Settings → Island → Pages has arrows on each page to move its tab left
+  or right; the open island follows at once, and Ctrl+1–9 and Ctrl+Tab go by the new order. Reset Order puts
+  Isle's own order back, which stays the order until you move one. The Call tab still comes first.
+- **Pi in the voice assistant.** [Pi](https://pi.dev) answers with the providers you signed in to in Pi (or
+  an API key), with the model your Pi uses or one picked in Settings → Assistant. Isle runs it with no tools,
+  extensions, skills or context files of yours, and keeps its conversations apart from yours. It has no web
+  search. Signed in to ChatGPT in Pi, it offers only the models that account can use, as Codex lists them. (#64)
+  Thanks to @manuel-rtsch.
+- **The clock where you want it.** Settings → Appearance → Clock in the island, on as before: off, the closed
+  island keeps its size with nothing in it. Clock in the top bar (off by default) adds Isle's own clock at the
+  left or right end of the bar, showing the time, the day and time, or the date and time; a click opens the
+  Calendar. It never moves another extension's items, and gives way while that side of the bar has no room
+  for it. (#62) Thanks to @KYawCharles.
+- **Pin the lyrics open.** A pin beside the song's title in the lyrics keeps the island open on them while
+  you work, the pointer away. Off until you press it; it lets go when the island closes, when you press it
+  again, when the song or the lyrics go, and when an alert comes, so nothing waits behind it. (#62)
+- **Leave the top bar's colour to another extension.** Settings → Appearance → Colour the top bar, on by
+  default. Off, Isle no longer sets the bar's colour, transparency or text colour, so a theme or another
+  extension (Simple Taskbar, say) keeps its own; Isle still sizes the bar round the island. (#63) Thanks to
+  @nitro122.
+
+### Fixed
+
+- **A clock moved by another extension shows again.** With an extension that moves GNOME's clock to the left
+  or right of the top bar, Isle still hid it there and kept it as wide as the island, leaving a wide empty
+  gap. Isle now leaves that clock as the other extension has it, and keeps the island's room itself.
+- **A command's card no longer shows "Running" long after it finished.** Closing the island while the
+  assistant ran a command, then opening it again by typing, kept the card as it was when the island closed
+  ("Running · 0:01"), though the command had ended and the assistant had answered. The card now shows the
+  command as it is.
+- **The assistant hears how a command went in its last step.** When the AI's final answer also ran a
+  command, it was always told "Not all of that worked" afterwards, even when the command succeeded.
+
+### Performance
+
+New features, and no heavier: the lyrics no longer stall the first time they show, and the rest is as light as
+1.7.2 or a little lighter. Measured against 1.7.2 in the same GNOME 50 session, medians of six runs each (each dot
+below is one run; left of 100% is lighter):
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/performance-1.7.3-dark.svg">
+  <img alt="Every benchmark run of 1.7.3 as a share of 1.7.2's median, one row per measure" src="docs/images/performance-1.7.3-light.svg">
+</picture>
+
+| | 1.7.2 | 1.7.3 |
+|---|---|---|
+| At rest: GNOME Shell CPU a minute, isled wakeups a minute | 237 ms, 6 | 180 ms, 4.5 |
+| Opening the island: CPU, slowest frame's work | 268 ms, 5.6 ms | 250 ms, 5.2 ms |
+| Closing the island: CPU | 185 ms | 186 ms |
+| Switching pages: CPU | 137 ms | 133 ms |
+| Widening to the lyrics and back: CPU | 312 ms, 257 ms | 302 ms, 256 ms |
+| Lyrics playing, 10 seconds: CPU | 2127 ms | 2121 ms |
+| The first lyrics after a song changes: slowest frame\* | 140 ms | 42 ms |
+| Frames lost to a slow frame, in 66 openings, closings and page switches\* | 7 | 2 |
+| 50 openings and closings: actors left behind | 0 | 0 |
+| isled memory | 11.8 MB | 11.8 MB |
+
+\* Three runs each: measured from this release on.
+
+- The lyrics no longer stutter the first time they show for a song. The island lays them out ahead, unseen, in a
+  quiet moment while it is open on the player, never while it grows or shrinks; before, the widening to the
+  lyrics did it in the frames it animated.
+- The music bars in the player and beside the lyrics move on one shared timer, not one each, so they ask for
+  one redraw a tick between them.
+- Switching between the player and the lyrics no longer refreshes the whole player, only the parts that change.
+- Every animation still runs at 60 fps. All other differences above are within run-to-run noise.
+
+## [1.7.2] - 2026-11-13
+
+The voice assistant hears you again on newer PipeWire, the arrow keys choose in the clipboard, opencode 2 shows
+your own models, GNOME's calendar no longer gets stuck open, and the assistant's glow is smoother. To update:
+click Update on the new-version alert (or Settings → About → Update), then log out and back in.
+
+### Changed
+
+- **Every AI thinks at medium.** Claude Code, Codex, Grok, opencode and Antigravity all answer at medium effort,
+  the same for each and not a setting (Codex and Grok thought at low before; Claude and opencode as their own
+  settings had it). Where a model has no medium, it thinks as that model does by default. Antigravity lists each
+  effort as a model of its own: Settings now offers each of its models once, at medium, and a pick at another
+  effort moves to its medium.
+- **A smoother glow round the assistant.** The light round the island while the assistant listens or waits for
+  an answer looked rough at its edge: the round corners stepped in blocks of two pixels, the fine line of light
+  along the edge was blurred, and the light fell inwards in visible steps. The edge, the fine line and where the
+  light is cut to the island's shape are now worked out for each pixel, as sharp as the island's own edge; the
+  light falls inwards in one smooth gradient, and a touch of noise keeps its shades from banding. Its colours,
+  brightness and motion are as before. (#60) Thanks to @danielopensource.
+
+### Fixed
+
 - The one-line install stopped at the first time GitHub timed out ("curl: (22) The requested URL returned error:
   504", then "the download failed"). It now asks again a few times when GitHub times out or is busy for a moment,
   and still gives up at once when GitHub says to come back much later. An update from Settings runs the new
   version's own installer, so updates get this from the next version on.
+- The voice assistant heard no speech on some systems (Fedora 44 among them): every recording came out as loud
+  noise, "heard no speech: loudest -4 dB, the room -5 dB" in isled's log. Since PipeWire 1.4, pw-record writes a
+  sound file unless asked for bare samples, and Isle read that file as samples. Isle now asks for bare samples
+  where pw-record can (`--raw`, PipeWire 1.4 and newer); older PipeWire, as on Ubuntu 24.04, gives them anyway.
+  (#59) Thanks to @KYawCharles for finding the cause.
+- The Clipboard opened from its shortcut (Super+V) did not let ← → choose a card: the search field took them for
+  its cursor. ← → ↑ ↓ and the keypad's arrows now choose a card, also among those a search shows, and Enter
+  pastes it. (#56, #57) Thanks to @AlphaBeast97.
+- With opencode 2, the model list showed only opencode's free models: opencode 2 keeps sign-ins in its own
+  database, which Isle's separate opencode never saw. Isle now shares your API key and OAuth sign-ins with it
+  through opencode's own `auth export` and `auth import`, removes from it one you removed, and hands back a
+  sign-in opencode renewed during a request; see SECURITY.md. With opencode 1.x nothing changes. (#52, #54)
+  Thanks to @AlphaBeast97.
+- Settings → Assistant → Model listed opencode models that no longer existed and missed new ones: Isle's
+  opencode 1.x kept a copy of opencode's model catalog it never fetched again. A copy a day old is now
+  refreshed (from your own opencode's when that is newer, else fetched as opencode does).
+- Signed in to OpenAI in opencode with a ChatGPT account, Settings offered OpenAI models that account cannot use
+  ("The 'gpt-5.5' model is not supported when using Codex with a ChatGPT account"). It now offers only those
+  Codex lists for the account, when Codex is signed in too. Any model an AI refuses is left out of the list for
+  a week, then offered again.
+- With opencode 2, the model list missed free models whose id does not end in "-free" (Big Pickle) and named the
+  rest by their ids. It now takes opencode's own names and prices.
+- GNOME's own calendar could open while Isle hid the clock, and then never close: with a top bar menu open,
+  ← → (Ctrl+Alt+arrows too) or the pointer moving along the bar went on to the hidden clock's menu. On GNOME 51
+  the calendar then stayed on screen until Isle was turned off and on. The hidden clock's menu is now left out of
+  the bar's menus, so they pass it by, and anything else opening it has it closed before it shows; with Isle off,
+  or the island on another display, the clock and its calendar work as GNOME has them. (#61) Thanks to @Eisiem.
+- Logging out with Isle on left a warning in GNOME Shell's log ("Object Gjs_src_island_Island … has been already
+  disposed"): windows closing as the shell shut down still asked about the island it had just taken. Isle no
+  longer follows them once the island is gone.
 
 ## [1.7.1] - 2026-11-07
 
@@ -1853,7 +1982,9 @@ The first release.
   dark, vivid ones bright.
 - Text is at least 12 px throughout.
 
-[Unreleased]: https://github.com/zickrian/isle/compare/v1.7.1...HEAD
+[Unreleased]: https://github.com/zickrian/isle/compare/v1.7.3...HEAD
+[1.7.3]: https://github.com/zickrian/isle/compare/v1.7.2...v1.7.3
+[1.7.2]: https://github.com/zickrian/isle/compare/v1.7.1...v1.7.2
 [1.7.1]: https://github.com/zickrian/isle/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/zickrian/isle/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/zickrian/isle/compare/v1.5.3...v1.6.0

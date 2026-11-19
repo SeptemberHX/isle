@@ -143,6 +143,9 @@
 #panel.isle-panel .panel-button.screen-sharing-indicator:active:hover,
 #panel.isle-panel .panel-button.screen-sharing-indicator:checked:hover { box-shadow: inset 0 0 0 100px #ff9638; }
 
+/* Isle's own clock in the bar (Settings → Clock in the top bar): figures that keep their width as minutes turn. */
+#panel .isle-bar-clock-label { font-feature-settings: "tnum"; }
+
 /* The glass bar has no colour, so its text and icons carry a soft shadow to
  * stay readable on a light wallpaper. */
 #panel.isle-glass-bar .panel-button {
@@ -545,12 +548,18 @@
 /* Lyrics: the player in a column beside the words. */
 
 .isle-lyrics-layout { spacing: 26px; }
-.isle-lyrics-side { width: 232px; spacing: 8px; }
+/* 248 wide: a title of the usual length fits beside the lyrics' pin (see .isle-lyrics-pin). */
+.isle-lyrics-side { width: 248px; spacing: 8px; }
 .isle-lyrics-side .isle-player-top { spacing: 12px; }
 .isle-lyrics-side .isle-player-progress { padding-top: 2px; }
 .isle-lyrics-controls { spacing: 4px; }
 .isle-lyrics-controls .isle-transport { spacing: 14px; }
 .isle-lyrics-controls .isle-mode-toggle { color: rgba(255, 255, 255, 0.75); }
+/* The lyrics' pin (keeps the island open on them), right of the title and quiet until pressed: small, so the title
+ * keeps most of the line and the line stays its height. */
+.isle-lyrics-title-line { spacing: 4px; }
+.isle-lyrics-pin { color: rgba(255, 255, 255, 0.55); padding: 2px; }
+.isle-lyrics-pin:hover, .isle-lyrics-pin.on { color: #ffffff; }
 .isle-side-title { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; }
 .isle-side-artist { font-size: 12px; color: rgba(255, 255, 255, 0.6); }
 .isle-side-bars { padding-top: 5px; }
@@ -1837,6 +1846,8 @@
 #isleIsland.isle-skin-cream .isle-output-button.active, #isleBubbles.isle-skin-cream .isle-output-button.active { background-color: #e8dccd; }
 #isleIsland.isle-skin-cream .isle-output-detail, #isleBubbles.isle-skin-cream .isle-output-detail { color: rgba(46, 32, 22, 0.502); }
 #isleIsland.isle-skin-cream .isle-lyrics-controls .isle-mode-toggle, #isleBubbles.isle-skin-cream .isle-lyrics-controls .isle-mode-toggle { color: rgba(46, 32, 22, 0.749); }
+#isleIsland.isle-skin-cream .isle-lyrics-pin, #isleBubbles.isle-skin-cream .isle-lyrics-pin { color: rgba(46, 32, 22, 0.549); }
+#isleIsland.isle-skin-cream .isle-lyrics-pin:hover, #isleBubbles.isle-skin-cream .isle-lyrics-pin:hover, #isleIsland.isle-skin-cream .isle-lyrics-pin.on, #isleBubbles.isle-skin-cream .isle-lyrics-pin.on { color: #2e2016; }
 #isleIsland.isle-skin-cream .isle-side-artist, #isleBubbles.isle-skin-cream .isle-side-artist { color: rgba(46, 32, 22, 0.6); }
 #isleIsland.isle-skin-cream .isle-lyric-line, #isleBubbles.isle-skin-cream .isle-lyric-line { color: #2e2016; }
 #isleIsland.isle-skin-cream .isle-lyric-line.plain, #isleBubbles.isle-skin-cream .isle-lyric-line.plain { color: rgba(46, 32, 22, 0.851); }
@@ -2119,6 +2130,8 @@
 #isleIsland.isle-skin-glass-light .isle-output-button.active, #isleBubbles.isle-skin-glass-light .isle-output-button.active { background-color: rgba(240, 240, 240, 0.8); }
 #isleIsland.isle-skin-glass-light .isle-output-detail, #isleBubbles.isle-skin-glass-light .isle-output-detail { color: rgba(22, 22, 26, 0.502); }
 #isleIsland.isle-skin-glass-light .isle-lyrics-controls .isle-mode-toggle, #isleBubbles.isle-skin-glass-light .isle-lyrics-controls .isle-mode-toggle { color: rgba(22, 22, 26, 0.749); }
+#isleIsland.isle-skin-glass-light .isle-lyrics-pin, #isleBubbles.isle-skin-glass-light .isle-lyrics-pin { color: rgba(22, 22, 26, 0.549); }
+#isleIsland.isle-skin-glass-light .isle-lyrics-pin:hover, #isleBubbles.isle-skin-glass-light .isle-lyrics-pin:hover, #isleIsland.isle-skin-glass-light .isle-lyrics-pin.on, #isleBubbles.isle-skin-glass-light .isle-lyrics-pin.on { color: #16161a; }
 #isleIsland.isle-skin-glass-light .isle-side-artist, #isleBubbles.isle-skin-glass-light .isle-side-artist { color: rgba(22, 22, 26, 0.6); }
 #isleIsland.isle-skin-glass-light .isle-lyric-line, #isleBubbles.isle-skin-glass-light .isle-lyric-line { color: #16161a; }
 #isleIsland.isle-skin-glass-light .isle-lyric-line.plain, #isleBubbles.isle-skin-glass-light .isle-lyric-line.plain { color: rgba(22, 22, 26, 0.851); }

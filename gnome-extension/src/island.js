@@ -293,6 +293,11 @@ export const Island = GObject.registerClass({
         this.connect('destroy', () => this._onDestroy());
     }
 
+    /** Whether it is still growing or shrinking to its size. */
+    get moving() {
+        return this._driver?.running ?? false;
+    }
+
     /** Whether a pointer rests on it. */
     get hovered() {
         return this._hovered;
@@ -1020,7 +1025,7 @@ export const Island = GObject.registerClass({
         const box = this._box(height);
         const [width, actorHeight] = this._glow.get_size();
         this._rim.setUniforms({
-            frame: [width, actorHeight, GLOW_SCALE / pixels, 0],
+            frame: [width, actorHeight, GLOW_SCALE / pixels, 1 / pixels],
             grid: [Math.ceil(outerWidth / GLOW_SCALE) * pixels, Math.ceil(height / GLOW_SCALE) * pixels],
             ...rimUniforms({...box, left: box.left + this._islandFraction, right: box.right + this._islandFraction},
                 height, this._tint, this._motion, this._tintStrength, uiScale()),

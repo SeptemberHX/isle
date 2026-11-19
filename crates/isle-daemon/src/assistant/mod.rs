@@ -23,6 +23,7 @@ mod mic;
 mod models;
 mod music;
 mod opencode;
+mod pi;
 mod sign_in;
 mod system;
 mod tasks;
@@ -162,7 +163,7 @@ struct State {
 #[serde(default)]
 pub struct Context {
     apps: Vec<String>,
-    /// The AI picked in Settings ("auto", "agy", "claude", "codex", "grok", "opencode"), and the model picked for each
+    /// The AI picked in Settings ("auto", "agy", "claude", "codex", "grok", "opencode", "pi"), and the model picked for each
     /// ("" for its own default).
     provider: String,
     agy_model: String,
@@ -170,6 +171,7 @@ pub struct Context {
     codex_model: String,
     grok_model: String,
     opencode_model: String,
+    pi_model: String,
     whisper_model: String,
     language: String,
     /// How long a quiet conversation is kept ("day", "idle-30m", "idle-2h"; see chat.rs).
@@ -379,7 +381,7 @@ fn context(json: &str) -> fdo::Result<Context> {
 #[interface(name = "io.github.zickrian.isle.Assistant1")]
 impl AssistantService {
     /// Records a request and answers it; `context` is JSON
-    /// `{apps, provider, agy_model, claude_model, codex_model, grok_model, opencode_model, whisper_model, language,
+    /// `{apps, provider, agy_model, claude_model, codex_model, grok_model, opencode_model, pi_model, whisper_model, language,
     /// selection, …}`.
     async fn listen(
         &self,
@@ -571,12 +573,15 @@ impl Session {
             Provider::Codex => &context.codex_model,
             Provider::Grok => &context.grok_model,
             Provider::Opencode => &context.opencode_model,
+            Provider::Pi => &context.pi_model,
         };
         let catalog = self
             .catalogs
             .get(provider.id())
             .filter(|c| !c.models.is_empty());
         let wanted = match provider {
+            // agy's efforts are models of their own: one picked at another, at medium.
+            Provider::Agy if !picked.is_empty() => models::agy_medium(picked),
             _ if !picked.is_empty() => picked.clone(),
             // The account's default (never Fable), else Sonnet: Claude Code's own could be Fable.
             // Codex's, the user's own Codex's model.
@@ -588,7 +593,10 @@ impl Session {
             Provider::Grok => grok::user_model().unwrap_or_default(),
             // opencode's, the model the user's own opencode would use.
             Provider::Opencode => opencode::user_model().unwrap_or_default(),
-            Provider::Agy => String::new(),
+            // Pi's, the model the user's own Pi would use.
+            Provider::Pi => pi::user_model().unwrap_or_default(),
+            // Its catalog's first model at medium; agy's own default could think at another effort.
+            Provider::Agy => catalog.map(|c| c.default.clone()).unwrap_or_default(),
         };
         let usable = |model: &str| {
             let signature = catalog.map(models::Catalog::signature).unwrap_or_default();
@@ -640,6 +648,8 @@ impl Session {
             .map(models::Catalog::signature)
             .unwrap_or_default();
         self.refused.push((provider, ran.clone(), signature));
+        // Settings stops offering it a while too.
+        models::refused(provider, &ran);
         let now = self.model(provider);
         (now != ran).then_some((ran, now))
     }
@@ -1655,11 +1665,16 @@ async fn start_brain(
     iface: &InterfaceRef<AssistantService>,
     session: &mut Session,
 ) -> Result<(), Failure> {
-    let wanted = or(&session.context.provider, "auto");
-    let provider = Provider::pick(wanted).ok_or_else(|| {
+    let wanted = or(&session.context.provider, "auto").to_owned();
+    // Reading sign-ins can start a program (opencode 2's `auth export`): not on the daemon's own threads.
+    let picked = tokio::task::spawn_blocking(move || Provider::pick(&wanted))
+        .await
+        .ok()
+        .flatten();
+    let provider = picked.ok_or_else(|| {
         Failure::from((
             "No AI is set up",
-            "Install Claude Code, Codex, Grok, opencode or Antigravity (agy) and sign in, then pick it in Settings.",
+            "Install Claude Code, Codex, Grok, opencode, Pi or Antigravity (agy) and sign in, then pick it in Settings.",
         ))
     })?;
     if session.provider != Some(provider) {
@@ -1719,7 +1734,7 @@ async fn record(
     commands: &mut Commands,
     later: &mut VecDeque<Command>,
 ) -> Result<Recorded, Command> {
-    let mut mic = match Mic::start() {
+    let mut mic = match Mic::start().await {
         Ok(mic) => mic,
         Err(err) => {
             warn!("could not record: {err}");
@@ -2022,6 +2037,13 @@ async fn publish(iface: &InterfaceRef<AssistantService>, update: impl FnOnce(&mu
     }
     if let Err(err) = service.state_changed(iface.signal_emitter()).await {
         warn!("could not publish the assistant state: {err}");
+    }
+}
+
+/// Asks what `report` cannot ask without waiting: opencode's version, so opencode 2's sign-ins are read.
+pub async fn prepare_report() {
+    if let Some(program) = Provider::Opencode.program() {
+        opencode::learn_version(&program).await;
     }
 }
 
