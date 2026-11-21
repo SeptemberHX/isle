@@ -70,6 +70,8 @@ class AppsPage extends Page {
 
         this.add_child(this._buildBar());
         this.add_child(this._buildList());
+        // The times' widths are measured on the stage (see `_alignTimes`).
+        this.connect('notify::mapped', () => this.mapped && this._alignTimes());
 
         this._update();
     }
@@ -163,11 +165,29 @@ class AppsPage extends Page {
         const key = JSON.stringify([this._period, apps.map(app => [app.id, app.name])]);
         if (key === this._key) {
             apps.forEach((app, i) => this._rows[i].update(app, most));
+            this._alignTimes();
             return;
         }
         this._key = key;
         this._list.destroy_all_children();
         this._rows = apps.map(app => this._row(app, most));
+        this._alignTimes();
+    }
+
+    /** Gives every row's time the width of the widest, so the bars before them start and end in one line: a time's
+     * width is its words' ("1小时14分" beside "28分钟"), and no one width fits every language. */
+    _alignTimes() {
+        // Measured in its style, which it has only on the stage; `notify::mapped` asks again.
+        if (!this.get_stage() || !this._rows?.length)
+            return;
+        let widest = 0;
+        for (const {time} of this._rows) {
+            time.set_width(-1);
+            time.ensure_style();
+            widest = Math.max(widest, time.get_preferred_width(-1)[1]);
+        }
+        for (const {time} of this._rows)
+            time.set_width(Math.ceil(widest));
     }
 
     /** Adds one app's row: its icon, name, a bar against the most used, and its time; returns its updater. */
@@ -190,6 +210,7 @@ class AppsPage extends Page {
         row.add_child(time);
         this._list.add_child(row);
         return {
+            time,
             update: (next, top) => {
                 bar.share = Math.max(0, next.ms) / top;
                 time.text = Format.hoursMinutes(next.ms);

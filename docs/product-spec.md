@@ -267,17 +267,21 @@ with the wheel or touchpad and never show a scrollbar.
 
 ## 4. Closed island
 
-- Where it is: on the main display, in its top bar; or (Settings) on the display of the window in use,
-  moving there once closed; or (Settings) on every display. A display without the top bar has the island
+- Where it is: on the main display, in its top bar; or (Settings) on the display in use, which is the one the
+  pointer is on, moving there once closed and once the pointer has been there 0.15 s; or (Settings) on every
+  display. A display without the top bar has the island
   hang from its top edge, with a header of its own when open, and GNOME's clock comes back to the main top
   bar meanwhile (not on every display: the main one always has an island). So does the main display when
   another extension moves the bar off its top (to the bottom of the screen, say); Isle then leaves the
   bar's colour and height as that extension has them.
-- On every display, the island itself is on the display of the window in use, as above, and each other
-  display shows a copy of it: the closed island, and every alert at the same time and in the same shape.
+- A top bar another extension put on a display GNOME's own is not on (a bar for every display; found as a
+  `panelBox` of its own among the stage's) has a clock in its centre: Isle hides it, and takes its clicks
+  away, while the island or a copy is on that display, and gives it back once neither is.
+- On every display, the island itself is on the display in use, as above, and each other display shows a
+  copy of it: the closed island alone. An alert shows on the island, so on the display in use and no
+  other; one that came before the pointer moved to another display stays where it is until it is over.
   Only the island opens. The pointer coming onto a copy (or a press on it) moves the island into the
-  copy's place, where it holds an alert or opens as usual; a copy that grew under a still pointer counts
-  once the pointer moves, as the island does. Once the pointer leaves and the island is closed, it goes
+  copy's place, where it holds an alert or opens as usual. Once the pointer leaves and the island is closed, it goes
   back to the display in use. A fullscreen window hides the copy on its display; the island leaves that
   display for one without, so alerts still show on the others. With Over full-screen apps on, the island
   and the copies stay instead, hidden but for alerts, as below. Auto-hide hides each copy as it would the

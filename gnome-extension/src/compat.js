@@ -27,6 +27,11 @@ export function clutterBackend() {
         : global.stage.context.get_backend();
 }
 
+/** What follows the pointer; GNOME 48 moved it to the backend. */
+export function cursorTracker() {
+    return global.backend.get_cursor_tracker?.() ?? Meta.CursorTracker.get_for_display(global.display);
+}
+
 /** Whether `grab` (from `Main.pushModal`) holds the keyboard; GNOME 50 dropped `get_seat_state`. */
 export function grabsKeyboard(grab) {
     if (grab.get_seat_state)

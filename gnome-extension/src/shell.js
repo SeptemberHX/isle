@@ -69,6 +69,13 @@ export class TopBar extends Signals.EventEmitter {
         this._reserved = -1;
         this._spacer = null;
         this._movedAway = this._clockMovedAway();
+        /** The displays the island or a copy of it is on (their indexes), and the clocks of other extensions' bars
+         * there that Isle keeps hidden (see `_syncOtherBars`). */
+        this._islandMonitors = new Set();
+        this._otherClocks = new Map();
+        // Such a bar comes and goes with its extension, and with the displays.
+        this._barsChanged = ['child-added', 'child-removed'].map(signal =>
+            Main.uiGroup.connect(signal, () => this._otherBarsLater()));
         this._syncDateMenu();
         // Another extension may move GNOME's clock to the bar's left or right (#62): it is then that extension's,
         // shown where it put it, and the island's room in the centre is kept by a spacer of Isle's instead.
@@ -320,6 +327,57 @@ export class TopBar extends Signals.EventEmitter {
         this._syncDateMenu();
         // One clock in the bar: GNOME's, while it shows in the island's place.
         this._syncBarClock();
+    }
+
+    /** The displays the island and its copies are on: a bar another extension put on one of them (a top bar for
+     * every display) has its clock in the centre, under the island, and Isle hides it as it does GNOME's. */
+    set islandMonitors(monitors) {
+        this._islandMonitors = new Set(monitors.filter(monitor => monitor).map(monitor => monitor.index));
+        this._syncOtherBars();
+    }
+
+    /** Other extensions' top bars, on the displays GNOME's own is not on: each a child of the stage's group named
+     * `panelBox`, as extensions that add bars name theirs, holding a bar with a clock of its own. */
+    _otherBars() {
+        return Main.uiGroup.get_children()
+            .filter(box => box.name === 'panelBox' && box !== Main.layoutManager.panelBox)
+            .map(box => ({box, clock: box.get_first_child()?.statusArea?.dateMenu}))
+            .filter(({clock}) => clock && clock !== this._dateMenu);
+    }
+
+    /** Looks at the other bars again once the stage's group has settled (a bar is filled after it is added). */
+    _otherBarsLater() {
+        if (this._otherBarsId)
+            return;
+        this._otherBarsId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+            this._otherBarsId = 0;
+            this._syncOtherBars();
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    /** Hides the clock of each other bar on a display the island is on, and shows it again on one it left. */
+    _syncOtherBars() {
+        const under = new Set(this._otherBars()
+            .filter(({box}) => this._islandMonitors.has(Main.layoutManager.findIndexForActor(box)))
+            .map(({clock}) => clock));
+        for (const clock of under) {
+            if (this._otherClocks.has(clock))
+                continue;
+            // Forgotten when its bar goes: there is nothing to give back then.
+            this._otherClocks.set(clock, clock.connect('destroy', () => this._otherClocks.delete(clock)));
+            clock.opacity = 0;
+            clock.reactive = false;
+            clock.menu?.close();
+        }
+        for (const [clock, destroyed] of [...this._otherClocks]) {
+            if (under.has(clock))
+                continue;
+            this._otherClocks.delete(clock);
+            clock.disconnect(destroyed);
+            clock.opacity = 255;
+            clock.reactive = true;
+        }
     }
 
     /** Whether GNOME's clock shows: while the island is on another display, or where another extension moved it. */
@@ -585,6 +643,13 @@ export class TopBar extends Signals.EventEmitter {
         if (this._fitting)
             GLib.source_remove(this._fitting);
         this._fitting = 0;
+        this._barsChanged.forEach(id => Main.uiGroup.disconnect(id));
+        if (this._otherBarsId)
+            GLib.source_remove(this._otherBarsId);
+        this._otherBarsId = 0;
+        // Other extensions' clocks as they were.
+        this._islandMonitors = new Set();
+        this._syncOtherBars();
         this._barClock?.destroy();
         this._barClock = null;
         this._spacer?.destroy();

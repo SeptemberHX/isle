@@ -83,6 +83,14 @@ All notable changes to Isle are listed here. The format follows
 
 ### Changed
 
+- **The display in use is the one the pointer is on.** With Settings → Island → Display on Display in use or All
+  displays, the island goes to the display the pointer is on, once closed, not to the one of the window in front.
+- **On all displays, an alert shows on the display in use alone.** The copies on the other displays keep showing
+  the closed island; before, every display showed every alert at once. Pointing at a copy still brings the
+  island, and its alert, there.
+- **Another extension's top bar on a second display keeps clear of the island.** A top bar an extension adds to
+  the other displays has a clock of its own in the centre, which the island covered: Isle hides it on a display
+  the island or a copy is on, as it does GNOME's, and shows it again once the island has left.
 - The closed island keeps its bell while there are notifications, read or not, until you clear them; the red
   dot on it still says some are unread. Before, the bell went as soon as the Notifications page was opened.
 - **Click an agent's alert to go to it.** A click anywhere on an alert from Claude Code, Codex or Grok, not
@@ -98,6 +106,8 @@ All notable changes to Isle are listed here. The format follows
 
 ### Fixed
 
+- Apps page: the bars start and end in one line again in languages whose times differ in width ("1小时14分"
+  beside "28分钟"); every row's time takes the width of the widest.
 - Calls in WeChat, Tencent Meeting, Feishu (Lark), DingTalk and QQ are calls: WeChat names its microphone stream
   "Chromium input", so it was taken for a browser and waited for a call page that never came. WeChat's mini
   programs' runtime (WeChatAppEx) is not one.

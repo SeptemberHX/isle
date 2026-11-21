@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 zickrian
 
-// With the island on every display (Settings: Display), each display has a copy of it: the closed island
-// and the alerts, as the island shows them. Only the island itself opens; pointing at a copy brings it
-// there, in the copy's place, so the copy only ever shows.
+// With the island on every display (Settings: Display), each display has a copy of it: the closed island.
+// Alerts show on the display in use alone, on the island itself, and only it opens; pointing at a copy brings
+// it there, in the copy's place, so the copy only ever shows.
 
 import Clutter from 'gi://Clutter';
 
@@ -12,14 +12,13 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {isWayland} from './compat.js';
 import {CompactView} from './compact.js';
 import {Island} from './island.js';
-import {PeekView} from './peek.js';
 
-/** A copy of the island on one display: a closed view and two alert views (taking turns, as the island's do). */
+/** A copy of the island on one display: a closed view. */
 export class MirrorIsland {
     /** `services` are what the closed view watches; `onHover` runs as the pointer comes onto the copy or leaves it,
-     * `onRelease` as a click or a tap on it ends, `onResize` as its closed view changes width, `onShown` as it
-     * shows again, and `onClose` for the × on an alert. */
-    constructor(monitor, {daemon, settings, privacy, call}, {onHover, onRelease, onResize, onShown, onClose}) {
+     * `onRelease` as a click or a tap on it ends, `onResize` as its closed view changes width, and `onShown` as it
+     * shows again. */
+    constructor(monitor, {daemon, settings, privacy, call}, {onHover, onRelease, onResize, onShown}) {
         this.monitor = monitor;
         this._settings = settings;
         this._onShown = onShown;
@@ -28,14 +27,9 @@ export class MirrorIsland {
         /** Whether auto-hide has faded it away (see the controller's `_syncAutoHide`), and the name of its wait. */
         this.autoHidden = false;
         this.autoHideKey = `auto-hide-${monitor.index}`;
-        /** The alert whose glow it shows (see the controller's `_tintMirror`). */
-        this.glowAlert = null;
         this.island = new Island();
         this.compact = new CompactView(daemon, settings, privacy, call);
-        this._peeks = [new PeekView(), new PeekView()];
-        this.peek = this._peeks[0];
-        for (const view of [this.compact, ...this._peeks])
-            this.island.addView(view);
+        this.island.addView(this.compact);
         this.island.monitor = monitor;
         this.island.visible = false;
         // Not tracking fullscreen windows as the island does: the copy is hidden by hand as well (see `shown`).
@@ -49,19 +43,12 @@ export class MirrorIsland {
         this.island.connect('touch-event', (_actor, event) =>
             event.type() === Clutter.EventType.TOUCH_END ? onRelease(this, event) : Clutter.EVENT_STOP);
         this.compact.connect('width-changed', () => onResize(this));
-        for (const peek of this._peeks)
-            peek.connect('close-requested', onClose);
         // GNOME's rule for chrome over a fullscreen window (layout.js `_updateActorVisibility`), here.
         this._fullscreenChanged = global.display.connect('in-fullscreen-changed', () => this._syncVisible());
         this._windowsShown = global.window_group.connect('notify::visible', () => this._syncVisible());
         this._overFullscreenChanged = settings.connect('changed::alerts-over-fullscreen', () => this._syncVisible());
         // Also when GNOME Shell shuts down, taking it with the stage before Isle is turned off.
         this.island.connect('destroy', () => this._onDestroy());
-    }
-
-    /** Its alert views, both. */
-    get peeks() {
-        return this._peeks;
     }
 
     /** Whether the copy shows: not on the island's own display. */
@@ -72,13 +59,6 @@ export class MirrorIsland {
     set shown(shown) {
         this._shown = shown;
         this._syncVisible();
-    }
-
-    /** Fills the next alert view, or the one on show with `inPlace` (the volume moving), as the island's own. */
-    setAlert(alert, onDone, {inPlace = false, turn = false} = {}) {
-        if (turn)
-            this.peek = this._peeks[1 - this._peeks.indexOf(this.peek)];
-        this.peek.setAlert(alert, onDone, {fresh: !inPlace});
     }
 
     /** Fades it out or back as the island's auto-hide does (see Island.setAutoHidden); `onBar`, on the main display
