@@ -459,6 +459,31 @@ export default class IslePreferences extends ExtensionPreferences {
             _('The line being sung in place of the clock, while a song with synced lyrics plays')));
         look.add(switchRow(settings, 'companion', _('A companion on the closed island'),
             _('A little face that lives there: it blinks, follows the pointer, sings along with your music, dozes while you are away and cheers when something is done')));
+        const kind = choiceRow(settings, 'companion-kind', _('Companion'),
+            _('Who lives there: the two eyes, or a cat that walks about, plays, dances to your music and sleeps curled up, drawn in one of nineteen ways'), [
+                ['eyes', _('Two eyes')],
+                ['cat-moon', pgettext('a cat', 'Moonlight')],
+                ['cat-night', pgettext('a cat', 'Night cat')],
+                ['cat-line', pgettext('a cat', 'Line drawing')],
+                ['cat-ink', pgettext('a cat', 'Ink')],
+                ['cat-tabby', pgettext('a cat', 'Grey tabby')],
+                ['cat-tuxedo', pgettext('a cat', 'Tuxedo')],
+                ['cat-siamese', pgettext('a cat', 'Siamese')],
+                ['cat-calico', pgettext('a cat', 'Calico')],
+                ['cat-duo', pgettext('a cat', 'Two tones')],
+                ['cat-origami', pgettext('a cat', 'Origami')],
+                ['cat-aurora', pgettext('a cat', 'Aurora')],
+                ['cat-neon', pgettext('a cat', 'Neon')],
+                ['cat-bastet', pgettext('a cat', 'Egyptian')],
+                ['cat-stars', pgettext('a cat', 'Starry')],
+                ['cat-porcelain', pgettext('a cat', 'Blue and white')],
+                ['cat-kintsugi', pgettext('a cat', 'Kintsugi')],
+                ['cat-glass', pgettext('a cat', 'Glass')],
+                ['cat-dots', pgettext('a cat', 'Dot matrix')],
+                ['cat-pixel', pgettext('a cat', 'Pixels')],
+            ]);
+        settings.bind('companion', kind, 'sensitive', Gio.SettingsBindFlags.GET);
+        look.add(kind);
         look.add(switchRow(settings, 'privacy-indicators', _('Privacy indicators'), _('Dots when the camera, microphone or screen sharing is in use')));
         look.add(choiceRow(settings, 'island-monitor', _('Display'), _('With more than one display, where the island is'), [
             ['primary', _('Main display')],

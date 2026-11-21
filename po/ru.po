@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Isle\n"
 "Report-Msgid-Bugs-To: https://github.com/zickrian/isle/issues\n"
-"POT-Creation-Date: 2026-11-19 04:40-0800\n"
+"POT-Creation-Date: 2026-11-21 07:46-0800\n"
 "PO-Revision-Date: 2026-10-31 21:30+0000\n"
 "Last-Translator: Isle contributors\n"
 "Language-Team: Russian\n"
@@ -102,8 +102,8 @@ msgid "Reset"
 msgstr "Сбросить"
 
 #: gnome-extension/prefs.js:120 gnome-extension/prefs.js:122
-#: gnome-extension/prefs.js:1046 gnome-extension/prefs.js:1159
-#: gnome-extension/prefs.js:1249 gnome-extension/src/expanded.js:46
+#: gnome-extension/prefs.js:1071 gnome-extension/prefs.js:1184
+#: gnome-extension/prefs.js:1274 gnome-extension/src/expanded.js:46
 #, no-javascript-format
 msgid "Weather"
 msgstr "Погода"
@@ -140,8 +140,8 @@ msgid "The weather’s icon and the temperature on the closed island"
 msgstr "Значок погоды и температура на закрытом острове"
 
 #: gnome-extension/prefs.js:138 gnome-extension/prefs.js:141
-#: gnome-extension/prefs.js:1046 gnome-extension/prefs.js:1161
-#: gnome-extension/prefs.js:1250
+#: gnome-extension/prefs.js:1071 gnome-extension/prefs.js:1186
+#: gnome-extension/prefs.js:1275
 #, no-javascript-format
 msgid "AI Usage"
 msgstr "Лимиты ИИ"
@@ -203,7 +203,7 @@ msgstr ""
 "спрашивают, и узнавайте, когда они закончили. Включено по умолчанию; если "
 "выключить, Isle перестанет получать оповещения этого агента."
 
-#: gnome-extension/prefs.js:192 gnome-extension/prefs.js:1922
+#: gnome-extension/prefs.js:192 gnome-extension/prefs.js:1947
 #, no-javascript-format
 msgid "Assistant"
 msgstr "Ассистент"
@@ -224,7 +224,7 @@ msgstr ""
 "распознаётся на этом компьютере (кнопка «Настроить» один раз скачивает "
 "модель); запрос уходит выбранному вами ИИ — с вашим входом и вашим тарифом."
 
-#: gnome-extension/prefs.js:200 gnome-extension/prefs.js:1169
+#: gnome-extension/prefs.js:200 gnome-extension/prefs.js:1194
 #, no-javascript-format
 msgid "AI Assistant"
 msgstr "ИИ-ассистент"
@@ -241,7 +241,7 @@ msgstr ""
 msgid "Opens the assistant and listens"
 msgstr "Открывает ассистента и начинает слушать"
 
-#: gnome-extension/prefs.js:202 gnome-extension/prefs.js:1935
+#: gnome-extension/prefs.js:202 gnome-extension/prefs.js:1960
 #, no-javascript-format
 msgid "Shortcut"
 msgstr "Сочетание клавиш"
@@ -429,8 +429,8 @@ msgstr ""
 "Ассистент начнёт с чистого листа; всё сказанное удалится здесь и из "
 "собственной истории ИИ на этом компьютере."
 
-#: gnome-extension/prefs.js:322 gnome-extension/prefs.js:1416
-#: gnome-extension/prefs.js:1990 gnome-extension/src/pages/notifications.js:89
+#: gnome-extension/prefs.js:322 gnome-extension/prefs.js:1441
+#: gnome-extension/prefs.js:2015 gnome-extension/src/pages/notifications.js:89
 #, no-javascript-format
 msgid "Clear"
 msgstr "Очистить"
@@ -540,7 +540,7 @@ msgstr "Очистить историю"
 msgid "Pinned items are kept"
 msgstr "Закреплённое сохранится"
 
-#: gnome-extension/prefs.js:379 gnome-extension/prefs.js:1412
+#: gnome-extension/prefs.js:379 gnome-extension/prefs.js:1437
 #, no-javascript-format
 msgid "Clear…"
 msgstr "Очистить…"
@@ -570,13 +570,13 @@ msgstr "Внешний вид"
 msgid "Black, glass that shows what is behind it, or a skin"
 msgstr "Чёрный, стекло, сквозь которое видно то, что позади, или тема"
 
-#: gnome-extension/prefs.js:400 gnome-extension/prefs.js:946
+#: gnome-extension/prefs.js:400 gnome-extension/prefs.js:971
 #, no-javascript-format
 msgid "Black"
 msgstr "Чёрный"
 
-#: gnome-extension/prefs.js:401 gnome-extension/prefs.js:891
-#: gnome-extension/prefs.js:944
+#: gnome-extension/prefs.js:401 gnome-extension/prefs.js:916
+#: gnome-extension/prefs.js:969
 #, no-javascript-format
 msgid "Glass"
 msgstr "Стекло"
@@ -601,7 +601,7 @@ msgstr "Парящее облако"
 msgid "Joined to the top of the screen, or floating free"
 msgstr "Примыкает к верху экрана или парит отдельно"
 
-#: gnome-extension/prefs.js:407 gnome-extension/prefs.js:785
+#: gnome-extension/prefs.js:407 gnome-extension/prefs.js:810
 #, no-javascript-format
 msgid "Shape"
 msgstr "Форма"
@@ -729,8 +729,8 @@ msgstr ""
 "Дополнительные часы у левого или правого края панели. Нажмите на них, чтобы "
 "открыть календарь"
 
-#: gnome-extension/prefs.js:449 gnome-extension/prefs.js:482
-#: gnome-extension/prefs.js:1107 gnome-extension/prefs.js:1854
+#: gnome-extension/prefs.js:449 gnome-extension/prefs.js:507
+#: gnome-extension/prefs.js:1132 gnome-extension/prefs.js:1879
 #: gnome-extension/src/alerts.js:49 gnome-extension/src/alerts.js:51
 #: gnome-extension/src/alerts.js:53 gnome-extension/src/alerts.js:55
 #: gnome-extension/src/alerts.js:57 gnome-extension/src/alerts.js:104
@@ -799,76 +799,209 @@ msgstr ""
 
 #: gnome-extension/prefs.js:462
 #, no-javascript-format
+msgid "Companion"
+msgstr "Питомец"
+
+#: gnome-extension/prefs.js:463
+#, no-javascript-format
+msgid ""
+"Who lives there: the two eyes, or a cat that walks about, plays, dances to "
+"your music and sleeps curled up, drawn in one of nineteen ways"
+msgstr ""
+"Кто там живёт: два глаза или кошка, которая гуляет, играет, танцует под "
+"музыку и спит, свернувшись клубком, — в одном из девятнадцати стилей"
+
+#: gnome-extension/prefs.js:464
+#, no-javascript-format
+msgid "Two eyes"
+msgstr "Два глаза"
+
+#: gnome-extension/prefs.js:465
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Moonlight"
+msgstr "Лунный силуэт"
+
+#: gnome-extension/prefs.js:466
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Night cat"
+msgstr "Ночная кошка"
+
+#: gnome-extension/prefs.js:467
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Line drawing"
+msgstr "Контур"
+
+#: gnome-extension/prefs.js:468
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Ink"
+msgstr "Тушь"
+
+#: gnome-extension/prefs.js:469
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Grey tabby"
+msgstr "Серая полосатая"
+
+#: gnome-extension/prefs.js:470
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Tuxedo"
+msgstr "Чёрно-белая"
+
+#: gnome-extension/prefs.js:471
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Siamese"
+msgstr "Сиамская"
+
+#: gnome-extension/prefs.js:472
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Calico"
+msgstr "Трёхцветная"
+
+#: gnome-extension/prefs.js:473
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Two tones"
+msgstr "Два тона"
+
+#: gnome-extension/prefs.js:474
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Origami"
+msgstr "Оригами"
+
+#: gnome-extension/prefs.js:475
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Aurora"
+msgstr "Северное сияние"
+
+#: gnome-extension/prefs.js:476
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Neon"
+msgstr "Неон"
+
+#: gnome-extension/prefs.js:477
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Egyptian"
+msgstr "Египетская"
+
+#: gnome-extension/prefs.js:478
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Starry"
+msgstr "Звёздная"
+
+#: gnome-extension/prefs.js:479
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Blue and white"
+msgstr "Гжель"
+
+#: gnome-extension/prefs.js:480
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Kintsugi"
+msgstr "Кинцуги"
+
+#: gnome-extension/prefs.js:481
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Glass"
+msgstr "Стекло"
+
+#: gnome-extension/prefs.js:482
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Dot matrix"
+msgstr "Точечная матрица"
+
+#: gnome-extension/prefs.js:483
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Pixels"
+msgstr "Пиксели"
+
+#: gnome-extension/prefs.js:487
+#, no-javascript-format
 msgid "Dots when the camera, microphone or screen sharing is in use"
 msgstr "Точки, когда используются камера, микрофон или демонстрация экрана"
 
-#: gnome-extension/prefs.js:462
+#: gnome-extension/prefs.js:487
 #, no-javascript-format
 msgid "Privacy indicators"
 msgstr "Индикаторы приватности"
 
-#: gnome-extension/prefs.js:463 gnome-extension/src/alerts.js:58
+#: gnome-extension/prefs.js:488 gnome-extension/src/alerts.js:58
 #, no-javascript-format
 msgid "Display"
 msgstr "Экран"
 
-#: gnome-extension/prefs.js:463
+#: gnome-extension/prefs.js:488
 #, no-javascript-format
 msgid "With more than one display, where the island is"
 msgstr "Где находится остров, если экранов несколько"
 
-#: gnome-extension/prefs.js:464
+#: gnome-extension/prefs.js:489
 #, no-javascript-format
 msgid "Main display"
 msgstr "Основной экран"
 
-#: gnome-extension/prefs.js:465
+#: gnome-extension/prefs.js:490
 #, no-javascript-format
 msgid "Display in use"
 msgstr "Активный экран"
 
-#: gnome-extension/prefs.js:466
+#: gnome-extension/prefs.js:491
 #, no-javascript-format
 msgid "All displays"
 msgstr "Все экраны"
 
-#: gnome-extension/prefs.js:468
+#: gnome-extension/prefs.js:493
 #, no-javascript-format
 msgid "How the closed island opens"
 msgstr "Как открывается закрытый остров"
 
-#: gnome-extension/prefs.js:468
+#: gnome-extension/prefs.js:493
 #, no-javascript-format
 msgctxt "how the island opens"
 msgid "Open"
 msgstr "Открывать"
 
-#: gnome-extension/prefs.js:469
+#: gnome-extension/prefs.js:494
 #, no-javascript-format
 msgid "On hover"
 msgstr "При наведении"
 
-#: gnome-extension/prefs.js:470
+#: gnome-extension/prefs.js:495
 #, no-javascript-format
 msgid "On click"
 msgstr "По щелчку"
 
-#: gnome-extension/prefs.js:473
+#: gnome-extension/prefs.js:498
 #, no-javascript-format
 msgid "Rest before opening"
 msgstr "Задержка перед открытием"
 
-#: gnome-extension/prefs.js:474
+#: gnome-extension/prefs.js:499
 #, no-javascript-format
 msgid "In milliseconds"
 msgstr "В миллисекундах"
 
-#: gnome-extension/prefs.js:481
+#: gnome-extension/prefs.js:506
 #, no-javascript-format
 msgid "Auto-hide"
 msgstr "Автоскрытие"
 
-#: gnome-extension/prefs.js:481
+#: gnome-extension/prefs.js:506
 #, no-javascript-format
 msgid ""
 "Hide the closed island; alerts still show, and pointing at its place brings "
@@ -877,37 +1010,37 @@ msgstr ""
 "Скрывать закрытый остров; оповещения всё равно видны, а наведение на его "
 "место возвращает его"
 
-#: gnome-extension/prefs.js:483 gnome-extension/src/alerts.js:605
+#: gnome-extension/prefs.js:508 gnome-extension/src/alerts.js:605
 #, no-javascript-format
 msgid "Always"
 msgstr "Всегда"
 
-#: gnome-extension/prefs.js:484
+#: gnome-extension/prefs.js:509
 #, no-javascript-format
 msgid "With the top bar"
 msgstr "Вместе с верхней панелью"
 
-#: gnome-extension/prefs.js:485
+#: gnome-extension/prefs.js:510
 #, no-javascript-format
 msgid "Beside windows"
 msgstr "Рядом с окнами"
 
-#: gnome-extension/prefs.js:488
+#: gnome-extension/prefs.js:513
 #, no-javascript-format
 msgid "Hide after"
 msgstr "Скрывать через"
 
-#: gnome-extension/prefs.js:488
+#: gnome-extension/prefs.js:513
 #, no-javascript-format
 msgid "Seconds without the pointer on the island"
 msgstr "Секунд без указателя на острове"
 
-#: gnome-extension/prefs.js:494
+#: gnome-extension/prefs.js:519
 #, no-javascript-format
 msgid "Pixel shift for OLED displays"
 msgstr "Сдвиг пикселей для OLED-экранов"
 
-#: gnome-extension/prefs.js:495
+#: gnome-extension/prefs.js:520
 #, no-javascript-format
 msgid ""
 "The closed island moves a pixel sideways now and then, so its time does not "
@@ -916,31 +1049,31 @@ msgstr ""
 "Закрытый остров время от времени сдвигается на пиксель вбок, чтобы время не "
 "оставляло следа на экране"
 
-#: gnome-extension/prefs.js:506
+#: gnome-extension/prefs.js:531
 #, no-javascript-format
 msgid "Alerts"
 msgstr "Оповещения"
 
-#: gnome-extension/prefs.js:508 gnome-extension/prefs.js:1036
-#: gnome-extension/prefs.js:1242 gnome-extension/src/expanded.js:39
+#: gnome-extension/prefs.js:533 gnome-extension/prefs.js:1061
+#: gnome-extension/prefs.js:1267 gnome-extension/src/expanded.js:39
 #: gnome-extension/src/pages/notifications.js:84
 #, no-javascript-format
 msgid "Notifications"
 msgstr "Уведомления"
 
-#: gnome-extension/prefs.js:509
+#: gnome-extension/prefs.js:534
 #, no-javascript-format
 msgid ""
 "Apps’ notifications in the island, with their buttons, as GNOME shows them"
 msgstr ""
 "Уведомления приложений в острове, с их кнопками, как их показывает GNOME"
 
-#: gnome-extension/prefs.js:512
+#: gnome-extension/prefs.js:537
 #, no-javascript-format
 msgid "Apps with notifications beside the open island"
 msgstr "Приложения с уведомлениями рядом с открытым островом"
 
-#: gnome-extension/prefs.js:513
+#: gnome-extension/prefs.js:538
 #, no-javascript-format
 msgid ""
 "An icon for each app with notifications, and how many, beside the "
@@ -951,22 +1084,22 @@ msgstr ""
 "уведомлений; щелчок показывает только его уведомления, правый щелчок очищает "
 "их"
 
-#: gnome-extension/prefs.js:514
+#: gnome-extension/prefs.js:539
 #, no-javascript-format
 msgid "Show them in the island instead of the centre of the screen"
 msgstr "Показывать в острове, а не в центре экрана"
 
-#: gnome-extension/prefs.js:514
+#: gnome-extension/prefs.js:539
 #, no-javascript-format
 msgid "Volume and brightness"
 msgstr "Громкость и яркость"
 
-#: gnome-extension/prefs.js:515
+#: gnome-extension/prefs.js:540
 #, no-javascript-format
 msgid "Over full-screen apps"
 msgstr "Поверх полноэкранных приложений"
 
-#: gnome-extension/prefs.js:516
+#: gnome-extension/prefs.js:541
 #, no-javascript-format
 msgid ""
 "Alerts show over a video or game, then hide again; off, they wait until it "
@@ -975,153 +1108,153 @@ msgstr ""
 "Оповещения появляются поверх видео или игры и снова скрываются; если "
 "выключено, они ждут выхода из полноэкранного режима"
 
-#: gnome-extension/prefs.js:517
+#: gnome-extension/prefs.js:542
 #, no-javascript-format
 msgid "Charging and battery"
 msgstr "Зарядка и батарея"
 
-#: gnome-extension/prefs.js:517
+#: gnome-extension/prefs.js:542
 #, no-javascript-format
 msgid "Plugged in, unplugged, full and low"
 msgstr "Подключение и отключение зарядки, полный и низкий заряд"
 
-#: gnome-extension/prefs.js:518
+#: gnome-extension/prefs.js:543
 #, no-javascript-format
 msgid "Network"
 msgstr "Сеть"
 
-#: gnome-extension/prefs.js:518
+#: gnome-extension/prefs.js:543
 #, no-javascript-format
 msgid "When the connection drops"
 msgstr "Когда пропадает соединение"
 
-#: gnome-extension/prefs.js:519
+#: gnome-extension/prefs.js:544
 #, no-javascript-format
 msgid "Devices connecting, with their battery"
 msgstr "Подключение устройств, с зарядом их батареи"
 
-#: gnome-extension/prefs.js:520
+#: gnome-extension/prefs.js:545
 #, no-javascript-format
 msgid "Bluetooth battery"
 msgstr "Батарея Bluetooth"
 
-#: gnome-extension/prefs.js:521
+#: gnome-extension/prefs.js:546
 #, no-javascript-format
 msgid "A device’s battery low, at 20, 10 and 5%"
 msgstr "Низкий заряд устройства: 20, 10 и 5%"
 
-#: gnome-extension/prefs.js:522
+#: gnome-extension/prefs.js:547
 #, no-javascript-format
 msgid "When it turns on or off"
 msgstr "Когда включается или выключается"
 
-#: gnome-extension/prefs.js:523
+#: gnome-extension/prefs.js:548
 #, no-javascript-format
 msgid "Calendar events"
 msgstr "События календаря"
 
-#: gnome-extension/prefs.js:524
+#: gnome-extension/prefs.js:549
 #, no-javascript-format
 msgid "Before each event with a time, with Join for a Meet, Zoom or Teams link"
 msgstr ""
 "Перед каждым событием со временем; с кнопкой «Подключиться» для ссылок Meet, "
 "Zoom и Teams"
 
-#: gnome-extension/prefs.js:525
+#: gnome-extension/prefs.js:550
 #, no-javascript-format
 msgid "Minutes before an event"
 msgstr "За сколько минут до события"
 
-#: gnome-extension/prefs.js:528
+#: gnome-extension/prefs.js:553
 #, no-javascript-format
 msgid "Briefly show the song when the track changes"
 msgstr "Ненадолго показывать песню при смене трека"
 
-#: gnome-extension/prefs.js:528
+#: gnome-extension/prefs.js:553
 #, no-javascript-format
 msgid "New song"
 msgstr "Новая песня"
 
-#: gnome-extension/prefs.js:529
+#: gnome-extension/prefs.js:554
 #, no-javascript-format
 msgid "Look up the playing song’s lyrics on LRCLIB"
 msgstr "Искать текст играющей песни на LRCLIB"
 
-#: gnome-extension/prefs.js:529
+#: gnome-extension/prefs.js:554
 #, no-javascript-format
 msgid "Lyrics"
 msgstr "Тексты песен"
 
-#: gnome-extension/prefs.js:530
+#: gnome-extension/prefs.js:555
 #, no-javascript-format
 msgid "Chime when a focus session or break ends, and for reminders"
 msgstr "Звуковой сигнал в конце сессии фокуса или перерыва и для напоминаний"
 
-#: gnome-extension/prefs.js:530
+#: gnome-extension/prefs.js:555
 #, no-javascript-format
 msgid "Sounds"
 msgstr "Звуки"
 
-#: gnome-extension/prefs.js:534
+#: gnome-extension/prefs.js:559
 #, no-javascript-format
 msgid "Calls"
 msgstr "Звонки"
 
-#: gnome-extension/prefs.js:535
+#: gnome-extension/prefs.js:560
 #, no-javascript-format
 msgid "WhatsApp, Telegram, Meet and other calls, in any app or browser."
 msgstr ""
 "WhatsApp, Telegram, Meet и другие звонки — в любом приложении или браузере."
 
-#: gnome-extension/prefs.js:537
+#: gnome-extension/prefs.js:562
 #, no-javascript-format
 msgid "Calls in the island"
 msgstr "Звонки в острове"
 
-#: gnome-extension/prefs.js:537
+#: gnome-extension/prefs.js:562
 #, no-javascript-format
 msgid "The call’s length, mute and a way back to it"
 msgstr "Длительность звонка, выключение микрофона и быстрый возврат к нему"
 
-#: gnome-extension/prefs.js:538
+#: gnome-extension/prefs.js:563
 #, no-javascript-format
 msgid "Live preview"
 msgstr "Живое превью"
 
-#: gnome-extension/prefs.js:539
+#: gnome-extension/prefs.js:564
 #, no-javascript-format
 msgid "See yourself and whoever you call, live in the open island"
 msgstr "Видеть себя и собеседника вживую в открытом острове"
 
-#: gnome-extension/prefs.js:548 gnome-extension/prefs.js:1037
-#: gnome-extension/prefs.js:1243 gnome-extension/src/expanded.js:40
+#: gnome-extension/prefs.js:573 gnome-extension/prefs.js:1062
+#: gnome-extension/prefs.js:1268 gnome-extension/src/expanded.js:40
 #, no-javascript-format
 msgid "Timer"
 msgstr "Таймер"
 
-#: gnome-extension/prefs.js:549
+#: gnome-extension/prefs.js:574
 #, no-javascript-format
 msgid "While Focusing"
 msgstr "Во время фокуса"
 
-#: gnome-extension/prefs.js:550 gnome-extension/src/pages/notifications.js:87
+#: gnome-extension/prefs.js:575 gnome-extension/src/pages/notifications.js:87
 #, no-javascript-format
 msgid "Do Not Disturb"
 msgstr "Не беспокоить"
 
-#: gnome-extension/prefs.js:550
+#: gnome-extension/prefs.js:575
 #, no-javascript-format
 msgid ""
 "Silence notifications during focus sessions, and restore them afterwards"
 msgstr ""
 "Отключать уведомления на время сессий фокуса и включать их обратно после"
 
-#: gnome-extension/prefs.js:554
+#: gnome-extension/prefs.js:579
 #, no-javascript-format
 msgid "Pomodoro"
 msgstr "Помодоро"
 
-#: gnome-extension/prefs.js:555
+#: gnome-extension/prefs.js:580
 #, no-javascript-format
 msgid ""
 "Focus sessions with short breaks, and a long break after a few sessions."
@@ -1129,12 +1262,12 @@ msgstr ""
 "Сессии фокуса с короткими перерывами и длинным перерывом после нескольких "
 "сессий."
 
-#: gnome-extension/prefs.js:570
+#: gnome-extension/prefs.js:595
 #, no-javascript-format
 msgid "The timer settings aren’t available right now"
 msgstr "Настройки таймера сейчас недоступны"
 
-#: gnome-extension/prefs.js:571
+#: gnome-extension/prefs.js:596
 #, no-javascript-format
 msgid ""
 "Isle isn’t running in the background. Log out and back in, or install Isle "
@@ -1143,118 +1276,118 @@ msgstr ""
 "Фоновая служба Isle не запущена. Выйдите из системы и войдите снова или "
 "переустановите Isle."
 
-#: gnome-extension/prefs.js:649
+#: gnome-extension/prefs.js:674
 #, no-javascript-format
 msgid "Focus (minutes)"
 msgstr "Фокус (минуты)"
 
-#: gnome-extension/prefs.js:650
+#: gnome-extension/prefs.js:675
 #, no-javascript-format
 msgid "Short break (minutes)"
 msgstr "Короткий перерыв (минуты)"
 
-#: gnome-extension/prefs.js:651
+#: gnome-extension/prefs.js:676
 #, no-javascript-format
 msgid "Long break (minutes)"
 msgstr "Длинный перерыв (минуты)"
 
-#: gnome-extension/prefs.js:652
+#: gnome-extension/prefs.js:677
 #, no-javascript-format
 msgid "Sessions before a long break"
 msgstr "Сессий до длинного перерыва"
 
-#: gnome-extension/prefs.js:653
+#: gnome-extension/prefs.js:678
 #, no-javascript-format
 msgid "Start breaks automatically"
 msgstr "Начинать перерывы автоматически"
 
-#: gnome-extension/prefs.js:654
+#: gnome-extension/prefs.js:679
 #, no-javascript-format
 msgid "After a break ends"
 msgstr "После окончания перерыва"
 
-#: gnome-extension/prefs.js:654
+#: gnome-extension/prefs.js:679
 #, no-javascript-format
 msgid "Start focus automatically"
 msgstr "Начинать фокус автоматически"
 
-#: gnome-extension/prefs.js:727
+#: gnome-extension/prefs.js:752
 #, no-javascript-format
 msgid "How the assistant looks, and the light it brings to the island."
 msgstr "Как выглядит ассистент и каким светом он подсвечивает остров."
 
-#: gnome-extension/prefs.js:727
+#: gnome-extension/prefs.js:752
 #, no-javascript-format
 msgid "Look"
 msgstr "Облик"
 
-#: gnome-extension/prefs.js:762
+#: gnome-extension/prefs.js:787
 #, no-javascript-format
 msgid "LibreOffice is installed."
 msgstr "LibreOffice установлен."
 
-#: gnome-extension/prefs.js:762 gnome-extension/src/voice.js:718
+#: gnome-extension/prefs.js:787 gnome-extension/src/voice.js:718
 #, no-javascript-format
 msgid "Listening…"
 msgstr "Слушаю…"
 
-#: gnome-extension/prefs.js:762 gnome-extension/src/daemonWords.js:16
+#: gnome-extension/prefs.js:787 gnome-extension/src/daemonWords.js:16
 #, no-javascript-format
 msgid "Searching the web…"
 msgstr "Ищу в интернете…"
 
-#: gnome-extension/prefs.js:795
+#: gnome-extension/prefs.js:820
 #, no-javascript-format
 msgid "A colour of your own"
 msgstr "Свой цвет"
 
-#: gnome-extension/prefs.js:808
+#: gnome-extension/prefs.js:833
 #, no-javascript-format
 msgid "Assistant colour"
 msgstr "Цвет ассистента"
 
-#: gnome-extension/prefs.js:817
+#: gnome-extension/prefs.js:842
 #, no-javascript-format
 msgid "Colour"
 msgstr "Цвет"
 
-#: gnome-extension/prefs.js:822
+#: gnome-extension/prefs.js:847
 #, no-javascript-format
 msgid "Glow"
 msgstr "Свечение"
 
-#: gnome-extension/prefs.js:822
+#: gnome-extension/prefs.js:847
 #, no-javascript-format
 msgid "The light along the island's edge"
 msgstr "Свет по краю острова"
 
-#: gnome-extension/prefs.js:823
+#: gnome-extension/prefs.js:848
 #, no-javascript-format
 msgid "Classic"
 msgstr "Классическое"
 
-#: gnome-extension/prefs.js:823
+#: gnome-extension/prefs.js:848
 #, no-javascript-format
 msgid "Custom"
 msgstr "Своё"
 
-#: gnome-extension/prefs.js:823
+#: gnome-extension/prefs.js:848
 #, no-javascript-format
 msgid "Match"
 msgstr "В тон"
 
-#: gnome-extension/prefs.js:824
+#: gnome-extension/prefs.js:849
 #, no-javascript-format
 msgid "Glow colour"
 msgstr "Цвет свечения"
 
-#: gnome-extension/prefs.js:877
+#: gnome-extension/prefs.js:902
 #, no-javascript-format
 msgid "Allow, deny or always allow, and when it is done"
 msgstr ""
 "Разрешить, запретить или разрешать всегда, а также когда работа закончена"
 
-#: gnome-extension/prefs.js:878
+#: gnome-extension/prefs.js:903
 #, no-javascript-format
 msgid ""
 "Allow or deny, and when it is done · in Codex, type /hooks once and allow "
@@ -1263,85 +1396,85 @@ msgstr ""
 "Разрешить или запретить, а также когда работа закончена · в Codex один раз "
 "введите /hooks и разрешите Isle"
 
-#: gnome-extension/prefs.js:897
+#: gnome-extension/prefs.js:922
 #, no-javascript-format
 msgctxt "glass"
 msgid "Clear"
 msgstr "Прозрачно"
 
-#: gnome-extension/prefs.js:899
+#: gnome-extension/prefs.js:924
 #, no-javascript-format
 msgctxt "glass"
 msgid "Dark"
 msgstr "Темно"
 
-#: gnome-extension/prefs.js:903
+#: gnome-extension/prefs.js:928
 #, no-javascript-format
 msgid "Clear glass: what is behind shows through"
 msgstr "Прозрачное стекло: видно то, что под ним"
 
-#: gnome-extension/prefs.js:904
+#: gnome-extension/prefs.js:929
 #, no-javascript-format
 msgid "Dark frosted glass"
 msgstr "Тёмное матовое стекло"
 
-#: gnome-extension/prefs.js:904
+#: gnome-extension/prefs.js:929
 #, no-javascript-format
 msgid "{percent}% darker"
 msgstr "Темнее на {percent}%"
 
-#: gnome-extension/prefs.js:937
+#: gnome-extension/prefs.js:962
 #, no-javascript-format
 msgid "Top bar"
 msgstr "Верхняя панель"
 
-#: gnome-extension/prefs.js:953
+#: gnome-extension/prefs.js:978
 #, no-javascript-format
 msgid "See-through glass"
 msgstr "Прозрачное стекло"
 
-#: gnome-extension/prefs.js:953
+#: gnome-extension/prefs.js:978
 #, no-javascript-format
 msgid "The island blends into the bar"
 msgstr "Остров сливается с панелью"
 
-#: gnome-extension/prefs.js:954
+#: gnome-extension/prefs.js:979
 #, no-javascript-format
 msgid "{percent}% black"
 msgstr "Чёрный на {percent}%"
 
-#: gnome-extension/prefs.js:995
+#: gnome-extension/prefs.js:1020
 #, no-javascript-format
 msgctxt "what the top bar clock shows"
 msgid "Day"
 msgstr "День недели"
 
-#: gnome-extension/prefs.js:995
+#: gnome-extension/prefs.js:1020
 #, no-javascript-format
 msgid "Time"
 msgstr "Время"
 
-#: gnome-extension/prefs.js:996
+#: gnome-extension/prefs.js:1021
 #, no-javascript-format
 msgid "Date"
 msgstr "Дата"
 
-#: gnome-extension/prefs.js:998
+#: gnome-extension/prefs.js:1023
 #, no-javascript-format
 msgid "Top bar clock shows"
 msgstr "Часы в панели показывают"
 
-#: gnome-extension/prefs.js:999
+#: gnome-extension/prefs.js:1024
 #, no-javascript-format
 msgid "It hides by itself while the bar is too full"
 msgstr "Скрываются сами, пока на панели слишком тесно"
 
-#: gnome-extension/prefs.js:1016
+#: gnome-extension/prefs.js:1041
 #, no-javascript-format
 msgid "Black top bar beside windows"
 msgstr "Чёрная верхняя панель рядом с окнами"
 
-#: gnome-extension/prefs.js:1017
+#: gnome-extension/prefs.js:1042
 #, no-javascript-format
 msgid ""
 "While a window reaches the top bar, maximized or tiled, the bar turns black"
@@ -1349,80 +1482,80 @@ msgstr ""
 "Пока окно касается верхней панели, развёрнутое или прикреплённое, панель "
 "становится чёрной"
 
-#: gnome-extension/prefs.js:1035 gnome-extension/prefs.js:1241
+#: gnome-extension/prefs.js:1060 gnome-extension/prefs.js:1266
 #: gnome-extension/src/expanded.js:38
 #, no-javascript-format
 msgid "Music"
 msgstr "Музыка"
 
-#: gnome-extension/prefs.js:1035
+#: gnome-extension/prefs.js:1060
 #, no-javascript-format
 msgid "The player and lyrics, and the song in the closed island"
 msgstr "Плеер и тексты песен, а также песня в закрытом острове"
 
-#: gnome-extension/prefs.js:1036
+#: gnome-extension/prefs.js:1061
 #, no-javascript-format
 msgid "The list to look back at, and its unread dot; alerts show either way"
 msgstr ""
 "Список для просмотра и точка непрочитанного; оповещения показываются в любом "
 "случае"
 
-#: gnome-extension/prefs.js:1037
+#: gnome-extension/prefs.js:1062
 #, no-javascript-format
 msgid "Pomodoro focus sessions and breaks"
 msgstr "Сессии фокуса по методу помодоро и перерывы"
 
-#: gnome-extension/prefs.js:1038 gnome-extension/prefs.js:1244
+#: gnome-extension/prefs.js:1063 gnome-extension/prefs.js:1269
 #: gnome-extension/src/expanded.js:41 gnome-extension/src/pages/tasks.js:132
 #, no-javascript-format
 msgid "Reminders"
 msgstr "Напоминания"
 
-#: gnome-extension/prefs.js:1038
+#: gnome-extension/prefs.js:1063
 #, no-javascript-format
 msgid "Your to-do list"
 msgstr "Ваш список дел"
 
-#: gnome-extension/prefs.js:1039
+#: gnome-extension/prefs.js:1064
 #, no-javascript-format
 msgid "Clipboard history (Super+V), the files tray and sharing with a phone"
 msgstr "История буфера обмена (Super+V), лоток файлов и обмен с телефоном"
 
-#: gnome-extension/prefs.js:1039 gnome-extension/prefs.js:1245
+#: gnome-extension/prefs.js:1064 gnome-extension/prefs.js:1270
 #: gnome-extension/src/expanded.js:42
 #, no-javascript-format
 msgid "Shelf"
 msgstr "Полка"
 
-#: gnome-extension/prefs.js:1040 gnome-extension/prefs.js:1246
-#: gnome-extension/src/expanded.js:43 gnome-extension/src/shell.js:392
+#: gnome-extension/prefs.js:1065 gnome-extension/prefs.js:1271
+#: gnome-extension/src/expanded.js:43 gnome-extension/src/shell.js:450
 #, no-javascript-format
 msgid "Calendar"
 msgstr "Календарь"
 
-#: gnome-extension/prefs.js:1040
+#: gnome-extension/prefs.js:1065
 #, no-javascript-format
 msgid "The month, its events and world clocks"
 msgstr "Месяц, его события и мировое время"
 
-#: gnome-extension/prefs.js:1045 gnome-extension/prefs.js:1154
-#: gnome-extension/prefs.js:1247 gnome-extension/src/expanded.js:44
+#: gnome-extension/prefs.js:1070 gnome-extension/prefs.js:1179
+#: gnome-extension/prefs.js:1272 gnome-extension/src/expanded.js:44
 #, no-javascript-format
 msgid "Apps"
 msgstr "Приложения"
 
-#: gnome-extension/prefs.js:1045 gnome-extension/prefs.js:1156
-#: gnome-extension/prefs.js:1248 gnome-extension/src/expanded.js:45
+#: gnome-extension/prefs.js:1070 gnome-extension/prefs.js:1181
+#: gnome-extension/prefs.js:1273 gnome-extension/src/expanded.js:45
 #, no-javascript-format
 msgid "Devices"
 msgstr "Устройства"
 
-#: gnome-extension/prefs.js:1051
+#: gnome-extension/prefs.js:1076
 #, no-javascript-format
 msgid "Shortcuts"
 msgstr "Сочетания клавиш"
 
-#: gnome-extension/prefs.js:1052
+#: gnome-extension/prefs.js:1077
 #, no-javascript-format
 msgid ""
 "Open a page from anywhere; the same shortcut closes it. Super+V opens the "
@@ -1433,22 +1566,22 @@ msgstr ""
 "открывает буфер обмена на Полке или Календарь: нажмите его на одной из них. "
 "В открытом острове страницы переключаются по Ctrl+Tab и Ctrl+1–9."
 
-#: gnome-extension/prefs.js:1092 gnome-extension/prefs.js:1869
+#: gnome-extension/prefs.js:1117 gnome-extension/prefs.js:1894
 #, no-javascript-format
 msgid "{shortcut} is already used by {what}"
 msgstr "{shortcut} уже занято: {what}"
 
-#: gnome-extension/prefs.js:1121
+#: gnome-extension/prefs.js:1146
 #, no-javascript-format
 msgid "Super+V opens it too"
 msgstr "Super+V тоже открывает её"
 
-#: gnome-extension/prefs.js:1139
+#: gnome-extension/prefs.js:1164
 #, no-javascript-format
 msgid "Pages"
 msgstr "Страницы"
 
-#: gnome-extension/prefs.js:1140
+#: gnome-extension/prefs.js:1165
 #, no-javascript-format
 msgid ""
 "The open island’s tabs, top here is left there. Use the arrows to reorder "
@@ -1457,12 +1590,12 @@ msgstr ""
 "Вкладки открытого острова: верх здесь — это лево там. Стрелками меняйте их "
 "порядок, а переключателями скрывайте те, которыми не пользуетесь."
 
-#: gnome-extension/prefs.js:1154
+#: gnome-extension/prefs.js:1179
 #, no-javascript-format
 msgid "Time spent in each app, kept on this computer for 30 days"
 msgstr "Время в каждом приложении; хранится на этом компьютере 30 дней"
 
-#: gnome-extension/prefs.js:1157
+#: gnome-extension/prefs.js:1182
 #, no-javascript-format
 msgid ""
 "Connected Bluetooth devices and their battery; its tab shows while one is "
@@ -1471,73 +1604,73 @@ msgstr ""
 "Подключённые устройства Bluetooth и их заряд; вкладка видна, пока подключено "
 "хотя бы одно"
 
-#: gnome-extension/prefs.js:1159
+#: gnome-extension/prefs.js:1184
 #, no-javascript-format
 msgid "The weather now and the week ahead, from Open-Meteo"
 msgstr "Погода сейчас и на неделю вперёд, от Open-Meteo"
 
-#: gnome-extension/prefs.js:1161
+#: gnome-extension/prefs.js:1186
 #, no-javascript-format
 msgid "Your AI plans’ limits, and warnings as one nears its end"
 msgstr "Лимиты ваших тарифов ИИ и предупреждения, когда лимит подходит к концу"
 
-#: gnome-extension/prefs.js:1166
+#: gnome-extension/prefs.js:1191
 #, no-javascript-format
 msgid "Sign in to Claude Code, Codex or Grok to see your plan"
 msgstr "Войдите в Claude Code, Codex или Grok, чтобы видеть свой тариф"
 
-#: gnome-extension/prefs.js:1169
+#: gnome-extension/prefs.js:1194
 #, no-javascript-format
 msgid "The ✦ in the open island and its shortcut"
 msgstr "✦ в открытом острове и его сочетание клавиш"
 
-#: gnome-extension/prefs.js:1184
+#: gnome-extension/prefs.js:1209
 #, no-javascript-format
 msgid "Move up: the tab goes left"
 msgstr "Выше: вкладка сдвинется влево"
 
-#: gnome-extension/prefs.js:1185
+#: gnome-extension/prefs.js:1210
 #, no-javascript-format
 msgid "Move down: the tab goes right"
 msgstr "Ниже: вкладка сдвинется вправо"
 
-#: gnome-extension/prefs.js:1193
+#: gnome-extension/prefs.js:1218
 #, no-javascript-format
 msgid "Reset Order"
 msgstr "Сбросить порядок"
 
-#: gnome-extension/prefs.js:1194
+#: gnome-extension/prefs.js:1219
 #, no-javascript-format
 msgid "Put the tabs back in Isle’s own order"
 msgstr "Вернуть вкладкам порядок Isle"
 
-#: gnome-extension/prefs.js:1225
+#: gnome-extension/prefs.js:1250
 #, no-javascript-format
 msgid "The island keeps at least one page"
 msgstr "У острова остаётся хотя бы одна страница"
 
-#: gnome-extension/prefs.js:1240 gnome-extension/src/call.js:144
+#: gnome-extension/prefs.js:1265 gnome-extension/src/call.js:144
 #: gnome-extension/src/expanded.js:37
 #, no-javascript-format
 msgid "Call"
 msgstr "Звонок"
 
-#: gnome-extension/prefs.js:1240
+#: gnome-extension/prefs.js:1265
 #, no-javascript-format
 msgid "Only during a call"
 msgstr "Только во время звонка"
 
-#: gnome-extension/prefs.js:1248
+#: gnome-extension/prefs.js:1273
 #, no-javascript-format
 msgid "Only while a device is connected"
 msgstr "Только пока подключено устройство"
 
-#: gnome-extension/prefs.js:1256
+#: gnome-extension/prefs.js:1281
 #, no-javascript-format
 msgid "Place"
 msgstr "Место"
 
-#: gnome-extension/prefs.js:1257
+#: gnome-extension/prefs.js:1282
 #, no-javascript-format
 msgid ""
 "With none picked, Isle asks ipwho.is where your network’s address is, and "
@@ -1546,47 +1679,47 @@ msgstr ""
 "Если место не выбрано, Isle спрашивает у ipwho.is, где находится адрес вашей "
 "сети, и больше ничего."
 
-#: gnome-extension/prefs.js:1260
+#: gnome-extension/prefs.js:1285
 #, no-javascript-format
 msgid "Automatic"
 msgstr "Автоматически"
 
-#: gnome-extension/prefs.js:1273
+#: gnome-extension/prefs.js:1298
 #, no-javascript-format
 msgid "Where your network is"
 msgstr "Там, где ваша сеть"
 
-#: gnome-extension/prefs.js:1274
+#: gnome-extension/prefs.js:1299
 #, no-javascript-format
 msgid "Found by itself"
 msgstr "Определяется автоматически"
 
-#: gnome-extension/prefs.js:1281
+#: gnome-extension/prefs.js:1306
 #, no-javascript-format
 msgid "Search for a town or city"
 msgstr "Найти город"
 
-#: gnome-extension/prefs.js:1299
+#: gnome-extension/prefs.js:1324
 #, no-javascript-format
 msgid "Searching…"
 msgstr "Поиск…"
 
-#: gnome-extension/prefs.js:1315
+#: gnome-extension/prefs.js:1340
 #, no-javascript-format
 msgid "Couldn’t search just now. Try again in a moment."
 msgstr "Сейчас не удалось выполнить поиск. Попробуйте чуть позже."
 
-#: gnome-extension/prefs.js:1317
+#: gnome-extension/prefs.js:1342
 #, no-javascript-format
 msgid "No place called “{name}”"
 msgstr "Места с названием «{name}» не найдено"
 
-#: gnome-extension/prefs.js:1362
+#: gnome-extension/prefs.js:1387
 #, no-javascript-format
 msgid "Page Height"
 msgstr "Высота страниц"
 
-#: gnome-extension/prefs.js:1363
+#: gnome-extension/prefs.js:1388
 #, no-javascript-format
 msgid ""
 "How tall each page of the open island is, in pixels ({least} to {most}); one "
@@ -1597,12 +1730,12 @@ msgstr ""
 "страница с высотой по умолчанию следует настройке «Размер». При переходе "
 "между ними остров растёт и сжимается."
 
-#: gnome-extension/prefs.js:1408 gnome-extension/src/pages/apps.js:80
+#: gnome-extension/prefs.js:1433 gnome-extension/src/pages/apps.js:82
 #, no-javascript-format
 msgid "App Usage"
 msgstr "Время в приложениях"
 
-#: gnome-extension/prefs.js:1409
+#: gnome-extension/prefs.js:1434
 #, no-javascript-format
 msgid ""
 "With the Apps page on, the app in front is timed. Five minutes without input "
@@ -1612,32 +1745,32 @@ msgstr ""
 "Пять минут без действий ставят подсчёт на паузу, если только видео не держит "
 "экран включённым."
 
-#: gnome-extension/prefs.js:1411
+#: gnome-extension/prefs.js:1436
 #, no-javascript-format
 msgid "Clear app usage"
 msgstr "Очистить время в приложениях"
 
-#: gnome-extension/prefs.js:1411
+#: gnome-extension/prefs.js:1436
 #, no-javascript-format
 msgid "Forget every day recorded so far"
 msgstr "Забыть все записанные дни"
 
-#: gnome-extension/prefs.js:1414
+#: gnome-extension/prefs.js:1439
 #, no-javascript-format
 msgid "Clear app usage?"
 msgstr "Очистить время в приложениях?"
 
-#: gnome-extension/prefs.js:1415
+#: gnome-extension/prefs.js:1440
 #, no-javascript-format
 msgid "Every app’s time recorded so far is removed. This cannot be undone."
 msgstr "Всё записанное время приложений будет удалено. Это нельзя отменить."
 
-#: gnome-extension/prefs.js:1427 gnome-extension/src/pages/calendar.js:809
+#: gnome-extension/prefs.js:1452 gnome-extension/src/pages/calendar.js:809
 #, no-javascript-format
 msgid "World Clocks"
 msgstr "Мировое время"
 
-#: gnome-extension/prefs.js:1428
+#: gnome-extension/prefs.js:1453
 #, no-javascript-format
 msgid ""
 "The time in other cities on the Calendar page. The same list as GNOME’s "
@@ -1646,82 +1779,82 @@ msgstr ""
 "Время в других городах на странице «Календарь». Тот же список, что в меню "
 "календаря GNOME и в приложении «Часы»."
 
-#: gnome-extension/prefs.js:1430
+#: gnome-extension/prefs.js:1455
 #, no-javascript-format
 msgid "Show world clocks"
 msgstr "Показывать мировое время"
 
-#: gnome-extension/prefs.js:1430
+#: gnome-extension/prefs.js:1455
 #, no-javascript-format
 msgid "Under the day’s events; click them for more"
 msgstr "Под событиями дня; нажмите, чтобы увидеть больше"
 
-#: gnome-extension/prefs.js:1434
+#: gnome-extension/prefs.js:1459
 #, no-javascript-format
 msgid "GNOME’s world clocks are not available here"
 msgstr "Мировое время GNOME здесь недоступно"
 
-#: gnome-extension/prefs.js:1438 gnome-extension/prefs.js:1439
+#: gnome-extension/prefs.js:1463 gnome-extension/prefs.js:1464
 #, no-javascript-format
 msgid "Add a City…"
 msgstr "Добавить город…"
 
-#: gnome-extension/prefs.js:1461
+#: gnome-extension/prefs.js:1486
 #, no-javascript-format
 msgid "Same time as here"
 msgstr "То же время, что здесь"
 
-#: gnome-extension/prefs.js:1469
+#: gnome-extension/prefs.js:1494
 #, no-javascript-format
 msgid "Remove this city"
 msgstr "Удалить этот город"
 
-#: gnome-extension/prefs.js:1516
+#: gnome-extension/prefs.js:1541
 #, no-javascript-format
 msgid "Add a City"
 msgstr "Добавить город"
 
-#: gnome-extension/prefs.js:1520
+#: gnome-extension/prefs.js:1545
 #, no-javascript-format
 msgid "Search for a city"
 msgstr "Поиск города"
 
-#: gnome-extension/prefs.js:1525 gnome-extension/prefs.js:1547
+#: gnome-extension/prefs.js:1550 gnome-extension/prefs.js:1572
 #, no-javascript-format
 msgid "Search for a City"
 msgstr "Поиск города"
 
-#: gnome-extension/prefs.js:1526 gnome-extension/prefs.js:1548
+#: gnome-extension/prefs.js:1551 gnome-extension/prefs.js:1573
 #, no-javascript-format
 msgid "Type a city’s name, like Tokyo or New York"
 msgstr "Введите название города, например Токио или Нью-Йорк"
 
-#: gnome-extension/prefs.js:1547
+#: gnome-extension/prefs.js:1572
 #, no-javascript-format
 msgid "No City Found"
 msgstr "Город не найден"
 
-#: gnome-extension/prefs.js:1548
+#: gnome-extension/prefs.js:1573
 #, no-javascript-format
 msgid "Try another spelling, or a bigger city nearby"
 msgstr "Попробуйте другое написание или более крупный город рядом"
 
-#: gnome-extension/prefs.js:1559
+#: gnome-extension/prefs.js:1584
 #, no-javascript-format
 msgid "what Claude answers with"
 msgstr "чем отвечает Claude"
 
-#: gnome-extension/prefs.js:1561
+#: gnome-extension/prefs.js:1586
 #, no-javascript-format
 msgid "what ChatGPT answers with, quickly"
 msgstr "чем быстро отвечает ChatGPT"
 
-#: gnome-extension/prefs.js:1563
+#: gnome-extension/prefs.js:1588
 #, no-javascript-format
 msgid "what Grok answers with, quickly"
 msgstr "чем быстро отвечает Grok"
 
-#: gnome-extension/prefs.js:1566
+#: gnome-extension/prefs.js:1591
 #, no-javascript-format
 msgid ""
 "your recent opencode models, your providers’, the free ones and your plan’s"
@@ -1729,281 +1862,281 @@ msgstr ""
 "ваши недавние модели opencode, модели ваших провайдеров, бесплатные и из "
 "вашего тарифа"
 
-#: gnome-extension/prefs.js:1569
+#: gnome-extension/prefs.js:1594
 #, no-javascript-format
 msgid "the models of the providers you signed in to in Pi"
 msgstr "модели провайдеров, в которые вы вошли в Pi"
 
-#: gnome-extension/prefs.js:1571
+#: gnome-extension/prefs.js:1596
 #, no-javascript-format
 msgid "what Antigravity answers with"
 msgstr "чем отвечает Antigravity"
 
-#: gnome-extension/prefs.js:1776
+#: gnome-extension/prefs.js:1801
 #, no-javascript-format
 msgid "Signed in with Claude Code"
 msgstr "Вход через Claude Code"
 
-#: gnome-extension/prefs.js:1780
+#: gnome-extension/prefs.js:1805
 #, no-javascript-format
 msgid "Signed in with Codex"
 msgstr "Вход через Codex"
 
-#: gnome-extension/prefs.js:1782
+#: gnome-extension/prefs.js:1807
 #, no-javascript-format
 msgid "Signed in with Grok"
 msgstr "Вход через Grok"
 
-#: gnome-extension/prefs.js:1845 gnome-extension/prefs.js:1846
+#: gnome-extension/prefs.js:1870 gnome-extension/prefs.js:1871
 #, no-javascript-format
 msgid "Remove the shortcut"
 msgstr "Удалить сочетание"
 
-#: gnome-extension/prefs.js:1885 gnome-extension/prefs.js:1887
+#: gnome-extension/prefs.js:1910 gnome-extension/prefs.js:1912
 #, no-javascript-format
 msgid "a GNOME window shortcut"
 msgstr "сочетание окон GNOME"
 
-#: gnome-extension/prefs.js:1886
+#: gnome-extension/prefs.js:1911
 #, no-javascript-format
 msgid "a GNOME Shell shortcut"
 msgstr "сочетание GNOME Shell"
 
-#: gnome-extension/prefs.js:1888
+#: gnome-extension/prefs.js:1913
 #, no-javascript-format
 msgid "a GNOME shortcut"
 msgstr "сочетание GNOME"
 
-#: gnome-extension/prefs.js:1889
+#: gnome-extension/prefs.js:1914
 #, no-javascript-format
 msgid "a GNOME system shortcut"
 msgstr "системное сочетание GNOME"
 
-#: gnome-extension/prefs.js:1919
+#: gnome-extension/prefs.js:1944
 #, no-javascript-format
 msgid "your shortcut “{name}”"
 msgstr "ваше сочетание «{name}»"
 
-#: gnome-extension/prefs.js:1925
+#: gnome-extension/prefs.js:1950
 #, no-javascript-format
 msgid "Isle’s {page} shortcut"
 msgstr "сочетание Isle для «{page}»"
 
-#: gnome-extension/prefs.js:1941
+#: gnome-extension/prefs.js:1966
 #, no-javascript-format
 msgid "Press the new shortcut"
 msgstr "Нажмите новое сочетание клавиш"
 
-#: gnome-extension/prefs.js:1942
+#: gnome-extension/prefs.js:1967
 #, no-javascript-format
 msgid "With Super, Ctrl or Alt"
 msgstr "С Super, Ctrl или Alt"
 
-#: gnome-extension/prefs.js:1944 gnome-extension/prefs.js:2000
+#: gnome-extension/prefs.js:1969 gnome-extension/prefs.js:2025
 #, no-javascript-format
 msgid "Cancel"
 msgstr "Отмена"
 
-#: gnome-extension/prefs.js:1944 gnome-extension/src/pages/clips.js:606
+#: gnome-extension/prefs.js:1969 gnome-extension/src/pages/clips.js:606
 #, no-javascript-format
 msgid "Remove"
 msgstr "Удалить"
 
-#: gnome-extension/prefs.js:1988
+#: gnome-extension/prefs.js:2013
 #, no-javascript-format
 msgid "Clear clipboard history?"
 msgstr "Очистить историю буфера обмена?"
 
-#: gnome-extension/prefs.js:1989
+#: gnome-extension/prefs.js:2014
 #, no-javascript-format
 msgid "Everything you copied is removed. Pinned items stay."
 msgstr "Всё скопированное будет удалено. Закреплённое останется."
 
-#: gnome-extension/prefs.js:2047
+#: gnome-extension/prefs.js:2072
 #, no-javascript-format
 msgid "today"
 msgstr "сегодня"
 
-#: gnome-extension/prefs.js:2047
+#: gnome-extension/prefs.js:2072
 #, no-javascript-format
 msgid "yesterday"
 msgstr "вчера"
 
-#: gnome-extension/prefs.js:2073
+#: gnome-extension/prefs.js:2098
 #, no-javascript-format
 msgid "Isle couldn’t reach GitHub; check the internet connection"
 msgstr "Isle не смог связаться с GitHub; проверьте подключение к интернету"
 
-#: gnome-extension/prefs.js:2074
+#: gnome-extension/prefs.js:2099
 #, no-javascript-format
 msgid "GitHub limits how often it is asked; try again in an hour"
 msgstr "GitHub ограничивает частоту запросов; попробуйте через час"
 
-#: gnome-extension/prefs.js:2075
+#: gnome-extension/prefs.js:2100
 #, no-javascript-format
 msgid "GitHub had a problem just now; try again in a while"
 msgstr "У GitHub сейчас проблемы; попробуйте немного позже"
 
-#: gnome-extension/prefs.js:2076
+#: gnome-extension/prefs.js:2101
 #, no-javascript-format
 msgid "That version isn’t on GitHub yet; try again later"
 msgstr "Этой версии ещё нет на GitHub; попробуйте позже"
 
-#: gnome-extension/prefs.js:2077
+#: gnome-extension/prefs.js:2102
 #, no-javascript-format
 msgid "The download didn’t come through whole; try again"
 msgstr "Файл скачался не полностью; попробуйте ещё раз"
 
-#: gnome-extension/prefs.js:2078
+#: gnome-extension/prefs.js:2103
 #, no-javascript-format
 msgid ""
 "This version of Isle doesn’t support this GNOME yet; nothing was changed"
 msgstr ""
 "Эта версия Isle пока не поддерживает эту версию GNOME; ничего не изменено"
 
-#: gnome-extension/prefs.js:2079
+#: gnome-extension/prefs.js:2104
 #, no-javascript-format
 msgid "The disk is full; free some space and try again"
 msgstr "Диск заполнен; освободите место и попробуйте ещё раз"
 
-#: gnome-extension/prefs.js:2080
+#: gnome-extension/prefs.js:2105
 #, no-javascript-format
 msgid "Isle couldn’t write its files; try again"
 msgstr "Isle не смог записать свои файлы; попробуйте ещё раз"
 
-#: gnome-extension/prefs.js:2083
+#: gnome-extension/prefs.js:2108
 #, no-javascript-format
 msgid ""
 "There’s no ready-made Isle for this computer; build it from source instead"
 msgstr ""
 "Для этого компьютера нет готовой сборки Isle; соберите его из исходников"
 
-#: gnome-extension/prefs.js:2084
+#: gnome-extension/prefs.js:2109
 #, no-javascript-format
 msgid "Another install of Isle is running; wait for it, then try again"
 msgstr ""
 "Уже идёт другая установка Isle; дождитесь её окончания и попробуйте снова"
 
-#: gnome-extension/prefs.js:2086
+#: gnome-extension/prefs.js:2111
 #, no-javascript-format
 msgid "The update didn’t start; try again"
 msgstr "Обновление не запустилось; попробуйте ещё раз"
 
-#: gnome-extension/prefs.js:2091
+#: gnome-extension/prefs.js:2116
 #, no-javascript-format
 msgid "Install {program}, then try again"
 msgstr "Установите {program} и попробуйте снова"
 
-#: gnome-extension/prefs.js:2093
+#: gnome-extension/prefs.js:2118
 #, no-javascript-format
 msgid "The update didn’t finish; try again"
 msgstr "Обновление не завершилось; попробуйте ещё раз"
 
-#: gnome-extension/prefs.js:2093
+#: gnome-extension/prefs.js:2118
 #, no-javascript-format
 msgid "the installer stopped"
 msgstr "установщик остановился"
 
-#: gnome-extension/prefs.js:2172
+#: gnome-extension/prefs.js:2197
 #, no-javascript-format
 msgid "How"
 msgstr "Как"
 
-#: gnome-extension/prefs.js:2174 gnome-extension/prefs.js:2180
+#: gnome-extension/prefs.js:2199 gnome-extension/prefs.js:2205
 #, no-javascript-format
 msgid "Copy command"
 msgstr "Скопировать команду"
 
-#: gnome-extension/prefs.js:2178 gnome-extension/src/chat.js:440
+#: gnome-extension/prefs.js:2203 gnome-extension/src/chat.js:440
 #: gnome-extension/src/chat.js:616 gnome-extension/src/pages/phone.js:384
 #: gnome-extension/src/pages/shelf.js:663
 #, no-javascript-format
 msgid "Copied"
 msgstr "Скопировано"
 
-#: gnome-extension/prefs.js:2184
+#: gnome-extension/prefs.js:2209
 #, no-javascript-format
 msgid "Download"
 msgstr "Скачать"
 
-#: gnome-extension/prefs.js:2186 gnome-extension/prefs.js:2259
+#: gnome-extension/prefs.js:2211 gnome-extension/prefs.js:2284
 #: gnome-extension/src/alerts.js:743
 #, no-javascript-format
 msgid "Update"
 msgstr "Обновить"
 
-#: gnome-extension/prefs.js:2187
+#: gnome-extension/prefs.js:2212
 #, no-javascript-format
 msgid "Log Out"
 msgstr "Выйти"
 
-#: gnome-extension/prefs.js:2191
+#: gnome-extension/prefs.js:2216
 #, no-javascript-format
 msgid "Asks GitHub once a day; nothing else is sent"
 msgstr "Раз в день спрашивает GitHub; больше ничего не отправляется"
 
-#: gnome-extension/prefs.js:2191
+#: gnome-extension/prefs.js:2216
 #, no-javascript-format
 msgid "Check for new versions"
 msgstr "Проверять новые версии"
 
-#: gnome-extension/prefs.js:2237
+#: gnome-extension/prefs.js:2262
 #, no-javascript-format
 msgid "Downloading and installing; Settings can be closed"
 msgstr "Скачиваю и устанавливаю; настройки можно закрыть"
 
-#: gnome-extension/prefs.js:2237
+#: gnome-extension/prefs.js:2262
 #, no-javascript-format
 msgid "Updating to Isle {version}…"
 msgstr "Обновление до Isle {version}…"
 
-#: gnome-extension/prefs.js:2240
+#: gnome-extension/prefs.js:2265
 #, no-javascript-format
 msgid "Try Again"
 msgstr "Повторить"
 
-#: gnome-extension/prefs.js:2241
+#: gnome-extension/prefs.js:2266
 #, no-javascript-format
 msgid "it was cut off before it finished"
 msgstr "оно прервалось, не завершившись"
 
-#: gnome-extension/prefs.js:2242
+#: gnome-extension/prefs.js:2267
 #, no-javascript-format
 msgid "Couldn’t update"
 msgstr "Не удалось обновить"
 
-#: gnome-extension/prefs.js:2243
+#: gnome-extension/prefs.js:2268
 #, no-javascript-format
 msgid "{reason}. Or paste the command in a terminal"
 msgstr "{reason}. Или вставьте команду в терминал"
 
-#: gnome-extension/prefs.js:2246
+#: gnome-extension/prefs.js:2271
 #, no-javascript-format
 msgid "Isle {version} is installed"
 msgstr "Isle {version} установлен"
 
-#: gnome-extension/prefs.js:2247
+#: gnome-extension/prefs.js:2272
 #, no-javascript-format
 msgid "Log out and back in to finish"
 msgstr "Выйдите из системы и войдите снова, чтобы завершить"
 
-#: gnome-extension/prefs.js:2249
+#: gnome-extension/prefs.js:2274
 #, no-javascript-format
 msgid "Not checking for new versions"
 msgstr "Новые версии не проверяются"
 
-#: gnome-extension/prefs.js:2250
+#: gnome-extension/prefs.js:2275
 #, no-javascript-format
 msgid "Turn it on below to hear when one is out"
 msgstr "Включите ниже, чтобы узнавать о выходе новой версии"
 
-#: gnome-extension/prefs.js:2253 gnome-extension/prefs.js:2260
+#: gnome-extension/prefs.js:2278 gnome-extension/prefs.js:2285
 #: gnome-extension/src/alerts.js:740
 #, no-javascript-format
 msgid "Isle {version} is out"
 msgstr "Вышел Isle {version}"
 
-#: gnome-extension/prefs.js:2254
+#: gnome-extension/prefs.js:2279
 #, no-javascript-format
 msgid ""
 "Update it the way you installed it from the AUR, then log out and back in"
@@ -2011,54 +2144,54 @@ msgstr ""
 "Обновите его тем же способом, каким ставили из AUR, затем выйдите и войдите "
 "снова"
 
-#: gnome-extension/prefs.js:2255
+#: gnome-extension/prefs.js:2280
 #, no-javascript-format
 msgid "Download its .{format} and open it to install, then log out and back in"
 msgstr ""
 "Скачайте .{format} и откройте его для установки, затем выйдите и войдите "
 "снова"
 
-#: gnome-extension/prefs.js:2261
+#: gnome-extension/prefs.js:2286
 #, no-javascript-format
 msgid "Your tasks, events and settings stay"
 msgstr "Ваши задачи, события и настройки сохранятся"
 
-#: gnome-extension/prefs.js:2264
+#: gnome-extension/prefs.js:2289
 #, no-javascript-format
 msgid "Checked {when}"
 msgstr "Проверено {when}"
 
-#: gnome-extension/prefs.js:2264
+#: gnome-extension/prefs.js:2289
 #, no-javascript-format
 msgid "You’re up to date"
 msgstr "У вас последняя версия"
 
-#: gnome-extension/prefs.js:2266
+#: gnome-extension/prefs.js:2291
 #, no-javascript-format
 msgid "Isle asks GitHub once a day"
 msgstr "Isle проверяет GitHub раз в день"
 
-#: gnome-extension/prefs.js:2266
+#: gnome-extension/prefs.js:2291
 #, no-javascript-format
 msgid "Not checked yet"
 msgstr "Ещё не проверялось"
 
-#: gnome-extension/prefs.js:2306
+#: gnome-extension/prefs.js:2331
 #, no-javascript-format
 msgid "Isle isn’t fully installed; install it again, then try this"
 msgstr "Isle установлен не полностью; переустановите его и попробуйте снова"
 
-#: gnome-extension/prefs.js:2314
+#: gnome-extension/prefs.js:2339
 #, no-javascript-format
 msgid "Copied: paste it into the report on GitHub"
 msgstr "Скопировано: вставьте это в отчёт на GitHub"
 
-#: gnome-extension/prefs.js:2317
+#: gnome-extension/prefs.js:2342
 #, no-javascript-format
 msgid "Couldn’t make the report; try again"
 msgstr "Не удалось составить отчёт; попробуйте ещё раз"
 
-#: gnome-extension/prefs.js:2331
+#: gnome-extension/prefs.js:2356
 #, no-javascript-format
 msgid "Add an app"
 msgstr "Добавить приложение"
@@ -2703,7 +2836,7 @@ msgstr "Обновление в один щелчок; всё ваше сохр�
 msgid "Update its package to get it"
 msgstr "Обновите пакет, чтобы получить её"
 
-#: gnome-extension/src/alerts.js:754 gnome-extension/src/controller.js:2868
+#: gnome-extension/src/alerts.js:754 gnome-extension/src/controller.js:2870
 #, no-javascript-format
 msgid "Isle’s service isn’t running"
 msgstr "Служба Isle не запущена"
@@ -2964,23 +3097,23 @@ msgstr "Скрыть разговор"
 msgid "Conversation"
 msgstr "Разговор"
 
-#: gnome-extension/src/controller.js:2868
+#: gnome-extension/src/controller.js:2870
 #, no-javascript-format
 msgid "Isle couldn’t take that"
 msgstr "Isle не смог это принять"
 
-#: gnome-extension/src/controller.js:2924
+#: gnome-extension/src/controller.js:2926
 #, no-javascript-format
 msgid "Press {shortcut} to ask again."
 msgstr "Нажмите {shortcut}, чтобы спросить снова."
 
-#: gnome-extension/src/controller.js:2925
+#: gnome-extension/src/controller.js:2927
 #, no-javascript-format
 msgid "Ask again from the mic in the island."
 msgstr "Спросите снова через микрофон в острове."
 
-#: gnome-extension/src/controller.js:3268
-#: gnome-extension/src/controller.js:3274
+#: gnome-extension/src/controller.js:3270
+#: gnome-extension/src/controller.js:3276
 #, no-javascript-format
 msgid "Isle restarted"
 msgstr "Isle перезапустился"
@@ -3566,12 +3699,12 @@ msgstr "30 дней"
 msgid "{time} in 30 days"
 msgstr "{time} за 30 дней"
 
-#: gnome-extension/src/pages/apps.js:118
+#: gnome-extension/src/pages/apps.js:120
 #, no-javascript-format
 msgid "No usage yet"
 msgstr "Пока ничего нет"
 
-#: gnome-extension/src/pages/apps.js:119
+#: gnome-extension/src/pages/apps.js:121
 #, no-javascript-format
 msgid "Time in the app in front shows up here"
 msgstr "Здесь появится время в активном приложении"

@@ -176,6 +176,33 @@
       <summary>A companion on the closed island</summary>
       <description>A little face of two eyes lives on the closed island, on a side nothing else takes and in the music bars' place while a song plays: it blinks and follows the pointer, plays an expression now and then, sings along with a microphone, narrows its eyes during a focus session, worries when the battery is low or the network is gone, dozes and then sleeps while no one is at the computer, and cheers when a focus session ends, a reminder is done or a file is put on the shelf. It is Daozai's pet.</description>
     </key>
+    <key name="companion-kind" type="s">
+      <choices>
+        <choice value="eyes"/>
+        <choice value="cat-moon"/>
+        <choice value="cat-night"/>
+        <choice value="cat-line"/>
+        <choice value="cat-ink"/>
+        <choice value="cat-tabby"/>
+        <choice value="cat-tuxedo"/>
+        <choice value="cat-siamese"/>
+        <choice value="cat-calico"/>
+        <choice value="cat-duo"/>
+        <choice value="cat-origami"/>
+        <choice value="cat-aurora"/>
+        <choice value="cat-neon"/>
+        <choice value="cat-bastet"/>
+        <choice value="cat-stars"/>
+        <choice value="cat-porcelain"/>
+        <choice value="cat-kintsugi"/>
+        <choice value="cat-glass"/>
+        <choice value="cat-dots"/>
+        <choice value="cat-pixel"/>
+      </choices>
+      <default>'eyes'</default>
+      <summary>Which companion lives on the closed island</summary>
+      <description>The two eyes (Daozai's pet), or a cat, seen from the side, in one of nineteen looks: a plain shape, a dark cat with bright eyes, a line, ink, four coats (grey tabby, tuxedo, Siamese, calico), two tones, folded paper, a gradient, neon, an Egyptian cat in gold, a starry sky, blue-and-white porcelain, gold-mended cracks, glass, a dot matrix, pixels. The cat lives as the eyes do, in its own way: every few seconds it does something of its own (walks about, plays with a ball of yarn or after a butterfly, washes, scratches, stretches, lies down, yawns, meows), it turns to the pointer, gets down to pounce and purrs when the pointer is over it, wears headphones and dances to a song, types at a little computer in glasses for a focus session, puts its back up in a worry, nods off as a loaf and sleeps curled up, and is pleased in three ways when something is done.</description>
+    </key>
     <key name="oled-shift" type="b">
       <default>false</default>
       <summary>Pixel shift for OLED displays</summary>

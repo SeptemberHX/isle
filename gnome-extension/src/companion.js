@@ -5,7 +5,8 @@
 // its life), drawn here with Cairo and fed what goes on: where the pointer is, how long no one has been at the
 // computer, and from the closed island (compact.js) whether a song plays, a focus session runs, something
 // worries it, or something was just done. A face of two eyes, 48 × 30 of its units, drawn 20 times a second
-// while it is seen (10 asleep); with animations off it holds still.
+// while it is seen (10 asleep); with animations off it holds still. Or, as Settings has it, a cat in the eyes'
+// place (cat.js), living the same life in the same box.
 
 import Cairo from 'cairo';
 import GdkPixbuf from 'gi://GdkPixbuf';
@@ -13,6 +14,8 @@ import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import St from 'gi://St';
 
+import {Cat} from './cat.js';
+import {cairoPen} from './catPen.js';
 import {onUiScale, px} from './compat.js';
 import {HEIGHT, Pet, sheetName, stateFor, WIDTH} from './pet.js';
 import {extensionFile} from './widgets.js';
@@ -30,12 +33,13 @@ const SHEET_SCALE = 3;
 
 export const Companion = GObject.registerClass(
 class Companion extends St.DrawingArea {
-    /** `height` in CSS pixels; its width follows (48 to 30). */
-    _init(height) {
+    /** `height` in CSS pixels; its width follows (48 to 30). `kind` is which companion (see `kind`). */
+    _init(height, kind = 'eyes') {
         super._init();
         this._height = height;
         onUiScale(this, () => this._resize());
-        this._pet = new Pet();
+        this._kind = kind;
+        this._pet = this._make(kind);
         /** What goes on, as the closed island says (see `stateFor`). */
         this.singing = false;
         this.focusing = false;
@@ -54,6 +58,22 @@ class Companion extends St.DrawingArea {
             this._stop();
             this._dropSheet();
         });
+    }
+
+    // The eyes, or a cat in the look named after "cat-".
+    _make(kind) {
+        return kind.startsWith('cat-') ? new Cat(kind.slice(4)) : new Pet();
+    }
+
+    /** Which companion lives here: 'eyes', or a cat by its look ('cat-moon', see STYLES in cat.js). */
+    set kind(kind) {
+        if (kind === this._kind)
+            return;
+        this._kind = kind;
+        this._dropSheet();
+        this._pet = this._make(kind);
+        this._last = (GLib.get_monotonic_time() - this._start) / 1e6;
+        this.queue_repaint();
     }
 
     /** Another height, in CSS pixels. */
@@ -182,6 +202,12 @@ class Companion extends St.DrawingArea {
         const cr = area.get_context();
         const unit = area.get_surface_size()[1] / HEIGHT;
         cr.scale(unit, unit);
+        // A cat has a pen and colours of its own, on any island; on a light one it gets a line round it.
+        if (this._pet instanceof Cat) {
+            this._pet.draw(cairoPen(cr, WIDTH, HEIGHT), WIDTH / 2, this._now ?? 0, this._animate ?? true, Theme.light());
+            cr.$dispose();
+            return;
+        }
         cr.setLineJoin(Cairo.LineJoin.ROUND);
         let alpha = 1;
         // As the look has it: on a light skin the eyes are its ink.

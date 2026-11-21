@@ -8,6 +8,20 @@ All notable changes to Isle are listed here. The format follows
 
 ### Added
 
+- **A cat for a companion.** Settings → Island → Appearance → Companion: the two eyes, or a cat. It is drawn,
+  not pictures: a grown cat seen from the side that goes from one pose to the next on its own four legs, in one
+  of nineteen looks: a plain pale shape, a dark cat with bright eyes, a line drawing, ink with a red seal, four
+  coats (grey tabby, tuxedo, Siamese, calico), two tones, folded paper, a gradient, neon, an Egyptian cat in a
+  gold collar, a starry sky, blue-and-white porcelain, gold-mended cracks, glass, a dot matrix, pixels.
+  Every few seconds it does something of its own, twenty things in turn: it walks to another place and sits
+  down, dashes from end to end, bats a ball of yarn about, sits up after a butterfly, licks a paw, washes its
+  face, scratches behind an ear, treads with its front paws, stretches in a long bow, lies down for a while
+  with its paws out or as a loaf, yawns, meows, tilts its head, looks about, flicks an ear or its tail. It turns
+  to the pointer and gets down to pounce, sits up to bat at it, and purrs with its eyes shut when the pointer is
+  right over it. To a song it puts on headphones and nods, dances on all fours, waves both paws or lies with
+  its tail keeping time; in a focus session it types at a little computer in glasses; in a worry its back goes
+  up and its tail out, then it keeps low; it nods off as a loaf, sleeps curled up and dreams of a fish, wakes
+  with a stretch, and is pleased in three ways when something is done (`companion-kind`).
 - **Brighten, on the Call page.** While the camera is in use, a third round control beside Mute and Open lifts a
   dim picture: each click a level further (Off, Low, Medium, High, then Off), a scroll either way. It turns the
   camera itself through v4l2-ctl (v4l-utils), so the call and its preview show the change at once: brightness and

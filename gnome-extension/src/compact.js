@@ -149,13 +149,15 @@ export const CompactView = GObject.registerClass({
         this._assistant.y_align = Clutter.ActorAlign.CENTER;
         // The companion (Settings): a face of two eyes on a side nothing else takes, in the music bars' place
         // while a song plays (see companion.js). A little taller than the signs: it is mostly air.
-        this._pet = new Companion(SIZES.hanging.art + PET_OVER);
+        this._pet = new Companion(SIZES.hanging.art + PET_OVER, settings.get_string('companion-kind'));
         this._pet.y_align = Clutter.ActorAlign.CENTER;
         /** What the companion is pleased by, as it was last: reminders done, files on the shelf, the timer's phase. */
         this._petSeen = {};
         this._botLookChanged = ['bot-shape', 'bot-color', 'bot-glow'].map(key =>
             settings.connect(`changed::${key}`, () => (this._assistant.look = this._botLook())));
         this._botLookChanged.push(settings.connect('changed::companion', () => this._refresh()));
+        this._botLookChanged.push(settings.connect('changed::companion-kind',
+            () => (this._pet.kind = settings.get_string('companion-kind'))));
 
         const center = new St.Widget({layout_manager: new CentreLayout(), x_expand: true});
         const times = new St.Widget({layout_manager: new CentreLayout(), y_align: Clutter.ActorAlign.CENTER});

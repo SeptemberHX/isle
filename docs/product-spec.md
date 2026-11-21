@@ -300,6 +300,42 @@ with the wheel or touchpad and never show a scrollbar.
   shut, "z"), else awake (the eyes follow the pointer, a blink every 5.6 s, an expression after 8 s and then
   every 22 to 31 s). With animations off it holds still. It has no page: its side opens the default page,
   Music where it sings.
+- Which companion (Settings → Appearance → Companion, `companion-kind`): the eyes (the default), or a cat. The
+  cat is drawn, not pictures, in the same box, place and states for the same reasons. It is a grown cat seen
+  from the side; how it holds itself is one of nine poses (sitting, standing, a loaf, lying with its paws out,
+  curled up, a bow, its back up, crouching, up on its haunches), it eases from one to the next, and it may
+  stand up to 5 units either side of the box's middle, looking either way.
+  - Its look is one of nineteen ways of drawing that one shape, with its own colours on every skin (on a light
+    one a pale cat gets a dark line round it): Moonlight (one pale colour, the eye a slit cut out), Night cat
+    (dark, a fine pale line round it, a yellow eye), Line drawing (its outline alone), Ink (a brush's uneven
+    edge, redrawn five times a second, and a red seal in the box's corner), Grey tabby, Tuxedo, Siamese and
+    Calico (coats: their marks, a lighter chest or darker points, the far legs darker, an eye with a pupil),
+    Two tones (dark behind a line from its hips to its head), Origami (flat faces in four shades), Aurora
+    (a gradient across the box, which it moves through), Neon (a glowing line, pink to cyan), Egyptian (black
+    with a gold line, collar, earring and eye), Starry (deep blue with a constellation that twinkles), Blue and
+    white (cobalt scrolls and a collar on white), Kintsugi (gold seams on a dark body), Glass (faint, with a
+    bright rim and a light along its back), Dot matrix (amber dots) and Pixels (squares, each a whole number
+    of the screen's pixels).
+  - Awake it sits, the tail swaying, face and eyes after the pointer, a blink every 5.6 s, and after 4 s and
+    then every 4.5 to 7.5 s the next of these: an ear twitches, it looks up and down, licks a front paw, flicks
+    its tail, walks to another place (left, right, the middle, in turn) and sits looking in, bats a ball of yarn
+    that rolls up (crouch, wiggle, four bats, the ball rolls off), blinks slowly, tilts its head, scratches behind
+    an ear with a hind paw, yawns, washes its face, meows, sits up and bats at a butterfly that gets away, treads
+    with its front paws, lies down (paws out, or a loaf, in turn) for 22 s doing only small things and gets up
+    with a stretch, dashes to both ends of the box and back.
+  - Curious: it turns to the pointer's side, eyes wide; gets down and wiggles to pounce (at most every 18 s);
+    sits up and bats at it for 2 s in each 7; with the pointer within 17 units of the box's middle it is being
+    stroked: eyes shut, head up, tail up, a heart every 2.4 s.
+  - Happy (2.6 s, hearts), another way each time: a dance where it sits with a paw up, jumps on all fours with
+    its tail up, up on its haunches waving both paws.
+  - Music: headphones and notes, 12 s each of nodding where it sits, dancing on all fours, both paws in the air,
+    lying with its eyes shut and its tail keeping time.
+  - Focused: lying at a little computer in glasses, paws on the keys, and a think (head tilted, looking up)
+    for 2.5 s in each 13. Worried: 4 s with its back up, ears flat, tail thick, shaking, then 6 s low to the
+    ground looking about, a yellow "!" over it. Dozing: a loaf whose head sinks and starts up, "z". Sleeping:
+    a loaf with its chin down, or curled up, in turn, breathing, an ear twitching now and then, "z z", and for
+    7 s in each 24 a dream of a fish. Waking: a bow with a yawn, then sitting.
+  - With animations off it holds still and does nothing of its own.
 - Pixel shift for OLED displays (Settings → Appearance, off by default): the closed island, at rest, moves
   one pixel sideways every 45 s, 0 → 3 → −3 → 0 pixels of the display and again; open, or showing an alert
   or the assistant, it stays where it is. Its copies on other monitors move with it.

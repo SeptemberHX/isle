@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Isle\n"
 "Report-Msgid-Bugs-To: https://github.com/zickrian/isle/issues\n"
-"POT-Creation-Date: 2026-11-19 04:40-0800\n"
+"POT-Creation-Date: 2026-11-21 07:46-0800\n"
 "PO-Revision-Date: 2026-11-05 12:00+0800\n"
 "Last-Translator: Isle contributors\n"
 "Language-Team: Chinese (simplified)\n"
@@ -96,8 +96,8 @@ msgid "Reset"
 msgstr "重置"
 
 #: gnome-extension/prefs.js:120 gnome-extension/prefs.js:122
-#: gnome-extension/prefs.js:1046 gnome-extension/prefs.js:1159
-#: gnome-extension/prefs.js:1249 gnome-extension/src/expanded.js:46
+#: gnome-extension/prefs.js:1071 gnome-extension/prefs.js:1184
+#: gnome-extension/prefs.js:1274 gnome-extension/src/expanded.js:46
 #, no-javascript-format
 msgid "Weather"
 msgstr "天气"
@@ -133,8 +133,8 @@ msgid "The weather’s icon and the temperature on the closed island"
 msgstr "在收起的灵动岛上显示天气图标和温度"
 
 #: gnome-extension/prefs.js:138 gnome-extension/prefs.js:141
-#: gnome-extension/prefs.js:1046 gnome-extension/prefs.js:1161
-#: gnome-extension/prefs.js:1250
+#: gnome-extension/prefs.js:1071 gnome-extension/prefs.js:1186
+#: gnome-extension/prefs.js:1275
 #, no-javascript-format
 msgid "AI Usage"
 msgstr "AI 用量"
@@ -193,7 +193,7 @@ msgstr ""
 "在灵动岛上回应编程智能体的请求，并在它们完成时收到通知。默认开启；关闭后，"
 "Isle 不再接收该智能体的提示。"
 
-#: gnome-extension/prefs.js:192 gnome-extension/prefs.js:1922
+#: gnome-extension/prefs.js:192 gnome-extension/prefs.js:1947
 #, no-javascript-format
 msgid "Assistant"
 msgstr "助手"
@@ -213,7 +213,7 @@ msgstr ""
 "按下快捷键（或展开的灵动岛中的 ✦）然后说话。语音在本机识别（点“配置”后下载一"
 "次）；请求会发送给你选择的 AI，使用你自己的账号和套餐。"
 
-#: gnome-extension/prefs.js:200 gnome-extension/prefs.js:1169
+#: gnome-extension/prefs.js:200 gnome-extension/prefs.js:1194
 #, no-javascript-format
 msgid "AI Assistant"
 msgstr "AI 助手"
@@ -228,7 +228,7 @@ msgstr "快捷键和展开的灵动岛中的 ✦。关闭后，Isle 不会向任
 msgid "Opens the assistant and listens"
 msgstr "打开助手并开始聆听"
 
-#: gnome-extension/prefs.js:202 gnome-extension/prefs.js:1935
+#: gnome-extension/prefs.js:202 gnome-extension/prefs.js:1960
 #, no-javascript-format
 msgid "Shortcut"
 msgstr "快捷键"
@@ -413,8 +413,8 @@ msgid ""
 "own history on this computer."
 msgstr "助手将重新开始；对话内容会从这里以及本机上 AI 自己的历史记录中删除。"
 
-#: gnome-extension/prefs.js:322 gnome-extension/prefs.js:1416
-#: gnome-extension/prefs.js:1990 gnome-extension/src/pages/notifications.js:89
+#: gnome-extension/prefs.js:322 gnome-extension/prefs.js:1441
+#: gnome-extension/prefs.js:2015 gnome-extension/src/pages/notifications.js:89
 #, no-javascript-format
 msgid "Clear"
 msgstr "清除"
@@ -514,7 +514,7 @@ msgstr "清除历史"
 msgid "Pinned items are kept"
 msgstr "已固定的项目会保留"
 
-#: gnome-extension/prefs.js:379 gnome-extension/prefs.js:1412
+#: gnome-extension/prefs.js:379 gnome-extension/prefs.js:1437
 #, no-javascript-format
 msgid "Clear…"
 msgstr "清除…"
@@ -544,13 +544,13 @@ msgstr "外观"
 msgid "Black, glass that shows what is behind it, or a skin"
 msgstr "黑色、能透出背后内容的玻璃，或一款皮肤"
 
-#: gnome-extension/prefs.js:400 gnome-extension/prefs.js:946
+#: gnome-extension/prefs.js:400 gnome-extension/prefs.js:971
 #, no-javascript-format
 msgid "Black"
 msgstr "黑色"
 
-#: gnome-extension/prefs.js:401 gnome-extension/prefs.js:891
-#: gnome-extension/prefs.js:944
+#: gnome-extension/prefs.js:401 gnome-extension/prefs.js:916
+#: gnome-extension/prefs.js:969
 #, no-javascript-format
 msgid "Glass"
 msgstr "玻璃"
@@ -575,7 +575,7 @@ msgstr "悬浮云"
 msgid "Joined to the top of the screen, or floating free"
 msgstr "贴合屏幕顶部，或自由悬浮"
 
-#: gnome-extension/prefs.js:407 gnome-extension/prefs.js:785
+#: gnome-extension/prefs.js:407 gnome-extension/prefs.js:810
 #, no-javascript-format
 msgid "Shape"
 msgstr "形状"
@@ -698,8 +698,8 @@ msgid ""
 "calendar"
 msgstr "在顶栏最左或最右端额外显示一个时钟。点击它可打开日历"
 
-#: gnome-extension/prefs.js:449 gnome-extension/prefs.js:482
-#: gnome-extension/prefs.js:1107 gnome-extension/prefs.js:1854
+#: gnome-extension/prefs.js:449 gnome-extension/prefs.js:507
+#: gnome-extension/prefs.js:1132 gnome-extension/prefs.js:1879
 #: gnome-extension/src/alerts.js:49 gnome-extension/src/alerts.js:51
 #: gnome-extension/src/alerts.js:53 gnome-extension/src/alerts.js:55
 #: gnome-extension/src/alerts.js:57 gnome-extension/src/alerts.js:104
@@ -766,143 +766,276 @@ msgstr ""
 
 #: gnome-extension/prefs.js:462
 #, no-javascript-format
+msgid "Companion"
+msgstr "宠物"
+
+#: gnome-extension/prefs.js:463
+#, no-javascript-format
+msgid ""
+"Who lives there: the two eyes, or a cat that walks about, plays, dances to "
+"your music and sleeps curled up, drawn in one of nineteen ways"
+msgstr ""
+"住在岛上的是谁：两只眼睛，或者一只会四处走动、玩耍、跟着音乐跳舞、蜷着睡觉的"
+"猫，有十九种画法可选"
+
+#: gnome-extension/prefs.js:464
+#, no-javascript-format
+msgid "Two eyes"
+msgstr "两只眼睛"
+
+#: gnome-extension/prefs.js:465
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Moonlight"
+msgstr "月白剪影"
+
+#: gnome-extension/prefs.js:466
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Night cat"
+msgstr "夜猫"
+
+#: gnome-extension/prefs.js:467
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Line drawing"
+msgstr "线描"
+
+#: gnome-extension/prefs.js:468
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Ink"
+msgstr "墨迹"
+
+#: gnome-extension/prefs.js:469
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Grey tabby"
+msgstr "灰狸花"
+
+#: gnome-extension/prefs.js:470
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Tuxedo"
+msgstr "奶牛猫"
+
+#: gnome-extension/prefs.js:471
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Siamese"
+msgstr "暹罗猫"
+
+#: gnome-extension/prefs.js:472
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Calico"
+msgstr "三花猫"
+
+#: gnome-extension/prefs.js:473
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Two tones"
+msgstr "双色块"
+
+#: gnome-extension/prefs.js:474
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Origami"
+msgstr "折纸"
+
+#: gnome-extension/prefs.js:475
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Aurora"
+msgstr "极光渐变"
+
+#: gnome-extension/prefs.js:476
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Neon"
+msgstr "霓虹"
+
+#: gnome-extension/prefs.js:477
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Egyptian"
+msgstr "埃及猫"
+
+#: gnome-extension/prefs.js:478
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Starry"
+msgstr "星空"
+
+#: gnome-extension/prefs.js:479
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Blue and white"
+msgstr "青花"
+
+#: gnome-extension/prefs.js:480
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Kintsugi"
+msgstr "金缮"
+
+#: gnome-extension/prefs.js:481
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Glass"
+msgstr "玻璃"
+
+#: gnome-extension/prefs.js:482
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Dot matrix"
+msgstr "点阵"
+
+#: gnome-extension/prefs.js:483
+#, no-javascript-format
+msgctxt "a cat"
+msgid "Pixels"
+msgstr "像素"
+
+#: gnome-extension/prefs.js:487
+#, no-javascript-format
 msgid "Dots when the camera, microphone or screen sharing is in use"
 msgstr "摄像头、麦克风或屏幕共享正在使用时显示圆点"
 
-#: gnome-extension/prefs.js:462
+#: gnome-extension/prefs.js:487
 #, no-javascript-format
 msgid "Privacy indicators"
 msgstr "隐私指示器"
 
-#: gnome-extension/prefs.js:463 gnome-extension/src/alerts.js:58
+#: gnome-extension/prefs.js:488 gnome-extension/src/alerts.js:58
 #, no-javascript-format
 msgid "Display"
 msgstr "显示器"
 
-#: gnome-extension/prefs.js:463
+#: gnome-extension/prefs.js:488
 #, no-javascript-format
 msgid "With more than one display, where the island is"
 msgstr "有多个显示器时，灵动岛显示在哪一个上"
 
-#: gnome-extension/prefs.js:464
+#: gnome-extension/prefs.js:489
 #, no-javascript-format
 msgid "Main display"
 msgstr "主显示器"
 
-#: gnome-extension/prefs.js:465
+#: gnome-extension/prefs.js:490
 #, no-javascript-format
 msgid "Display in use"
 msgstr "正在使用的显示器"
 
-#: gnome-extension/prefs.js:466
+#: gnome-extension/prefs.js:491
 #, no-javascript-format
 msgid "All displays"
 msgstr "所有显示器"
 
-#: gnome-extension/prefs.js:468
+#: gnome-extension/prefs.js:493
 #, no-javascript-format
 msgid "How the closed island opens"
 msgstr "收起的灵动岛如何展开"
 
-#: gnome-extension/prefs.js:468
+#: gnome-extension/prefs.js:493
 #, no-javascript-format
 msgctxt "how the island opens"
 msgid "Open"
 msgstr "展开方式"
 
-#: gnome-extension/prefs.js:469
+#: gnome-extension/prefs.js:494
 #, no-javascript-format
 msgid "On hover"
 msgstr "悬停时"
 
-#: gnome-extension/prefs.js:470
+#: gnome-extension/prefs.js:495
 #, no-javascript-format
 msgid "On click"
 msgstr "点击时"
 
-#: gnome-extension/prefs.js:473
+#: gnome-extension/prefs.js:498
 #, no-javascript-format
 msgid "Rest before opening"
 msgstr "展开前停留"
 
-#: gnome-extension/prefs.js:474
+#: gnome-extension/prefs.js:499
 #, no-javascript-format
 msgid "In milliseconds"
 msgstr "单位：毫秒"
 
-#: gnome-extension/prefs.js:481
+#: gnome-extension/prefs.js:506
 #, no-javascript-format
 msgid "Auto-hide"
 msgstr "自动隐藏"
 
-#: gnome-extension/prefs.js:481
+#: gnome-extension/prefs.js:506
 #, no-javascript-format
 msgid ""
 "Hide the closed island; alerts still show, and pointing at its place brings "
 "it back"
 msgstr "隐藏收起的灵动岛；提示仍会显示，指针移到它的位置时会重新出现"
 
-#: gnome-extension/prefs.js:483 gnome-extension/src/alerts.js:605
+#: gnome-extension/prefs.js:508 gnome-extension/src/alerts.js:605
 #, no-javascript-format
 msgid "Always"
 msgstr "始终"
 
-#: gnome-extension/prefs.js:484
+#: gnome-extension/prefs.js:509
 #, no-javascript-format
 msgid "With the top bar"
 msgstr "跟随顶栏"
 
-#: gnome-extension/prefs.js:485
+#: gnome-extension/prefs.js:510
 #, no-javascript-format
 msgid "Beside windows"
 msgstr "靠近窗口时"
 
-#: gnome-extension/prefs.js:488
+#: gnome-extension/prefs.js:513
 #, no-javascript-format
 msgid "Hide after"
 msgstr "隐藏延迟"
 
-#: gnome-extension/prefs.js:488
+#: gnome-extension/prefs.js:513
 #, no-javascript-format
 msgid "Seconds without the pointer on the island"
 msgstr "指针离开灵动岛多少秒后隐藏"
 
-#: gnome-extension/prefs.js:494
+#: gnome-extension/prefs.js:519
 #, no-javascript-format
 msgid "Pixel shift for OLED displays"
 msgstr "OLED 屏幕像素偏移"
 
-#: gnome-extension/prefs.js:495
+#: gnome-extension/prefs.js:520
 #, no-javascript-format
 msgid ""
 "The closed island moves a pixel sideways now and then, so its time does not "
 "mark the display"
 msgstr "收起的灵动岛每隔一会儿横向移动一个像素，避免时间在屏幕上留下痕迹"
 
-#: gnome-extension/prefs.js:506
+#: gnome-extension/prefs.js:531
 #, no-javascript-format
 msgid "Alerts"
 msgstr "提示"
 
-#: gnome-extension/prefs.js:508 gnome-extension/prefs.js:1036
-#: gnome-extension/prefs.js:1242 gnome-extension/src/expanded.js:39
+#: gnome-extension/prefs.js:533 gnome-extension/prefs.js:1061
+#: gnome-extension/prefs.js:1267 gnome-extension/src/expanded.js:39
 #: gnome-extension/src/pages/notifications.js:84
 #, no-javascript-format
 msgid "Notifications"
 msgstr "通知"
 
-#: gnome-extension/prefs.js:509
+#: gnome-extension/prefs.js:534
 #, no-javascript-format
 msgid ""
 "Apps’ notifications in the island, with their buttons, as GNOME shows them"
 msgstr "在灵动岛中显示应用通知及其按钮，与 GNOME 中一致"
 
-#: gnome-extension/prefs.js:512
+#: gnome-extension/prefs.js:537
 #, no-javascript-format
 msgid "Apps with notifications beside the open island"
 msgstr "在展开的灵动岛旁显示有通知的应用"
 
-#: gnome-extension/prefs.js:513
+#: gnome-extension/prefs.js:538
 #, no-javascript-format
 msgid ""
 "An icon for each app with notifications, and how many, beside the "
@@ -912,462 +1045,462 @@ msgstr ""
 "在通知页旁为每个有通知的应用显示一个图标和通知数；点击只看该应用的通知，右键"
 "清除它们"
 
-#: gnome-extension/prefs.js:514
+#: gnome-extension/prefs.js:539
 #, no-javascript-format
 msgid "Show them in the island instead of the centre of the screen"
 msgstr "显示在灵动岛中，而不是屏幕中央"
 
-#: gnome-extension/prefs.js:514
+#: gnome-extension/prefs.js:539
 #, no-javascript-format
 msgid "Volume and brightness"
 msgstr "音量和亮度"
 
-#: gnome-extension/prefs.js:515
+#: gnome-extension/prefs.js:540
 #, no-javascript-format
 msgid "Over full-screen apps"
 msgstr "在全屏应用上方"
 
-#: gnome-extension/prefs.js:516
+#: gnome-extension/prefs.js:541
 #, no-javascript-format
 msgid ""
 "Alerts show over a video or game, then hide again; off, they wait until it "
 "leaves full screen"
 msgstr "提示会显示在视频或游戏上方，然后再次隐藏；关闭后，会等到退出全屏再显示"
 
-#: gnome-extension/prefs.js:517
+#: gnome-extension/prefs.js:542
 #, no-javascript-format
 msgid "Charging and battery"
 msgstr "充电和电池"
 
-#: gnome-extension/prefs.js:517
+#: gnome-extension/prefs.js:542
 #, no-javascript-format
 msgid "Plugged in, unplugged, full and low"
 msgstr "接通电源、断开电源、充满和电量低"
 
-#: gnome-extension/prefs.js:518
+#: gnome-extension/prefs.js:543
 #, no-javascript-format
 msgid "Network"
 msgstr "网络"
 
-#: gnome-extension/prefs.js:518
+#: gnome-extension/prefs.js:543
 #, no-javascript-format
 msgid "When the connection drops"
 msgstr "连接断开时"
 
-#: gnome-extension/prefs.js:519
+#: gnome-extension/prefs.js:544
 #, no-javascript-format
 msgid "Devices connecting, with their battery"
 msgstr "设备连接时，显示其电量"
 
-#: gnome-extension/prefs.js:520
+#: gnome-extension/prefs.js:545
 #, no-javascript-format
 msgid "Bluetooth battery"
 msgstr "蓝牙设备电量"
 
-#: gnome-extension/prefs.js:521
+#: gnome-extension/prefs.js:546
 #, no-javascript-format
 msgid "A device’s battery low, at 20, 10 and 5%"
 msgstr "设备电量降到 20%、10% 和 5% 时"
 
-#: gnome-extension/prefs.js:522
+#: gnome-extension/prefs.js:547
 #, no-javascript-format
 msgid "When it turns on or off"
 msgstr "开启或关闭时"
 
-#: gnome-extension/prefs.js:523
+#: gnome-extension/prefs.js:548
 #, no-javascript-format
 msgid "Calendar events"
 msgstr "日历日程"
 
-#: gnome-extension/prefs.js:524
+#: gnome-extension/prefs.js:549
 #, no-javascript-format
 msgid "Before each event with a time, with Join for a Meet, Zoom or Teams link"
 msgstr ""
 "在每个有时间的日程开始前提醒，有 Meet、Zoom 或 Teams 链接时附带“加入”按钮"
 
-#: gnome-extension/prefs.js:525
+#: gnome-extension/prefs.js:550
 #, no-javascript-format
 msgid "Minutes before an event"
 msgstr "日程开始前几分钟"
 
-#: gnome-extension/prefs.js:528
+#: gnome-extension/prefs.js:553
 #, no-javascript-format
 msgid "Briefly show the song when the track changes"
 msgstr "切换曲目时短暂显示歌曲"
 
-#: gnome-extension/prefs.js:528
+#: gnome-extension/prefs.js:553
 #, no-javascript-format
 msgid "New song"
 msgstr "新歌曲"
 
-#: gnome-extension/prefs.js:529
+#: gnome-extension/prefs.js:554
 #, no-javascript-format
 msgid "Look up the playing song’s lyrics on LRCLIB"
 msgstr "在 LRCLIB 上查找正在播放歌曲的歌词"
 
-#: gnome-extension/prefs.js:529
+#: gnome-extension/prefs.js:554
 #, no-javascript-format
 msgid "Lyrics"
 msgstr "歌词"
 
-#: gnome-extension/prefs.js:530
+#: gnome-extension/prefs.js:555
 #, no-javascript-format
 msgid "Chime when a focus session or break ends, and for reminders"
 msgstr "专注或休息结束时，以及提醒事项到时，播放提示音"
 
-#: gnome-extension/prefs.js:530
+#: gnome-extension/prefs.js:555
 #, no-javascript-format
 msgid "Sounds"
 msgstr "声音"
 
-#: gnome-extension/prefs.js:534
+#: gnome-extension/prefs.js:559
 #, no-javascript-format
 msgid "Calls"
 msgstr "通话"
 
-#: gnome-extension/prefs.js:535
+#: gnome-extension/prefs.js:560
 #, no-javascript-format
 msgid "WhatsApp, Telegram, Meet and other calls, in any app or browser."
 msgstr "WhatsApp、Telegram、Meet 等通话，适用于任何应用或浏览器。"
 
-#: gnome-extension/prefs.js:537
+#: gnome-extension/prefs.js:562
 #, no-javascript-format
 msgid "Calls in the island"
 msgstr "在灵动岛中显示通话"
 
-#: gnome-extension/prefs.js:537
+#: gnome-extension/prefs.js:562
 #, no-javascript-format
 msgid "The call’s length, mute and a way back to it"
 msgstr "通话时长、静音以及返回通话的入口"
 
-#: gnome-extension/prefs.js:538
+#: gnome-extension/prefs.js:563
 #, no-javascript-format
 msgid "Live preview"
 msgstr "实时预览"
 
-#: gnome-extension/prefs.js:539
+#: gnome-extension/prefs.js:564
 #, no-javascript-format
 msgid "See yourself and whoever you call, live in the open island"
 msgstr "在展开的灵动岛中实时看到你自己和通话对象"
 
-#: gnome-extension/prefs.js:548 gnome-extension/prefs.js:1037
-#: gnome-extension/prefs.js:1243 gnome-extension/src/expanded.js:40
+#: gnome-extension/prefs.js:573 gnome-extension/prefs.js:1062
+#: gnome-extension/prefs.js:1268 gnome-extension/src/expanded.js:40
 #, no-javascript-format
 msgid "Timer"
 msgstr "计时器"
 
-#: gnome-extension/prefs.js:549
+#: gnome-extension/prefs.js:574
 #, no-javascript-format
 msgid "While Focusing"
 msgstr "专注期间"
 
-#: gnome-extension/prefs.js:550 gnome-extension/src/pages/notifications.js:87
+#: gnome-extension/prefs.js:575 gnome-extension/src/pages/notifications.js:87
 #, no-javascript-format
 msgid "Do Not Disturb"
 msgstr "勿扰模式"
 
-#: gnome-extension/prefs.js:550
+#: gnome-extension/prefs.js:575
 #, no-javascript-format
 msgid ""
 "Silence notifications during focus sessions, and restore them afterwards"
 msgstr "专注期间静音通知，结束后恢复"
 
-#: gnome-extension/prefs.js:554
+#: gnome-extension/prefs.js:579
 #, no-javascript-format
 msgid "Pomodoro"
 msgstr "番茄钟"
 
-#: gnome-extension/prefs.js:555
+#: gnome-extension/prefs.js:580
 #, no-javascript-format
 msgid ""
 "Focus sessions with short breaks, and a long break after a few sessions."
 msgstr "专注时段之间有短休息，几个时段后有一次长休息。"
 
-#: gnome-extension/prefs.js:570
+#: gnome-extension/prefs.js:595
 #, no-javascript-format
 msgid "The timer settings aren’t available right now"
 msgstr "计时器设置暂时不可用"
 
-#: gnome-extension/prefs.js:571
+#: gnome-extension/prefs.js:596
 #, no-javascript-format
 msgid ""
 "Isle isn’t running in the background. Log out and back in, or install Isle "
 "again."
 msgstr "Isle 没有在后台运行。请注销后重新登录，或重新安装 Isle。"
 
-#: gnome-extension/prefs.js:649
+#: gnome-extension/prefs.js:674
 #, no-javascript-format
 msgid "Focus (minutes)"
 msgstr "专注（分钟）"
 
-#: gnome-extension/prefs.js:650
+#: gnome-extension/prefs.js:675
 #, no-javascript-format
 msgid "Short break (minutes)"
 msgstr "短休息（分钟）"
 
-#: gnome-extension/prefs.js:651
+#: gnome-extension/prefs.js:676
 #, no-javascript-format
 msgid "Long break (minutes)"
 msgstr "长休息（分钟）"
 
-#: gnome-extension/prefs.js:652
+#: gnome-extension/prefs.js:677
 #, no-javascript-format
 msgid "Sessions before a long break"
 msgstr "长休息前的专注次数"
 
-#: gnome-extension/prefs.js:653
+#: gnome-extension/prefs.js:678
 #, no-javascript-format
 msgid "Start breaks automatically"
 msgstr "自动开始休息"
 
-#: gnome-extension/prefs.js:654
+#: gnome-extension/prefs.js:679
 #, no-javascript-format
 msgid "After a break ends"
 msgstr "休息结束后"
 
-#: gnome-extension/prefs.js:654
+#: gnome-extension/prefs.js:679
 #, no-javascript-format
 msgid "Start focus automatically"
 msgstr "自动开始专注"
 
-#: gnome-extension/prefs.js:727
+#: gnome-extension/prefs.js:752
 #, no-javascript-format
 msgid "How the assistant looks, and the light it brings to the island."
 msgstr "助手的外观，以及它为灵动岛带来的光效。"
 
-#: gnome-extension/prefs.js:727
+#: gnome-extension/prefs.js:752
 #, no-javascript-format
 msgid "Look"
 msgstr "样式"
 
-#: gnome-extension/prefs.js:762
+#: gnome-extension/prefs.js:787
 #, no-javascript-format
 msgid "LibreOffice is installed."
 msgstr "已安装 LibreOffice。"
 
-#: gnome-extension/prefs.js:762 gnome-extension/src/voice.js:718
+#: gnome-extension/prefs.js:787 gnome-extension/src/voice.js:718
 #, no-javascript-format
 msgid "Listening…"
 msgstr "正在聆听…"
 
-#: gnome-extension/prefs.js:762 gnome-extension/src/daemonWords.js:16
+#: gnome-extension/prefs.js:787 gnome-extension/src/daemonWords.js:16
 #, no-javascript-format
 msgid "Searching the web…"
 msgstr "正在搜索网络…"
 
-#: gnome-extension/prefs.js:795
+#: gnome-extension/prefs.js:820
 #, no-javascript-format
 msgid "A colour of your own"
 msgstr "自定义颜色"
 
-#: gnome-extension/prefs.js:808
+#: gnome-extension/prefs.js:833
 #, no-javascript-format
 msgid "Assistant colour"
 msgstr "助手颜色"
 
-#: gnome-extension/prefs.js:817
+#: gnome-extension/prefs.js:842
 #, no-javascript-format
 msgid "Colour"
 msgstr "颜色"
 
-#: gnome-extension/prefs.js:822
+#: gnome-extension/prefs.js:847
 #, no-javascript-format
 msgid "Glow"
 msgstr "光晕"
 
-#: gnome-extension/prefs.js:822
+#: gnome-extension/prefs.js:847
 #, no-javascript-format
 msgid "The light along the island's edge"
 msgstr "灵动岛边缘的光"
 
-#: gnome-extension/prefs.js:823
+#: gnome-extension/prefs.js:848
 #, no-javascript-format
 msgid "Classic"
 msgstr "经典"
 
-#: gnome-extension/prefs.js:823
+#: gnome-extension/prefs.js:848
 #, no-javascript-format
 msgid "Custom"
 msgstr "自定义"
 
-#: gnome-extension/prefs.js:823
+#: gnome-extension/prefs.js:848
 #, no-javascript-format
 msgid "Match"
 msgstr "匹配"
 
-#: gnome-extension/prefs.js:824
+#: gnome-extension/prefs.js:849
 #, no-javascript-format
 msgid "Glow colour"
 msgstr "光晕颜色"
 
-#: gnome-extension/prefs.js:877
+#: gnome-extension/prefs.js:902
 #, no-javascript-format
 msgid "Allow, deny or always allow, and when it is done"
 msgstr "允许、拒绝或始终允许，以及完成时通知"
 
-#: gnome-extension/prefs.js:878
+#: gnome-extension/prefs.js:903
 #, no-javascript-format
 msgid ""
 "Allow or deny, and when it is done · in Codex, type /hooks once and allow "
 "Isle"
 msgstr "允许或拒绝，以及完成时通知 · 在 Codex 中输入一次 /hooks 并允许 Isle"
 
-#: gnome-extension/prefs.js:897
+#: gnome-extension/prefs.js:922
 #, no-javascript-format
 msgctxt "glass"
 msgid "Clear"
 msgstr "透明"
 
-#: gnome-extension/prefs.js:899
+#: gnome-extension/prefs.js:924
 #, no-javascript-format
 msgctxt "glass"
 msgid "Dark"
 msgstr "深色"
 
-#: gnome-extension/prefs.js:903
+#: gnome-extension/prefs.js:928
 #, no-javascript-format
 msgid "Clear glass: what is behind shows through"
 msgstr "透明玻璃：能透出背后的内容"
 
-#: gnome-extension/prefs.js:904
+#: gnome-extension/prefs.js:929
 #, no-javascript-format
 msgid "Dark frosted glass"
 msgstr "深色磨砂玻璃"
 
-#: gnome-extension/prefs.js:904
+#: gnome-extension/prefs.js:929
 #, no-javascript-format
 msgid "{percent}% darker"
 msgstr "调暗 {percent}%"
 
-#: gnome-extension/prefs.js:937
+#: gnome-extension/prefs.js:962
 #, no-javascript-format
 msgid "Top bar"
 msgstr "顶栏"
 
-#: gnome-extension/prefs.js:953
+#: gnome-extension/prefs.js:978
 #, no-javascript-format
 msgid "See-through glass"
 msgstr "透明玻璃"
 
-#: gnome-extension/prefs.js:953
+#: gnome-extension/prefs.js:978
 #, no-javascript-format
 msgid "The island blends into the bar"
 msgstr "灵动岛与顶栏融为一体"
 
-#: gnome-extension/prefs.js:954
+#: gnome-extension/prefs.js:979
 #, no-javascript-format
 msgid "{percent}% black"
 msgstr "{percent}% 黑色"
 
-#: gnome-extension/prefs.js:995
+#: gnome-extension/prefs.js:1020
 #, no-javascript-format
 msgctxt "what the top bar clock shows"
 msgid "Day"
 msgstr "星期"
 
-#: gnome-extension/prefs.js:995
+#: gnome-extension/prefs.js:1020
 #, no-javascript-format
 msgid "Time"
 msgstr "时间"
 
-#: gnome-extension/prefs.js:996
+#: gnome-extension/prefs.js:1021
 #, no-javascript-format
 msgid "Date"
 msgstr "日期"
 
-#: gnome-extension/prefs.js:998
+#: gnome-extension/prefs.js:1023
 #, no-javascript-format
 msgid "Top bar clock shows"
 msgstr "顶栏时钟显示"
 
-#: gnome-extension/prefs.js:999
+#: gnome-extension/prefs.js:1024
 #, no-javascript-format
 msgid "It hides by itself while the bar is too full"
 msgstr "顶栏太满时会自动隐藏"
 
-#: gnome-extension/prefs.js:1016
+#: gnome-extension/prefs.js:1041
 #, no-javascript-format
 msgid "Black top bar beside windows"
 msgstr "窗口靠近时顶栏变黑"
 
-#: gnome-extension/prefs.js:1017
+#: gnome-extension/prefs.js:1042
 #, no-javascript-format
 msgid ""
 "While a window reaches the top bar, maximized or tiled, the bar turns black"
 msgstr "当有窗口触及顶栏（最大化或平铺）时，顶栏变为黑色"
 
-#: gnome-extension/prefs.js:1035 gnome-extension/prefs.js:1241
+#: gnome-extension/prefs.js:1060 gnome-extension/prefs.js:1266
 #: gnome-extension/src/expanded.js:38
 #, no-javascript-format
 msgid "Music"
 msgstr "音乐"
 
-#: gnome-extension/prefs.js:1035
+#: gnome-extension/prefs.js:1060
 #, no-javascript-format
 msgid "The player and lyrics, and the song in the closed island"
 msgstr "播放器和歌词，以及收起的灵动岛中显示的歌曲"
 
-#: gnome-extension/prefs.js:1036
+#: gnome-extension/prefs.js:1061
 #, no-javascript-format
 msgid "The list to look back at, and its unread dot; alerts show either way"
 msgstr "可回看的通知列表及其未读圆点；提示照常显示"
 
-#: gnome-extension/prefs.js:1037
+#: gnome-extension/prefs.js:1062
 #, no-javascript-format
 msgid "Pomodoro focus sessions and breaks"
 msgstr "番茄钟专注与休息"
 
-#: gnome-extension/prefs.js:1038 gnome-extension/prefs.js:1244
+#: gnome-extension/prefs.js:1063 gnome-extension/prefs.js:1269
 #: gnome-extension/src/expanded.js:41 gnome-extension/src/pages/tasks.js:132
 #, no-javascript-format
 msgid "Reminders"
 msgstr "提醒事项"
 
-#: gnome-extension/prefs.js:1038
+#: gnome-extension/prefs.js:1063
 #, no-javascript-format
 msgid "Your to-do list"
 msgstr "你的待办清单"
 
-#: gnome-extension/prefs.js:1039
+#: gnome-extension/prefs.js:1064
 #, no-javascript-format
 msgid "Clipboard history (Super+V), the files tray and sharing with a phone"
 msgstr "剪贴板历史（Super+V）、文件托盘和与手机共享"
 
-#: gnome-extension/prefs.js:1039 gnome-extension/prefs.js:1245
+#: gnome-extension/prefs.js:1064 gnome-extension/prefs.js:1270
 #: gnome-extension/src/expanded.js:42
 #, no-javascript-format
 msgid "Shelf"
 msgstr "暂存架"
 
-#: gnome-extension/prefs.js:1040 gnome-extension/prefs.js:1246
-#: gnome-extension/src/expanded.js:43 gnome-extension/src/shell.js:392
+#: gnome-extension/prefs.js:1065 gnome-extension/prefs.js:1271
+#: gnome-extension/src/expanded.js:43 gnome-extension/src/shell.js:450
 #, no-javascript-format
 msgid "Calendar"
 msgstr "日历"
 
-#: gnome-extension/prefs.js:1040
+#: gnome-extension/prefs.js:1065
 #, no-javascript-format
 msgid "The month, its events and world clocks"
 msgstr "月历、日程和世界时钟"
 
-#: gnome-extension/prefs.js:1045 gnome-extension/prefs.js:1154
-#: gnome-extension/prefs.js:1247 gnome-extension/src/expanded.js:44
+#: gnome-extension/prefs.js:1070 gnome-extension/prefs.js:1179
+#: gnome-extension/prefs.js:1272 gnome-extension/src/expanded.js:44
 #, no-javascript-format
 msgid "Apps"
 msgstr "应用"
 
-#: gnome-extension/prefs.js:1045 gnome-extension/prefs.js:1156
-#: gnome-extension/prefs.js:1248 gnome-extension/src/expanded.js:45
+#: gnome-extension/prefs.js:1070 gnome-extension/prefs.js:1181
+#: gnome-extension/prefs.js:1273 gnome-extension/src/expanded.js:45
 #, no-javascript-format
 msgid "Devices"
 msgstr "设备"
 
-#: gnome-extension/prefs.js:1051
+#: gnome-extension/prefs.js:1076
 #, no-javascript-format
 msgid "Shortcuts"
 msgstr "快捷键"
 
-#: gnome-extension/prefs.js:1052
+#: gnome-extension/prefs.js:1077
 #, no-javascript-format
 msgid ""
 "Open a page from anywhere; the same shortcut closes it. Super+V opens the "
@@ -1378,22 +1511,22 @@ msgstr ""
 "贴板或日历：在其中一行按下即可。在展开的灵动岛中，用 Ctrl+Tab 和 Ctrl+1–9 切"
 "换页面。"
 
-#: gnome-extension/prefs.js:1092 gnome-extension/prefs.js:1869
+#: gnome-extension/prefs.js:1117 gnome-extension/prefs.js:1894
 #, no-javascript-format
 msgid "{shortcut} is already used by {what}"
 msgstr "{shortcut} 已被{what}占用"
 
-#: gnome-extension/prefs.js:1121
+#: gnome-extension/prefs.js:1146
 #, no-javascript-format
 msgid "Super+V opens it too"
 msgstr "Super+V 也能打开它"
 
-#: gnome-extension/prefs.js:1139
+#: gnome-extension/prefs.js:1164
 #, no-javascript-format
 msgid "Pages"
 msgstr "页面"
 
-#: gnome-extension/prefs.js:1140
+#: gnome-extension/prefs.js:1165
 #, no-javascript-format
 msgid ""
 "The open island’s tabs, top here is left there. Use the arrows to reorder "
@@ -1402,85 +1535,85 @@ msgstr ""
 "展开的灵动岛中的标签页，这里越靠上，那里越靠左。用箭头调整顺序，用开关隐藏你"
 "不用的。"
 
-#: gnome-extension/prefs.js:1154
+#: gnome-extension/prefs.js:1179
 #, no-javascript-format
 msgid "Time spent in each app, kept on this computer for 30 days"
 msgstr "每个应用的使用时长，在本机保存 30 天"
 
-#: gnome-extension/prefs.js:1157
+#: gnome-extension/prefs.js:1182
 #, no-javascript-format
 msgid ""
 "Connected Bluetooth devices and their battery; its tab shows while one is "
 "connected"
 msgstr "已连接的蓝牙设备及其电量；有设备连接时才显示该标签页"
 
-#: gnome-extension/prefs.js:1159
+#: gnome-extension/prefs.js:1184
 #, no-javascript-format
 msgid "The weather now and the week ahead, from Open-Meteo"
 msgstr "当前天气和未来一周的预报，来自 Open-Meteo"
 
-#: gnome-extension/prefs.js:1161
+#: gnome-extension/prefs.js:1186
 #, no-javascript-format
 msgid "Your AI plans’ limits, and warnings as one nears its end"
 msgstr "你的 AI 套餐额度，以及快用完时的提醒"
 
-#: gnome-extension/prefs.js:1166
+#: gnome-extension/prefs.js:1191
 #, no-javascript-format
 msgid "Sign in to Claude Code, Codex or Grok to see your plan"
 msgstr "登录 Claude Code、Codex 或 Grok 以查看你的套餐"
 
-#: gnome-extension/prefs.js:1169
+#: gnome-extension/prefs.js:1194
 #, no-javascript-format
 msgid "The ✦ in the open island and its shortcut"
 msgstr "展开的灵动岛中的 ✦ 及其快捷键"
 
-#: gnome-extension/prefs.js:1184
+#: gnome-extension/prefs.js:1209
 #, no-javascript-format
 msgid "Move up: the tab goes left"
 msgstr "上移：标签页向左移"
 
-#: gnome-extension/prefs.js:1185
+#: gnome-extension/prefs.js:1210
 #, no-javascript-format
 msgid "Move down: the tab goes right"
 msgstr "下移：标签页向右移"
 
-#: gnome-extension/prefs.js:1193
+#: gnome-extension/prefs.js:1218
 #, no-javascript-format
 msgid "Reset Order"
 msgstr "重置顺序"
 
-#: gnome-extension/prefs.js:1194
+#: gnome-extension/prefs.js:1219
 #, no-javascript-format
 msgid "Put the tabs back in Isle’s own order"
 msgstr "将标签页恢复为 Isle 自带的顺序"
 
-#: gnome-extension/prefs.js:1225
+#: gnome-extension/prefs.js:1250
 #, no-javascript-format
 msgid "The island keeps at least one page"
 msgstr "灵动岛至少保留一个页面"
 
-#: gnome-extension/prefs.js:1240 gnome-extension/src/call.js:144
+#: gnome-extension/prefs.js:1265 gnome-extension/src/call.js:144
 #: gnome-extension/src/expanded.js:37
 #, no-javascript-format
 msgid "Call"
 msgstr "通话"
 
-#: gnome-extension/prefs.js:1240
+#: gnome-extension/prefs.js:1265
 #, no-javascript-format
 msgid "Only during a call"
 msgstr "仅在通话期间"
 
-#: gnome-extension/prefs.js:1248
+#: gnome-extension/prefs.js:1273
 #, no-javascript-format
 msgid "Only while a device is connected"
 msgstr "仅在有设备连接时"
 
-#: gnome-extension/prefs.js:1256
+#: gnome-extension/prefs.js:1281
 #, no-javascript-format
 msgid "Place"
 msgstr "地点"
 
-#: gnome-extension/prefs.js:1257
+#: gnome-extension/prefs.js:1282
 #, no-javascript-format
 msgid ""
 "With none picked, Isle asks ipwho.is where your network’s address is, and "
@@ -1489,47 +1622,47 @@ msgstr ""
 "未选择地点时，Isle 会向 ipwho.is 询问你的网络地址所在的位置，除此之外不发送任"
 "何信息。"
 
-#: gnome-extension/prefs.js:1260
+#: gnome-extension/prefs.js:1285
 #, no-javascript-format
 msgid "Automatic"
 msgstr "自动"
 
-#: gnome-extension/prefs.js:1273
+#: gnome-extension/prefs.js:1298
 #, no-javascript-format
 msgid "Where your network is"
 msgstr "网络所在位置"
 
-#: gnome-extension/prefs.js:1274
+#: gnome-extension/prefs.js:1299
 #, no-javascript-format
 msgid "Found by itself"
 msgstr "自动定位"
 
-#: gnome-extension/prefs.js:1281
+#: gnome-extension/prefs.js:1306
 #, no-javascript-format
 msgid "Search for a town or city"
 msgstr "搜索城市"
 
-#: gnome-extension/prefs.js:1299
+#: gnome-extension/prefs.js:1324
 #, no-javascript-format
 msgid "Searching…"
 msgstr "正在搜索…"
 
-#: gnome-extension/prefs.js:1315
+#: gnome-extension/prefs.js:1340
 #, no-javascript-format
 msgid "Couldn’t search just now. Try again in a moment."
 msgstr "暂时无法搜索，请稍后再试。"
 
-#: gnome-extension/prefs.js:1317
+#: gnome-extension/prefs.js:1342
 #, no-javascript-format
 msgid "No place called “{name}”"
 msgstr "找不到名为“{name}”的地点"
 
-#: gnome-extension/prefs.js:1362
+#: gnome-extension/prefs.js:1387
 #, no-javascript-format
 msgid "Page Height"
 msgstr "页面高度"
 
-#: gnome-extension/prefs.js:1363
+#: gnome-extension/prefs.js:1388
 #, no-javascript-format
 msgid ""
 "How tall each page of the open island is, in pixels ({least} to {most}); one "
@@ -1539,12 +1672,12 @@ msgstr ""
 "展开的灵动岛中每个页面的高度，单位为像素（{least} 到 {most}）；与“尺寸”默认高"
 "度相同的页面会跟随“尺寸”变化。切换页面时灵动岛会随之伸缩。"
 
-#: gnome-extension/prefs.js:1408 gnome-extension/src/pages/apps.js:80
+#: gnome-extension/prefs.js:1433 gnome-extension/src/pages/apps.js:82
 #, no-javascript-format
 msgid "App Usage"
 msgstr "应用使用时长"
 
-#: gnome-extension/prefs.js:1409
+#: gnome-extension/prefs.js:1434
 #, no-javascript-format
 msgid ""
 "With the Apps page on, the app in front is timed. Five minutes without input "
@@ -1553,32 +1686,32 @@ msgstr ""
 "开启“应用”页后，会统计前台应用的使用时间。五分钟无操作会暂停计时，除非有视频"
 "让屏幕保持常亮。"
 
-#: gnome-extension/prefs.js:1411
+#: gnome-extension/prefs.js:1436
 #, no-javascript-format
 msgid "Clear app usage"
 msgstr "清除应用使用记录"
 
-#: gnome-extension/prefs.js:1411
+#: gnome-extension/prefs.js:1436
 #, no-javascript-format
 msgid "Forget every day recorded so far"
 msgstr "删除至今记录的所有天数"
 
-#: gnome-extension/prefs.js:1414
+#: gnome-extension/prefs.js:1439
 #, no-javascript-format
 msgid "Clear app usage?"
 msgstr "清除应用使用记录？"
 
-#: gnome-extension/prefs.js:1415
+#: gnome-extension/prefs.js:1440
 #, no-javascript-format
 msgid "Every app’s time recorded so far is removed. This cannot be undone."
 msgstr "至今记录的所有应用时长都将被删除。此操作无法撤销。"
 
-#: gnome-extension/prefs.js:1427 gnome-extension/src/pages/calendar.js:809
+#: gnome-extension/prefs.js:1452 gnome-extension/src/pages/calendar.js:809
 #, no-javascript-format
 msgid "World Clocks"
 msgstr "世界时钟"
 
-#: gnome-extension/prefs.js:1428
+#: gnome-extension/prefs.js:1453
 #, no-javascript-format
 msgid ""
 "The time in other cities on the Calendar page. The same list as GNOME’s "
@@ -1586,410 +1719,410 @@ msgid ""
 msgstr ""
 "在“日历”页中显示其他城市的时间。与 GNOME 日历菜单和“时钟”应用使用同一个列表。"
 
-#: gnome-extension/prefs.js:1430
+#: gnome-extension/prefs.js:1455
 #, no-javascript-format
 msgid "Show world clocks"
 msgstr "显示世界时钟"
 
-#: gnome-extension/prefs.js:1430
+#: gnome-extension/prefs.js:1455
 #, no-javascript-format
 msgid "Under the day’s events; click them for more"
 msgstr "显示在当天日程下方；点击查看更多"
 
-#: gnome-extension/prefs.js:1434
+#: gnome-extension/prefs.js:1459
 #, no-javascript-format
 msgid "GNOME’s world clocks are not available here"
 msgstr "此处无法使用 GNOME 的世界时钟"
 
-#: gnome-extension/prefs.js:1438 gnome-extension/prefs.js:1439
+#: gnome-extension/prefs.js:1463 gnome-extension/prefs.js:1464
 #, no-javascript-format
 msgid "Add a City…"
 msgstr "添加城市…"
 
-#: gnome-extension/prefs.js:1461
+#: gnome-extension/prefs.js:1486
 #, no-javascript-format
 msgid "Same time as here"
 msgstr "与本地时间相同"
 
-#: gnome-extension/prefs.js:1469
+#: gnome-extension/prefs.js:1494
 #, no-javascript-format
 msgid "Remove this city"
 msgstr "移除此城市"
 
-#: gnome-extension/prefs.js:1516
+#: gnome-extension/prefs.js:1541
 #, no-javascript-format
 msgid "Add a City"
 msgstr "添加城市"
 
-#: gnome-extension/prefs.js:1520
+#: gnome-extension/prefs.js:1545
 #, no-javascript-format
 msgid "Search for a city"
 msgstr "搜索城市"
 
-#: gnome-extension/prefs.js:1525 gnome-extension/prefs.js:1547
+#: gnome-extension/prefs.js:1550 gnome-extension/prefs.js:1572
 #, no-javascript-format
 msgid "Search for a City"
 msgstr "搜索城市"
 
-#: gnome-extension/prefs.js:1526 gnome-extension/prefs.js:1548
+#: gnome-extension/prefs.js:1551 gnome-extension/prefs.js:1573
 #, no-javascript-format
 msgid "Type a city’s name, like Tokyo or New York"
 msgstr "输入城市名称，如 Tokyo 或 New York"
 
-#: gnome-extension/prefs.js:1547
+#: gnome-extension/prefs.js:1572
 #, no-javascript-format
 msgid "No City Found"
 msgstr "未找到城市"
 
-#: gnome-extension/prefs.js:1548
+#: gnome-extension/prefs.js:1573
 #, no-javascript-format
 msgid "Try another spelling, or a bigger city nearby"
 msgstr "换个拼写试试，或者搜索附近更大的城市"
 
-#: gnome-extension/prefs.js:1559
+#: gnome-extension/prefs.js:1584
 #, no-javascript-format
 msgid "what Claude answers with"
 msgstr "Claude 用来回答的模型"
 
-#: gnome-extension/prefs.js:1561
+#: gnome-extension/prefs.js:1586
 #, no-javascript-format
 msgid "what ChatGPT answers with, quickly"
 msgstr "ChatGPT 用来快速回答的模型"
 
-#: gnome-extension/prefs.js:1563
+#: gnome-extension/prefs.js:1588
 #, no-javascript-format
 msgid "what Grok answers with, quickly"
 msgstr "Grok 用来快速回答的模型"
 
-#: gnome-extension/prefs.js:1566
+#: gnome-extension/prefs.js:1591
 #, no-javascript-format
 msgid ""
 "your recent opencode models, your providers’, the free ones and your plan’s"
 msgstr "你最近用过的 opencode 模型、各提供商的模型、免费模型以及你套餐内的模型"
 
-#: gnome-extension/prefs.js:1569
+#: gnome-extension/prefs.js:1594
 #, no-javascript-format
 msgid "the models of the providers you signed in to in Pi"
 msgstr "你在 Pi 中登录的提供商的模型"
 
-#: gnome-extension/prefs.js:1571
+#: gnome-extension/prefs.js:1596
 #, no-javascript-format
 msgid "what Antigravity answers with"
 msgstr "Antigravity 用来回答的模型"
 
-#: gnome-extension/prefs.js:1776
+#: gnome-extension/prefs.js:1801
 #, no-javascript-format
 msgid "Signed in with Claude Code"
 msgstr "已通过 Claude Code 登录"
 
-#: gnome-extension/prefs.js:1780
+#: gnome-extension/prefs.js:1805
 #, no-javascript-format
 msgid "Signed in with Codex"
 msgstr "已通过 Codex 登录"
 
-#: gnome-extension/prefs.js:1782
+#: gnome-extension/prefs.js:1807
 #, no-javascript-format
 msgid "Signed in with Grok"
 msgstr "已通过 Grok 登录"
 
-#: gnome-extension/prefs.js:1845 gnome-extension/prefs.js:1846
+#: gnome-extension/prefs.js:1870 gnome-extension/prefs.js:1871
 #, no-javascript-format
 msgid "Remove the shortcut"
 msgstr "移除快捷键"
 
-#: gnome-extension/prefs.js:1885 gnome-extension/prefs.js:1887
+#: gnome-extension/prefs.js:1910 gnome-extension/prefs.js:1912
 #, no-javascript-format
 msgid "a GNOME window shortcut"
 msgstr " GNOME 窗口快捷键"
 
-#: gnome-extension/prefs.js:1886
+#: gnome-extension/prefs.js:1911
 #, no-javascript-format
 msgid "a GNOME Shell shortcut"
 msgstr " GNOME Shell 快捷键"
 
-#: gnome-extension/prefs.js:1888
+#: gnome-extension/prefs.js:1913
 #, no-javascript-format
 msgid "a GNOME shortcut"
 msgstr " GNOME 快捷键"
 
-#: gnome-extension/prefs.js:1889
+#: gnome-extension/prefs.js:1914
 #, no-javascript-format
 msgid "a GNOME system shortcut"
 msgstr " GNOME 系统快捷键"
 
-#: gnome-extension/prefs.js:1919
+#: gnome-extension/prefs.js:1944
 #, no-javascript-format
 msgid "your shortcut “{name}”"
 msgstr "你的快捷键“{name}”"
 
-#: gnome-extension/prefs.js:1925
+#: gnome-extension/prefs.js:1950
 #, no-javascript-format
 msgid "Isle’s {page} shortcut"
 msgstr " Isle 的“{page}”快捷键"
 
-#: gnome-extension/prefs.js:1941
+#: gnome-extension/prefs.js:1966
 #, no-javascript-format
 msgid "Press the new shortcut"
 msgstr "按下新的快捷键"
 
-#: gnome-extension/prefs.js:1942
+#: gnome-extension/prefs.js:1967
 #, no-javascript-format
 msgid "With Super, Ctrl or Alt"
 msgstr "需包含 Super、Ctrl 或 Alt"
 
-#: gnome-extension/prefs.js:1944 gnome-extension/prefs.js:2000
+#: gnome-extension/prefs.js:1969 gnome-extension/prefs.js:2025
 #, no-javascript-format
 msgid "Cancel"
 msgstr "取消"
 
-#: gnome-extension/prefs.js:1944 gnome-extension/src/pages/clips.js:606
+#: gnome-extension/prefs.js:1969 gnome-extension/src/pages/clips.js:606
 #, no-javascript-format
 msgid "Remove"
 msgstr "删除"
 
-#: gnome-extension/prefs.js:1988
+#: gnome-extension/prefs.js:2013
 #, no-javascript-format
 msgid "Clear clipboard history?"
 msgstr "清除剪贴板历史？"
 
-#: gnome-extension/prefs.js:1989
+#: gnome-extension/prefs.js:2014
 #, no-javascript-format
 msgid "Everything you copied is removed. Pinned items stay."
 msgstr "你复制过的所有内容都将被删除。已固定的项目会保留。"
 
-#: gnome-extension/prefs.js:2047
+#: gnome-extension/prefs.js:2072
 #, no-javascript-format
 msgid "today"
 msgstr "今天"
 
-#: gnome-extension/prefs.js:2047
+#: gnome-extension/prefs.js:2072
 #, no-javascript-format
 msgid "yesterday"
 msgstr "昨天"
 
-#: gnome-extension/prefs.js:2073
+#: gnome-extension/prefs.js:2098
 #, no-javascript-format
 msgid "Isle couldn’t reach GitHub; check the internet connection"
 msgstr "Isle 无法连接 GitHub；请检查网络连接"
 
-#: gnome-extension/prefs.js:2074
+#: gnome-extension/prefs.js:2099
 #, no-javascript-format
 msgid "GitHub limits how often it is asked; try again in an hour"
 msgstr "GitHub 限制了请求频率；请一小时后再试"
 
-#: gnome-extension/prefs.js:2075
+#: gnome-extension/prefs.js:2100
 #, no-javascript-format
 msgid "GitHub had a problem just now; try again in a while"
 msgstr "GitHub 刚才出了问题；请稍后再试"
 
-#: gnome-extension/prefs.js:2076
+#: gnome-extension/prefs.js:2101
 #, no-javascript-format
 msgid "That version isn’t on GitHub yet; try again later"
 msgstr "该版本尚未发布到 GitHub；请稍后再试"
 
-#: gnome-extension/prefs.js:2077
+#: gnome-extension/prefs.js:2102
 #, no-javascript-format
 msgid "The download didn’t come through whole; try again"
 msgstr "下载不完整；请重试"
 
-#: gnome-extension/prefs.js:2078
+#: gnome-extension/prefs.js:2103
 #, no-javascript-format
 msgid ""
 "This version of Isle doesn’t support this GNOME yet; nothing was changed"
 msgstr "此版本的 Isle 尚不支持当前 GNOME；未做任何更改"
 
-#: gnome-extension/prefs.js:2079
+#: gnome-extension/prefs.js:2104
 #, no-javascript-format
 msgid "The disk is full; free some space and try again"
 msgstr "磁盘已满；请释放一些空间后重试"
 
-#: gnome-extension/prefs.js:2080
+#: gnome-extension/prefs.js:2105
 #, no-javascript-format
 msgid "Isle couldn’t write its files; try again"
 msgstr "Isle 无法写入文件；请重试"
 
-#: gnome-extension/prefs.js:2083
+#: gnome-extension/prefs.js:2108
 #, no-javascript-format
 msgid ""
 "There’s no ready-made Isle for this computer; build it from source instead"
 msgstr "没有适用于这台电脑的预编译 Isle；请从源码构建"
 
-#: gnome-extension/prefs.js:2084
+#: gnome-extension/prefs.js:2109
 #, no-javascript-format
 msgid "Another install of Isle is running; wait for it, then try again"
 msgstr "另一个 Isle 安装正在进行；请等它完成后再试"
 
-#: gnome-extension/prefs.js:2086
+#: gnome-extension/prefs.js:2111
 #, no-javascript-format
 msgid "The update didn’t start; try again"
 msgstr "更新未能启动；请重试"
 
-#: gnome-extension/prefs.js:2091
+#: gnome-extension/prefs.js:2116
 #, no-javascript-format
 msgid "Install {program}, then try again"
 msgstr "请安装 {program} 后重试"
 
-#: gnome-extension/prefs.js:2093
+#: gnome-extension/prefs.js:2118
 #, no-javascript-format
 msgid "The update didn’t finish; try again"
 msgstr "更新未能完成；请重试"
 
-#: gnome-extension/prefs.js:2093
+#: gnome-extension/prefs.js:2118
 #, no-javascript-format
 msgid "the installer stopped"
 msgstr "安装程序已停止"
 
-#: gnome-extension/prefs.js:2172
+#: gnome-extension/prefs.js:2197
 #, no-javascript-format
 msgid "How"
 msgstr "方法"
 
-#: gnome-extension/prefs.js:2174 gnome-extension/prefs.js:2180
+#: gnome-extension/prefs.js:2199 gnome-extension/prefs.js:2205
 #, no-javascript-format
 msgid "Copy command"
 msgstr "复制命令"
 
-#: gnome-extension/prefs.js:2178 gnome-extension/src/chat.js:440
+#: gnome-extension/prefs.js:2203 gnome-extension/src/chat.js:440
 #: gnome-extension/src/chat.js:616 gnome-extension/src/pages/phone.js:384
 #: gnome-extension/src/pages/shelf.js:663
 #, no-javascript-format
 msgid "Copied"
 msgstr "已复制"
 
-#: gnome-extension/prefs.js:2184
+#: gnome-extension/prefs.js:2209
 #, no-javascript-format
 msgid "Download"
 msgstr "下载"
 
-#: gnome-extension/prefs.js:2186 gnome-extension/prefs.js:2259
+#: gnome-extension/prefs.js:2211 gnome-extension/prefs.js:2284
 #: gnome-extension/src/alerts.js:743
 #, no-javascript-format
 msgid "Update"
 msgstr "更新"
 
-#: gnome-extension/prefs.js:2187
+#: gnome-extension/prefs.js:2212
 #, no-javascript-format
 msgid "Log Out"
 msgstr "注销"
 
-#: gnome-extension/prefs.js:2191
+#: gnome-extension/prefs.js:2216
 #, no-javascript-format
 msgid "Asks GitHub once a day; nothing else is sent"
 msgstr "每天询问 GitHub 一次；不会发送其他任何内容"
 
-#: gnome-extension/prefs.js:2191
+#: gnome-extension/prefs.js:2216
 #, no-javascript-format
 msgid "Check for new versions"
 msgstr "检查新版本"
 
-#: gnome-extension/prefs.js:2237
+#: gnome-extension/prefs.js:2262
 #, no-javascript-format
 msgid "Downloading and installing; Settings can be closed"
 msgstr "正在下载并安装；可以关闭设置"
 
-#: gnome-extension/prefs.js:2237
+#: gnome-extension/prefs.js:2262
 #, no-javascript-format
 msgid "Updating to Isle {version}…"
 msgstr "正在更新到 Isle {version}…"
 
-#: gnome-extension/prefs.js:2240
+#: gnome-extension/prefs.js:2265
 #, no-javascript-format
 msgid "Try Again"
 msgstr "重试"
 
-#: gnome-extension/prefs.js:2241
+#: gnome-extension/prefs.js:2266
 #, no-javascript-format
 msgid "it was cut off before it finished"
 msgstr "在完成前被中断了"
 
-#: gnome-extension/prefs.js:2242
+#: gnome-extension/prefs.js:2267
 #, no-javascript-format
 msgid "Couldn’t update"
 msgstr "无法更新"
 
-#: gnome-extension/prefs.js:2243
+#: gnome-extension/prefs.js:2268
 #, no-javascript-format
 msgid "{reason}. Or paste the command in a terminal"
 msgstr "{reason}。也可以把命令粘贴到终端中运行"
 
-#: gnome-extension/prefs.js:2246
+#: gnome-extension/prefs.js:2271
 #, no-javascript-format
 msgid "Isle {version} is installed"
 msgstr "Isle {version} 已安装"
 
-#: gnome-extension/prefs.js:2247
+#: gnome-extension/prefs.js:2272
 #, no-javascript-format
 msgid "Log out and back in to finish"
 msgstr "注销后重新登录即可完成"
 
-#: gnome-extension/prefs.js:2249
+#: gnome-extension/prefs.js:2274
 #, no-javascript-format
 msgid "Not checking for new versions"
 msgstr "未检查新版本"
 
-#: gnome-extension/prefs.js:2250
+#: gnome-extension/prefs.js:2275
 #, no-javascript-format
 msgid "Turn it on below to hear when one is out"
 msgstr "在下方开启，新版本发布时会通知你"
 
-#: gnome-extension/prefs.js:2253 gnome-extension/prefs.js:2260
+#: gnome-extension/prefs.js:2278 gnome-extension/prefs.js:2285
 #: gnome-extension/src/alerts.js:740
 #, no-javascript-format
 msgid "Isle {version} is out"
 msgstr "Isle {version} 已发布"
 
-#: gnome-extension/prefs.js:2254
+#: gnome-extension/prefs.js:2279
 #, no-javascript-format
 msgid ""
 "Update it the way you installed it from the AUR, then log out and back in"
 msgstr "请按你从 AUR 安装的方式更新，然后注销并重新登录"
 
-#: gnome-extension/prefs.js:2255
+#: gnome-extension/prefs.js:2280
 #, no-javascript-format
 msgid "Download its .{format} and open it to install, then log out and back in"
 msgstr "下载其 .{format} 文件并打开安装，然后注销并重新登录"
 
-#: gnome-extension/prefs.js:2261
+#: gnome-extension/prefs.js:2286
 #, no-javascript-format
 msgid "Your tasks, events and settings stay"
 msgstr "你的任务、日程和设置都会保留"
 
-#: gnome-extension/prefs.js:2264
+#: gnome-extension/prefs.js:2289
 #, no-javascript-format
 msgid "Checked {when}"
 msgstr "检查于{when}"
 
-#: gnome-extension/prefs.js:2264
+#: gnome-extension/prefs.js:2289
 #, no-javascript-format
 msgid "You’re up to date"
 msgstr "已是最新版本"
 
-#: gnome-extension/prefs.js:2266
+#: gnome-extension/prefs.js:2291
 #, no-javascript-format
 msgid "Isle asks GitHub once a day"
 msgstr "Isle 每天询问 GitHub 一次"
 
-#: gnome-extension/prefs.js:2266
+#: gnome-extension/prefs.js:2291
 #, no-javascript-format
 msgid "Not checked yet"
 msgstr "尚未检查"
 
-#: gnome-extension/prefs.js:2306
+#: gnome-extension/prefs.js:2331
 #, no-javascript-format
 msgid "Isle isn’t fully installed; install it again, then try this"
 msgstr "Isle 没有完整安装；请重新安装后再试"
 
-#: gnome-extension/prefs.js:2314
+#: gnome-extension/prefs.js:2339
 #, no-javascript-format
 msgid "Copied: paste it into the report on GitHub"
 msgstr "已复制：请粘贴到 GitHub 上的报告中"
 
-#: gnome-extension/prefs.js:2317
+#: gnome-extension/prefs.js:2342
 #, no-javascript-format
 msgid "Couldn’t make the report; try again"
 msgstr "无法生成报告；请重试"
 
-#: gnome-extension/prefs.js:2331
+#: gnome-extension/prefs.js:2356
 #, no-javascript-format
 msgid "Add an app"
 msgstr "添加应用"
@@ -2624,7 +2757,7 @@ msgstr "一键更新；你的内容都会保留"
 msgid "Update its package to get it"
 msgstr "更新对应的软件包即可获取"
 
-#: gnome-extension/src/alerts.js:754 gnome-extension/src/controller.js:2868
+#: gnome-extension/src/alerts.js:754 gnome-extension/src/controller.js:2870
 #, no-javascript-format
 msgid "Isle’s service isn’t running"
 msgstr "Isle 的后台服务没有运行"
@@ -2879,23 +3012,23 @@ msgstr "隐藏对话"
 msgid "Conversation"
 msgstr "对话"
 
-#: gnome-extension/src/controller.js:2868
+#: gnome-extension/src/controller.js:2870
 #, no-javascript-format
 msgid "Isle couldn’t take that"
 msgstr "Isle 没能接收这个请求"
 
-#: gnome-extension/src/controller.js:2924
+#: gnome-extension/src/controller.js:2926
 #, no-javascript-format
 msgid "Press {shortcut} to ask again."
 msgstr "按 {shortcut} 重新提问。"
 
-#: gnome-extension/src/controller.js:2925
+#: gnome-extension/src/controller.js:2927
 #, no-javascript-format
 msgid "Ask again from the mic in the island."
 msgstr "点击灵动岛中的麦克风重新提问。"
 
-#: gnome-extension/src/controller.js:3268
-#: gnome-extension/src/controller.js:3274
+#: gnome-extension/src/controller.js:3270
+#: gnome-extension/src/controller.js:3276
 #, no-javascript-format
 msgid "Isle restarted"
 msgstr "Isle 已重启"
@@ -3474,12 +3607,12 @@ msgstr "30 天"
 msgid "{time} in 30 days"
 msgstr "30 天共 {time}"
 
-#: gnome-extension/src/pages/apps.js:118
+#: gnome-extension/src/pages/apps.js:120
 #, no-javascript-format
 msgid "No usage yet"
 msgstr "暂无使用记录"
 
-#: gnome-extension/src/pages/apps.js:119
+#: gnome-extension/src/pages/apps.js:121
 #, no-javascript-format
 msgid "Time in the app in front shows up here"
 msgstr "前台应用的使用时间会显示在这里"
